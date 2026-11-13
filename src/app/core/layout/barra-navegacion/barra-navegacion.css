@@ -1,0 +1,134 @@
+.fw-navbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background-color: var(--fw-surface);
+  border-bottom: 1px solid var(--fw-border);
+  box-shadow: var(--fw-shadow-sm);
+}
+
+.fw-navbar-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  height: 4rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
+.fw-marca {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  color: var(--fw-text);
+  text-decoration: none;
+}
+
+.fw-marca:hover {
+  text-decoration: none;
+}
+
+.fw-marca-titulo {
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--fw-primary);
+}
+
+.fw-marca-ciudad {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.125rem 0.5rem;
+  border-radius: 999px;
+  background-color: var(--fw-primary-soft);
+  color: var(--fw-primary);
+}
+
+.fw-nav-links {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  flex: 1;
+}
+
+.fw-nav-link {
+  padding: 0.45rem 0.85rem;
+  border-radius: var(--fw-radius);
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--fw-muted);
+  text-decoration: none;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.fw-nav-link:hover {
+  background-color: var(--fw-surface-alt);
+  color: var(--fw-text);
+  text-decoration: none;
+}
+
+.fw-nav-link-activo {
+  background-color: var(--fw-primary-soft);
+  color: var(--fw-primary);
+  font-weight: 600;
+}
+
+.fw-nav-usuario,
+.fw-nav-acciones {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.fw-usuario-nombre {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--fw-text);
+}
+
+.fw-usuario-rol {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  background-color: var(--fw-surface-alt);
+  color: var(--fw-muted);
+  border: 1px solid var(--fw-border);
+}
+
+.fw-btn-salir {
+  padding: 0.45rem 0.85rem;
+  border: 1px solid var(--fw-border);
+  border-radius: var(--fw-radius);
+  background-color: var(--fw-surface);
+  color: var(--fw-text);
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.fw-btn-salir:hover {
+  background-color: var(--fw-danger-soft);
+  border-color: var(--fw-danger);
+  color: var(--fw-danger);
+}
+
+.fw-btn-registro {
+  padding: 0.45rem 0.95rem;
+  border-radius: var(--fw-radius);
+  background-color: var(--fw-primary);
+  color: #ffffff;
+  font-size: 0.88rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.fw-btn-registro:hover {
+  background-color: var(--fw-primary-hover);
+  text-decoration: none;
+}
