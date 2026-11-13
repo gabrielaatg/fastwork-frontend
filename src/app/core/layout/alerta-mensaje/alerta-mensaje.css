@@ -1,0 +1,53 @@
+.fw-alerta {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-radius: var(--fw-radius);
+  border: 1px solid transparent;
+  font-size: 0.9rem;
+}
+
+.fw-alerta-error {
+  background-color: var(--fw-danger-soft);
+  border-color: #fecaca;
+  color: var(--fw-danger);
+}
+
+.fw-alerta-exito {
+  background-color: var(--fw-success-soft);
+  border-color: #bbf7d0;
+  color: var(--fw-success);
+}
+
+.fw-alerta-info {
+  background-color: var(--fw-primary-soft);
+  border-color: #bfdbfe;
+  color: var(--fw-primary);
+}
+
+.fw-alerta-cuerpo {
+  flex: 1;
+}
+
+.fw-alerta-texto {
+  margin: 0;
+  font-weight: 500;
+}
+
+.fw-alerta-lista {
+  margin: 0.45rem 0 0;
+  padding-left: 1.2rem;
+  font-size: 0.85rem;
+}
+
+.fw-alerta-cerrar {
+  background: transparent;
+  border: none;
+  font-size: 1.2rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 0.25rem;
+  color: inherit;
+}
