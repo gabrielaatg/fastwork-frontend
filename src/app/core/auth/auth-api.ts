@@ -1,14 +1,25 @@
-import { computed, Injectable, signal } from '@angular/core';
-import { AuthResponse, UsuarioSesion } from '../../dominio/auth';
+import { HttpClient } from '@angular/common/http';
+import { computed, inject, Injectable, signal } from '@angular/core';
+import { map, Observable, tap } from 'rxjs';
+import { environment } from '../../../environments/environment';
+import {
+  AuthResponse,
+  LoginRequest,
+  RegistroUsuarioRequest,
+  UsuarioSesion,
+} from '../../dominio/auth';
 import { RolUsuario } from '../../dominio/rol';
+import { extraerData, JsendResponse } from '../api/jsend';
 
 const CLAVE_SESION_STORAGE = 'fastwork_sesion';
 
 /**
- * Administra el estado reactivo de la sesión autenticada y su persistencia local.
+ * Cliente HTTP de autenticación (`/api/v1/auth`) y gestor reactivo de la sesión JWT.
  */
 @Injectable({ providedIn: 'root' })
 export class AuthApi {
+  private readonly http = inject(HttpClient);
+  private readonly baseUrl = `${environment.apiUrl}/auth`;
   private readonly estado = signal<UsuarioSesion | null>(this.cargarSesionGuardada());
 
   readonly usuario = this.estado.asReadonly();
@@ -19,6 +30,20 @@ export class AuthApi {
     const sesion = this.estado();
     return sesion !== null && !this.tokenExpirado(sesion.token);
   });
+
+  registrar(request: RegistroUsuarioRequest): Observable<AuthResponse> {
+    return this.http.post<JsendResponse<AuthResponse>>(`${this.baseUrl}/register`, request).pipe(
+      map(extraerData),
+      tap((respuesta) => this.establecerSesion(respuesta)),
+    );
+  }
+
+  iniciarSesion(request: LoginRequest): Observable<AuthResponse> {
+    return this.http.post<JsendResponse<AuthResponse>>(`${this.baseUrl}/login`, request).pipe(
+      map(extraerData),
+      tap((respuesta) => this.establecerSesion(respuesta)),
+    );
+  }
 
   establecerSesion(respuesta: AuthResponse): void {
     const sesion: UsuarioSesion = {
