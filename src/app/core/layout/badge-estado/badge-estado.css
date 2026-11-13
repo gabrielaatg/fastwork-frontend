@@ -1,0 +1,30 @@
+.fw-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  line-height: 1.25;
+  white-space: nowrap;
+}
+
+.fw-badge-exito {
+  background-color: var(--fw-success-soft);
+  color: var(--fw-success);
+}
+
+.fw-badge-advertencia {
+  background-color: var(--fw-warning-soft);
+  color: var(--fw-warning);
+}
+
+.fw-badge-peligro {
+  background-color: var(--fw-danger-soft);
+  color: var(--fw-danger);
+}
+
+.fw-badge-neutro {
+  background-color: var(--fw-surface-alt);
+  color: var(--fw-muted);
+}

@@ -1,0 +1,45 @@
+.fw-estrellas {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.fw-estrellas-lista {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.1rem;
+}
+
+.fw-estrella,
+.fw-estrella-btn {
+  font-size: 1.05rem;
+  line-height: 1;
+  color: var(--fw-border);
+}
+
+.fw-estrella-btn {
+  background: transparent;
+  border: none;
+  padding: 0.15rem;
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+
+.fw-estrella-btn:hover {
+  transform: scale(1.12);
+}
+
+.fw-estrella-activa {
+  color: #f59e0b;
+}
+
+.fw-estrellas-texto {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--fw-text);
+}
+
+.fw-estrellas-total {
+  font-weight: 400;
+  color: var(--fw-muted);
+}
