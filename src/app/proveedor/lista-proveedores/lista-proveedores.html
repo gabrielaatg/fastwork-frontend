@@ -1,0 +1,90 @@
+<section class="fw-directorio-pagina">
+  <header class="fw-directorio-cabecera">
+    <div>
+      <h1 class="fw-directorio-titulo">Directorio de Proveedores en Trujillo</h1>
+      <p class="fw-directorio-subtitulo">
+        Compara especialistas por oficio, rango referencial de tarifas y reputación verificada.
+      </p>
+    </div>
+    <span class="fw-contador-resultados">
+      {{ proveedores().length }}
+      {{ proveedores().length === 1 ? 'proveedor encontrado' : 'proveedores encontrados' }}
+    </span>
+  </header>
+
+  <app-alerta-mensaje [error]="errorHttp()" [cerrable]="true" (cerrado)="errorHttp.set(null)" />
+
+  <div class="fw-directorio-layout">
+    <aside class="fw-filtros-panel" aria-label="Filtros del directorio">
+      <div class="fw-filtros-top">
+        <h2>Filtros</h2>
+        <button type="button" class="fw-btn-limpiar" (click)="limpiarFiltros()">Limpiar</button>
+      </div>
+
+      <div class="fw-filtro-grupo">
+        <h3>Oficios técnicos</h3>
+        <div class="fw-checkboxes">
+          @for (oficio of oficios(); track oficio.idOficio) {
+            <label class="fw-check-item">
+              <input
+                type="checkbox"
+                [checked]="estaOficioSeleccionado(oficio.idOficio)"
+                (change)="alternarOficio(oficio.idOficio)"
+              />
+              <span>{{ oficio.nombreOficio }}</span>
+            </label>
+          }
+        </div>
+      </div>
+
+      <div class="fw-filtro-grupo">
+        <label class="fw-filtro-label" for="filtro-disponibilidad">Disponibilidad</label>
+        <select
+          id="filtro-disponibilidad"
+          class="fw-select"
+          [value]="disponibilidadSeleccionada()"
+          (change)="cambiarDisponibilidad($any($event.target).value)"
+        >
+          <option value="">Todas</option>
+          <option value="DISPONIBLE">Disponible</option>
+          <option value="OCUPADO">Ocupado</option>
+          <option value="NO_DISPONIBLE">No disponible</option>
+        </select>
+      </div>
+
+      <div class="fw-filtro-grupo">
+        <label class="fw-filtro-label" for="filtro-calificacion">Calificación mínima</label>
+        <select
+          id="filtro-calificacion"
+          class="fw-select"
+          [value]="calificacionMinima() ?? ''"
+          (change)="cambiarCalificacion($any($event.target).value)"
+        >
+          <option value="">Todas las puntuaciones</option>
+          <option value="3">3.0 estrellas o más</option>
+          <option value="4">4.0 estrellas o más</option>
+          <option value="4.5">4.5 estrellas o más</option>
+        </select>
+      </div>
+    </aside>
+
+    <div class="fw-resultados-area">
+      @if (cargando()) {
+        <div class="fw-estado-caja">Buscando proveedores disponibles en Trujillo...</div>
+      } @else if (proveedores().length === 0) {
+        <div class="fw-estado-caja">
+          <p>No se encontraron proveedores con los filtros seleccionados.</p>
+          <button type="button" class="fw-btn-secundario" (click)="limpiarFiltros()">
+            Restablecer filtros
+          </button>
+        </div>
+      } @else {
+        <div class="fw-grid-proveedores">
+          @for (proveedor of proveedores(); track proveedor.idPerfilProveedor) {
+            <app-tarjeta-proveedor [proveedor]="proveedor" />
+          }
+        </div>
+      }
+    </div>
+  </div>
+</section>

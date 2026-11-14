@@ -1,0 +1,48 @@
+<article class="fw-card-proveedor">
+  <header class="fw-card-cabecera">
+    <div>
+      <h2 class="fw-card-nombre">{{ proveedor().nombres }} {{ proveedor().apellidos }}</h2>
+      <div class="fw-card-rating">
+        <app-calificacion-estrellas
+          [valor]="proveedor().calificacionPromedio"
+          [soloLectura]="true"
+          [totalResenas]="proveedor().totalResenas"
+        />
+      </div>
+    </div>
+
+    <div class="fw-card-badges">
+      <app-badge-estado [estado]="proveedor().estadoVerificacion" />
+      <app-badge-estado [estado]="proveedor().estadoDisponibilidad" />
+    </div>
+  </header>
+
+  @if (proveedor().descripcionPerfil) {
+    <p class="fw-card-desc">{{ proveedor().descripcionPerfil }}</p>
+  }
+
+  <div class="fw-card-oficios">
+    @if (proveedor().oficios.length === 0) {
+      <span class="fw-sin-oficios">Sin oficios registrados aún</span>
+    } @else {
+      <ul class="fw-oficios-lista">
+        @for (oficio of proveedor().oficios; track oficio.idProveedorOficio) {
+          <li class="fw-oficio-chip">
+            <span class="fw-oficio-nombre">{{ oficio.nombreOficio }}</span>
+            <span class="fw-oficio-tarifa">
+              S/ {{ oficio.precioMinimo | number: '1.2-2' }} – S/
+              {{ oficio.precioMaximo | number: '1.2-2' }}
+            </span>
+          </li>
+        }
+      </ul>
+    }
+  </div>
+
+  <footer class="fw-card-pie">
+    <span class="fw-card-contacto">Tel. {{ proveedor().telefono }}</span>
+    <a class="fw-btn-detalle" [routerLink]="['/proveedores', proveedor().idPerfilProveedor]">
+      Ver perfil y tarifas
+    </a>
+  </footer>
+</article>

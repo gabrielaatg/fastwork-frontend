@@ -1,0 +1,118 @@
+.fw-detalle-pagina {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.fw-migas {
+  font-size: 0.9rem;
+}
+
+.fw-estado-caja {
+  padding: 2.5rem;
+  text-align: center;
+  background-color: var(--fw-surface);
+  border: 1px solid var(--fw-border);
+  border-radius: var(--fw-radius);
+  color: var(--fw-muted);
+}
+
+.fw-detalle-cabecera {
+  background-color: var(--fw-surface);
+  border: 1px solid var(--fw-border);
+  border-radius: var(--fw-radius);
+  padding: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1.5rem;
+}
+
+.fw-detalle-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.fw-badges {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.fw-detalle-nombre {
+  margin: 0;
+  font-size: 1.6rem;
+}
+
+.fw-detalle-desc {
+  margin: 0.25rem 0;
+  color: var(--fw-text);
+  max-width: 72ch;
+}
+
+.fw-contacto-fila {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  font-size: 0.9rem;
+  color: var(--fw-muted);
+}
+
+.fw-btn-solicitar {
+  display: inline-block;
+  padding: 0.75rem 1.35rem;
+  border-radius: var(--fw-radius);
+  background-color: var(--fw-primary);
+  color: #ffffff;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.fw-btn-solicitar:hover {
+  background-color: var(--fw-primary-hover);
+  text-decoration: none;
+}
+
+.fw-bloque {
+  background-color: var(--fw-surface);
+  border: 1px solid var(--fw-border);
+  border-radius: var(--fw-radius);
+  padding: 1.35rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.fw-bloque-titulo {
+  margin: 0;
+  font-size: 1.15rem;
+}
+
+.fw-tabla {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.925rem;
+}
+
+.fw-tabla th,
+.fw-tabla td {
+  text-align: left;
+  padding: 0.75rem;
+  border-bottom: 1px solid var(--fw-border);
+}
+
+.fw-tabla th {
+  color: var(--fw-muted);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+}
+
+.fw-tarifa-celda {
+  color: var(--fw-primary);
+  font-weight: 600;
+}
+
+.fw-vacio {
+  margin: 0;
+  color: var(--fw-muted);
+}
