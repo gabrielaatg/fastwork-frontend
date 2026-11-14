@@ -1,0 +1,61 @@
+<section class="fw-auth-pagina">
+  <div class="fw-auth-tarjeta">
+    <div class="fw-auth-cabecera">
+      <h1 class="fw-auth-titulo">Iniciar sesión</h1>
+      <p class="fw-auth-subtitulo">
+        Accede a Fast Work para gestionar tus servicios y contactos en Trujillo.
+      </p>
+    </div>
+
+    <app-alerta-mensaje [error]="errorHttp()" [cerrable]="true" (cerrado)="errorHttp.set(null)" />
+
+    <form class="fw-auth-form" (submit)="alEnviar($event)" novalidate>
+      <div class="fw-campo">
+        <label class="fw-label" for="login-correo">Correo electrónico</label>
+        <input
+          id="login-correo"
+          type="email"
+          autocomplete="email"
+          class="fw-input"
+          placeholder="usuario@correo.com"
+          [formField]="formulario.correo"
+        />
+        @if (formulario.correo().touched() && formulario.correo().invalid()) {
+          <ul class="fw-errores-campo">
+            @for (error of formulario.correo().errors(); track error.kind) {
+              <li>{{ error.message }}</li>
+            }
+          </ul>
+        }
+      </div>
+
+      <div class="fw-campo">
+        <label class="fw-label" for="login-password">Contraseña</label>
+        <input
+          id="login-password"
+          type="password"
+          autocomplete="current-password"
+          class="fw-input"
+          placeholder="Ingresa tu contraseña"
+          [formField]="formulario.password"
+        />
+        @if (formulario.password().touched() && formulario.password().invalid()) {
+          <ul class="fw-errores-campo">
+            @for (error of formulario.password().errors(); track error.kind) {
+              <li>{{ error.message }}</li>
+            }
+          </ul>
+        }
+      </div>
+
+      <button type="submit" class="fw-btn-primario" [disabled]="cargando()">
+        {{ cargando() ? 'Ingresando...' : 'Ingresar' }}
+      </button>
+    </form>
+
+    <p class="fw-auth-pie">
+      ¿Aún no tienes cuenta?
+      <a routerLink="/registro">Regístrate aquí</a>
+    </p>
+  </div>
+</section>

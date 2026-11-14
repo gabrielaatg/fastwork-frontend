@@ -1,0 +1,73 @@
+.fw-encuesta-pagina {
+  display: flex;
+  justify-content: center;
+  padding: 1rem 0;
+}
+
+.fw-encuesta-tarjeta {
+  width: 100%;
+  max-width: 640px;
+  background-color: var(--fw-surface);
+  border: 1px solid var(--fw-border);
+  border-radius: var(--fw-radius);
+  padding: 1.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.fw-titulo {
+  margin: 0;
+  font-size: 1.45rem;
+}
+
+.fw-subtitulo {
+  margin: 0.3rem 0 0;
+  color: var(--fw-muted);
+}
+
+.fw-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
+}
+
+.fw-campo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.fw-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.fw-textarea {
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--fw-border);
+  border-radius: var(--fw-radius);
+}
+
+.fw-error-texto {
+  margin: 0;
+  color: var(--fw-danger);
+  font-size: 0.8rem;
+}
+
+.fw-btn-primario {
+  align-self: flex-end;
+  padding: 0.68rem 1.35rem;
+  border: none;
+  border-radius: var(--fw-radius);
+  background-color: var(--fw-primary);
+  color: #ffffff;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.fw-btn-primario:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}

@@ -1,0 +1,62 @@
+<section class="fw-encuesta-pagina">
+  <div class="fw-encuesta-tarjeta">
+    <header>
+      <h1 class="fw-titulo">Encuesta de Evaluación del Piloto</h1>
+      <p class="fw-subtitulo">
+        Tu opinión nos ayuda a mejorar la usabilidad y experiencia de Fast Work en Trujillo.
+      </p>
+    </header>
+
+    <app-alerta-mensaje [error]="errorHttp()" [cerrable]="true" (cerrado)="errorHttp.set(null)" />
+    @if (mensajeExito()) {
+      <app-alerta-mensaje
+        tipo="exito"
+        [mensaje]="mensajeExito()"
+        [cerrable]="true"
+        (cerrado)="mensajeExito.set(null)"
+      />
+    }
+
+    <form class="fw-form" (submit)="alEnviar($event)" novalidate>
+      <div class="fw-campo">
+        <span class="fw-label">1. Facilidad de uso de la plataforma (Usabilidad)</span>
+        <app-calificacion-estrellas
+          [(valor)]="puntajeUsabilidad"
+          [soloLectura]="false"
+          [mostrarNumero]="true"
+        />
+      </div>
+
+      <div class="fw-campo">
+        <span class="fw-label">2. Nivel de satisfacción general con el servicio</span>
+        <app-calificacion-estrellas
+          [(valor)]="puntajeSatisfaccion"
+          [soloLectura]="false"
+          [mostrarNumero]="true"
+        />
+      </div>
+
+      @if (errorPuntajes()) {
+        <p class="fw-error-texto">{{ errorPuntajes() }}</p>
+      }
+
+      <div class="fw-campo">
+        <label class="fw-label" for="piloto-obs">Observaciones o sugerencias (opcional)</label>
+        <textarea
+          id="piloto-obs"
+          rows="4"
+          class="fw-textarea"
+          placeholder="Cuéntanos qué funcionó bien o qué podemos mejorar..."
+          [formField]="formulario.observaciones"
+        ></textarea>
+        @if (formulario.observaciones().touched() && formulario.observaciones().invalid()) {
+          <span class="fw-error-texto">{{ formulario.observaciones().errors()[0]?.message }}</span>
+        }
+      </div>
+
+      <button type="submit" class="fw-btn-primario" [disabled]="enviando()">
+        {{ enviando() ? 'Enviando evaluación...' : 'Enviar encuesta' }}
+      </button>
+    </form>
+  </div>
+</section>

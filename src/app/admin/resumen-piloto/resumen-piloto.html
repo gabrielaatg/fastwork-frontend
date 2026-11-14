@@ -1,0 +1,66 @@
+<section class="fw-piloto-admin">
+  <header class="fw-cabecera">
+    <div>
+      <h1 class="fw-titulo">Tablero Estadístico del Piloto</h1>
+      <p class="fw-subtitulo">
+        Métricas de usabilidad, satisfacción y adopción de Fast Work en Trujillo.
+      </p>
+    </div>
+    <button
+      type="button"
+      class="fw-btn-secundario"
+      [disabled]="cargando()"
+      (click)="cargarResumen()"
+    >
+      {{ cargando() ? 'Actualizando...' : 'Actualizar métricas' }}
+    </button>
+  </header>
+
+  <app-alerta-mensaje [error]="errorHttp()" [cerrable]="true" (cerrado)="errorHttp.set(null)" />
+
+  @if (cargando() && !resumen()) {
+    <div class="fw-estado-caja">Cargando estadísticas del piloto...</div>
+  } @else if (resumen(); as datos) {
+    <div class="fw-kpi-grid">
+      <article class="fw-kpi-card">
+        <span class="fw-kpi-label">Promedio de usabilidad</span>
+        <strong class="fw-kpi-valor">{{ datos.promedioUsabilidad | number: '1.2-2' }} / 5</strong>
+        <app-calificacion-estrellas
+          [valor]="datos.promedioUsabilidad"
+          [soloLectura]="true"
+          [mostrarNumero]="false"
+        />
+      </article>
+
+      <article class="fw-kpi-card">
+        <span class="fw-kpi-label">Promedio de satisfacción</span>
+        <strong class="fw-kpi-valor">{{ datos.promedioSatisfaccion | number: '1.2-2' }} / 5</strong>
+        <app-calificacion-estrellas
+          [valor]="datos.promedioSatisfaccion"
+          [soloLectura]="true"
+          [mostrarNumero]="false"
+        />
+      </article>
+
+      <article class="fw-kpi-card">
+        <span class="fw-kpi-label">Encuestas registradas</span>
+        <strong class="fw-kpi-valor">{{ datos.totalEncuestas }}</strong>
+      </article>
+
+      <article class="fw-kpi-card">
+        <span class="fw-kpi-label">Usuarios registrados</span>
+        <strong class="fw-kpi-valor">{{ datos.totalUsuariosRegistrados }}</strong>
+      </article>
+
+      <article class="fw-kpi-card">
+        <span class="fw-kpi-label">Proveedores verificados</span>
+        <strong class="fw-kpi-valor">{{ datos.totalProveedoresVerificados }}</strong>
+      </article>
+
+      <article class="fw-kpi-card">
+        <span class="fw-kpi-label">Solicitudes finalizadas</span>
+        <strong class="fw-kpi-valor">{{ datos.totalSolicitudesFinalizadas }}</strong>
+      </article>
+    </div>
+  }
+</section>

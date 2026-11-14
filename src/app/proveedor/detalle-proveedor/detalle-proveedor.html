@@ -1,0 +1,81 @@
+<section class="fw-detalle-pagina">
+  <div class="fw-migas">
+    <a routerLink="/directorio">&larr; Volver al directorio</a>
+  </div>
+
+  <app-alerta-mensaje [error]="errorHttp()" />
+
+  @if (cargando()) {
+    <div class="fw-estado-caja">Cargando perfil del proveedor...</div>
+  } @else if (detalle(); as proveedor) {
+    <article class="fw-detalle-cabecera">
+      <div class="fw-detalle-info">
+        <div class="fw-badges">
+          <app-badge-estado [estado]="proveedor.estadoVerificacion" />
+          <app-badge-estado [estado]="proveedor.estadoDisponibilidad" />
+        </div>
+        <h1 class="fw-detalle-nombre">{{ proveedor.nombres }} {{ proveedor.apellidos }}</h1>
+        <app-calificacion-estrellas
+          [valor]="proveedor.calificacionPromedio"
+          [soloLectura]="true"
+          [totalResenas]="proveedor.totalResenas"
+        />
+        @if (proveedor.descripcionPerfil) {
+          <p class="fw-detalle-desc">{{ proveedor.descripcionPerfil }}</p>
+        }
+        <div class="fw-contacto-fila">
+          <span><strong>Teléfono:</strong> {{ proveedor.telefono }}</span>
+          <span><strong>Correo:</strong> {{ proveedor.correo }}</span>
+          <span><strong>Cobertura:</strong> Trujillo, Perú</span>
+        </div>
+      </div>
+
+      @if (esCliente()) {
+        <div class="fw-detalle-cta">
+          <a
+            class="fw-btn-solicitar"
+            [routerLink]="['/solicitudes/nueva', proveedor.idPerfilProveedor]"
+          >
+            Solicitar servicio
+          </a>
+        </div>
+      }
+    </article>
+
+    <section class="fw-bloque">
+      <h2 class="fw-bloque-titulo">Oficios y tarifas referenciales</h2>
+      @if (proveedor.oficios.length === 0) {
+        <p class="fw-vacio">Este proveedor aún no ha registrado tarifas de oficios.</p>
+      } @else {
+        <table class="fw-tabla">
+          <thead>
+            <tr>
+              <th>Oficio</th>
+              <th>Rango referencial</th>
+              <th>Detalle de tarifa</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (oficio of proveedor.oficios; track oficio.idProveedorOficio) {
+              <tr>
+                <td>
+                  <strong>{{ oficio.nombreOficio }}</strong>
+                </td>
+                <td class="fw-tarifa-celda">
+                  S/ {{ oficio.precioMinimo | number: '1.2-2' }} – S/
+                  {{ oficio.precioMaximo | number: '1.2-2' }}
+                </td>
+                <td>{{ oficio.detalleTarifa || 'Sin observación adicional' }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      }
+    </section>
+
+    <section class="fw-bloque">
+      <h2 class="fw-bloque-titulo">Reseñas de clientes ({{ proveedor.resenas.length }})</h2>
+      <app-lista-resenas [resenas]="proveedor.resenas" />
+    </section>
+  }
+</section>

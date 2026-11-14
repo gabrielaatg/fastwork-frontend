@@ -1,0 +1,147 @@
+<section class="fw-solicitud-pagina">
+  <div class="fw-migas">
+    <a [routerLink]="['/proveedores', idPerfilProveedor()]"
+      >&larr; Volver al perfil del proveedor</a
+    >
+  </div>
+
+  <app-alerta-mensaje [error]="errorHttp()" [cerrable]="true" (cerrado)="errorHttp.set(null)" />
+
+  @if (cargandoProveedor()) {
+    <div class="fw-estado-caja">Cargando datos del proveedor...</div>
+  } @else if (proveedor(); as detalle) {
+    <div class="fw-solicitud-tarjeta">
+      <header class="fw-solicitud-cabecera">
+        <h1>Nueva solicitud de servicio</h1>
+        <p>
+          Proveedor seleccionado:
+          <strong>{{ detalle.nombres }} {{ detalle.apellidos }}</strong> (Trujillo, Perú)
+        </p>
+      </header>
+
+      @if (detalle.oficios.length === 0) {
+        <app-alerta-mensaje
+          tipo="info"
+          mensaje="Este proveedor aún no tiene oficios con tarifa configurados."
+        />
+      } @else {
+        <form class="fw-form" (submit)="alEnviar($event)" novalidate>
+          <div class="fw-campo">
+            <label class="fw-label" for="sol-oficio">Oficio requerido</label>
+            <select id="sol-oficio" class="fw-input" [formField]="formulario.idOficio">
+              <option value="">Selecciona uno de los oficios del proveedor</option>
+              @for (oficio of detalle.oficios; track oficio.idProveedorOficio) {
+                <option [value]="'' + oficio.idOficio">
+                  {{ oficio.nombreOficio }} (S/ {{ oficio.precioMinimo | number: '1.2-2' }} – S/
+                  {{ oficio.precioMaximo | number: '1.2-2' }})
+                </option>
+              }
+            </select>
+            @if (formulario.idOficio().touched() && formulario.idOficio().invalid()) {
+              <span class="fw-error-texto">{{ formulario.idOficio().errors()[0]?.message }}</span>
+            }
+          </div>
+
+          <div class="fw-campo">
+            <label class="fw-label" for="sol-direccion">Dirección en Trujillo</label>
+            <input
+              id="sol-direccion"
+              type="text"
+              class="fw-input"
+              placeholder="Ej. Av. Larco 450, Urb. La Merced, Trujillo"
+              [formField]="formulario.direccionTrujillo"
+            />
+            @if (
+              formulario.direccionTrujillo().touched() && formulario.direccionTrujillo().invalid()
+            ) {
+              <span class="fw-error-texto">
+                {{ formulario.direccionTrujillo().errors()[0]?.message }}
+              </span>
+            }
+          </div>
+
+          <div class="fw-fila-tres">
+            <div class="fw-campo">
+              <label class="fw-label" for="sol-fecha">Fecha programada</label>
+              <input
+                id="sol-fecha"
+                type="date"
+                class="fw-input"
+                [formField]="formulario.fechaProgramada"
+              />
+              @if (
+                formulario.fechaProgramada().touched() && formulario.fechaProgramada().invalid()
+              ) {
+                <span class="fw-error-texto">
+                  {{ formulario.fechaProgramada().errors()[0]?.message }}
+                </span>
+              }
+            </div>
+
+            <div class="fw-campo">
+              <label class="fw-label" for="sol-hora">Hora programada</label>
+              <input
+                id="sol-hora"
+                type="time"
+                class="fw-input"
+                [formField]="formulario.horaProgramada"
+              />
+              @if (formulario.horaProgramada().touched() && formulario.horaProgramada().invalid()) {
+                <span class="fw-error-texto">
+                  {{ formulario.horaProgramada().errors()[0]?.message }}
+                </span>
+              }
+            </div>
+
+            <div class="fw-campo">
+              <label class="fw-label" for="sol-presupuesto">Presupuesto referencial (S/)</label>
+              <input
+                id="sol-presupuesto"
+                type="number"
+                step="0.5"
+                class="fw-input"
+                placeholder="Opcional"
+                [formField]="formulario.presupuestoReferencial"
+              />
+              @if (
+                formulario.presupuestoReferencial().touched() &&
+                formulario.presupuestoReferencial().invalid()
+              ) {
+                <span class="fw-error-texto">
+                  {{ formulario.presupuestoReferencial().errors()[0]?.message }}
+                </span>
+              }
+            </div>
+          </div>
+
+          <div class="fw-campo">
+            <label class="fw-label" for="sol-desc">Descripción del trabajo</label>
+            <textarea
+              id="sol-desc"
+              rows="4"
+              class="fw-textarea"
+              placeholder="Detalla el problema, materiales si cuentas con ellos o referencias de acceso..."
+              [formField]="formulario.descripcionTrabajo"
+            ></textarea>
+            @if (
+              formulario.descripcionTrabajo().touched() && formulario.descripcionTrabajo().invalid()
+            ) {
+              <span class="fw-error-texto">
+                {{ formulario.descripcionTrabajo().errors()[0]?.message }}
+              </span>
+            }
+          </div>
+
+          <div class="fw-form-pie">
+            <a class="fw-btn-secundario" [routerLink]="['/proveedores', detalle.idPerfilProveedor]">
+              Cancelar
+            </a>
+            <button type="submit" class="fw-btn-primario" [disabled]="enviando()">
+              {{ enviando() ? 'Enviando solicitud...' : 'Enviar solicitud' }}
+            </button>
+          </div>
+        </form>
+      }
+    </div>
+  }
+</section>

@@ -1,0 +1,186 @@
+<section class="fw-perfil-pagina">
+  <header class="fw-perfil-cabecera">
+    <div>
+      <h1 class="fw-perfil-titulo">Mi Perfil Comercial</h1>
+      <p class="fw-perfil-subtitulo">
+        Configura tu disponibilidad, documento de identidad y tarifas referenciales en Trujillo.
+      </p>
+    </div>
+
+    @if (estadoVerificacion(); as verificacion) {
+      <div class="fw-estado-verificacion">
+        <span>Verificación:</span>
+        <app-badge-estado [estado]="verificacion" />
+      </div>
+    }
+  </header>
+
+  <app-alerta-mensaje [error]="errorHttp()" [cerrable]="true" (cerrado)="errorHttp.set(null)" />
+  @if (mensajeExito()) {
+    <app-alerta-mensaje
+      tipo="exito"
+      [mensaje]="mensajeExito()"
+      [cerrable]="true"
+      (cerrado)="mensajeExito.set(null)"
+    />
+  }
+
+  @if (cargandoInicial()) {
+    <div class="fw-estado-caja">Cargando información de tu perfil...</div>
+  } @else {
+    <section class="fw-bloque">
+      <div class="fw-disponibilidad-fila">
+        <div>
+          <h2 class="fw-bloque-titulo">Estado de disponibilidad</h2>
+          <p class="fw-bloque-ayuda">Indica a los clientes si puedes recibir nuevas solicitudes.</p>
+        </div>
+        <div class="fw-disponibilidad-botones" role="group" aria-label="Disponibilidad">
+          @for (estado of ['DISPONIBLE', 'OCUPADO', 'NO_DISPONIBLE']; track estado) {
+            <button
+              type="button"
+              class="fw-disp-btn"
+              [class.fw-disp-btn-activo]="estadoDisponibilidad() === estado"
+              [disabled]="guardandoDisponibilidad()"
+              (click)="cambiarDisponibilidad($any(estado))"
+            >
+              {{
+                estado === 'NO_DISPONIBLE'
+                  ? 'No disponible'
+                  : estado === 'OCUPADO'
+                    ? 'Ocupado'
+                    : 'Disponible'
+              }}
+            </button>
+          }
+        </div>
+      </div>
+    </section>
+
+    <form class="fw-bloque" (submit)="alGuardarPerfil($event)" novalidate>
+      <h2 class="fw-bloque-titulo">Datos del perfil</h2>
+
+      <div class="fw-campo">
+        <label class="fw-label" for="prov-dni">Documento de identidad (DNI)</label>
+        <input
+          id="prov-dni"
+          type="text"
+          class="fw-input fw-input-corto"
+          [formField]="formulario.documentoIdentidad"
+        />
+        @if (
+          formulario.documentoIdentidad().touched() && formulario.documentoIdentidad().invalid()
+        ) {
+          <ul class="fw-errores-campo">
+            @for (error of formulario.documentoIdentidad().errors(); track error.kind) {
+              <li>{{ error.message }}</li>
+            }
+          </ul>
+        }
+      </div>
+
+      <div class="fw-campo">
+        <label class="fw-label" for="prov-desc">Descripción comercial y experiencia</label>
+        <textarea
+          id="prov-desc"
+          rows="3"
+          class="fw-textarea"
+          placeholder="Describe tus años de experiencia, herramientas y tipo de trabajos que realizas en Trujillo..."
+          [formField]="formulario.descripcionPerfil"
+        ></textarea>
+      </div>
+
+      <div class="fw-oficios-cabecera">
+        <div>
+          <h3 class="fw-subtitulo-seccion">Oficios y tarifas referenciales</h3>
+          <p class="fw-bloque-ayuda">
+            Puedes ofrecer uno o varios oficios con su rango de precios.
+          </p>
+        </div>
+        <button type="button" class="fw-btn-secundario" (click)="agregarOficio()">
+          + Agregar oficio
+        </button>
+      </div>
+
+      @if (errorDuplicados()) {
+        <p class="fw-error-texto">{{ errorDuplicados() }}</p>
+      }
+
+      @if (formulario.oficios.length === 0) {
+        <p class="fw-vacio">Aún no agregas oficios. Pulsa "Agregar oficio" para definir tarifas.</p>
+      } @else {
+        <div class="fw-tarifas-lista">
+          @for (fila of formulario.oficios; track $index) {
+            <div class="fw-tarifa-fila">
+              <div class="fw-campo">
+                <label class="fw-label" [for]="'oficio-' + $index">Oficio</label>
+                <select [id]="'oficio-' + $index" class="fw-input" [formField]="fila.idOficio">
+                  <option value="">Selecciona un oficio</option>
+                  @for (oficio of catalogoOficios(); track oficio.idOficio) {
+                    <option [value]="'' + oficio.idOficio">{{ oficio.nombreOficio }}</option>
+                  }
+                </select>
+                @if (fila.idOficio().touched() && fila.idOficio().invalid()) {
+                  <span class="fw-error-texto">{{ fila.idOficio().errors()[0]?.message }}</span>
+                }
+              </div>
+
+              <div class="fw-campo">
+                <label class="fw-label" [for]="'pmin-' + $index">Precio mín. (S/)</label>
+                <input
+                  [id]="'pmin-' + $index"
+                  type="number"
+                  step="0.5"
+                  class="fw-input"
+                  [formField]="fila.precioMinimo"
+                />
+                @if (fila.precioMinimo().touched() && fila.precioMinimo().invalid()) {
+                  <span class="fw-error-texto">{{ fila.precioMinimo().errors()[0]?.message }}</span>
+                }
+              </div>
+
+              <div class="fw-campo">
+                <label class="fw-label" [for]="'pmax-' + $index">Precio máx. (S/)</label>
+                <input
+                  [id]="'pmax-' + $index"
+                  type="number"
+                  step="0.5"
+                  class="fw-input"
+                  [formField]="fila.precioMaximo"
+                />
+                @if (fila.precioMaximo().touched() && fila.precioMaximo().invalid()) {
+                  <span class="fw-error-texto">{{ fila.precioMaximo().errors()[0]?.message }}</span>
+                }
+              </div>
+
+              <div class="fw-campo">
+                <label class="fw-label" [for]="'det-' + $index">Detalle (opcional)</label>
+                <input
+                  [id]="'det-' + $index"
+                  type="text"
+                  class="fw-input"
+                  placeholder="Ej. Diagnóstico y reparación básica"
+                  [formField]="fila.detalleTarifa"
+                />
+              </div>
+
+              <button
+                type="button"
+                class="fw-btn-quitar"
+                aria-label="Quitar oficio"
+                (click)="quitarOficio($index)"
+              >
+                Quitar
+              </button>
+            </div>
+          }
+        </div>
+      }
+
+      <div class="fw-form-pie">
+        <button type="submit" class="fw-btn-primario" [disabled]="guardandoPerfil()">
+          {{ guardandoPerfil() ? 'Guardando cambios...' : 'Guardar perfil comercial' }}
+        </button>
+      </div>
+    </form>
+  }
+</section>

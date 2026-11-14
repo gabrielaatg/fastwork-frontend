@@ -1,0 +1,129 @@
+.fw-directorio-pagina {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.fw-directorio-cabecera {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 1rem;
+}
+
+.fw-directorio-titulo {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.fw-directorio-subtitulo {
+  margin: 0.25rem 0 0;
+  color: var(--fw-muted);
+  font-size: 0.925rem;
+}
+
+.fw-contador-resultados {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--fw-muted);
+}
+
+.fw-directorio-layout {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.fw-filtros-panel {
+  position: sticky;
+  top: 1rem;
+  background-color: var(--fw-surface);
+  border: 1px solid var(--fw-border);
+  border-radius: var(--fw-radius);
+  padding: 1.15rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
+}
+
+.fw-filtros-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.fw-filtros-top h2 {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.fw-btn-limpiar {
+  background: none;
+  border: none;
+  color: var(--fw-primary);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.fw-filtro-grupo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.fw-filtro-grupo h3,
+.fw-filtro-label {
+  margin: 0;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.fw-checkboxes {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+.fw-check-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+
+.fw-select {
+  width: 100%;
+  padding: 0.5rem 0.65rem;
+  border: 1px solid var(--fw-border);
+  border-radius: var(--fw-radius);
+  background-color: var(--fw-surface);
+}
+
+.fw-grid-proveedores {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.fw-estado-caja {
+  padding: 2.5rem;
+  text-align: center;
+  background-color: var(--fw-surface);
+  border: 1px solid var(--fw-border);
+  border-radius: var(--fw-radius);
+  color: var(--fw-muted);
+}
+
+.fw-btn-secundario {
+  margin-top: 0.75rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--fw-border);
+  border-radius: var(--fw-radius);
+  background-color: var(--fw-surface);
+  cursor: pointer;
+}

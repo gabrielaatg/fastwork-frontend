@@ -1,0 +1,35 @@
+<section class="fw-panel-oficio">
+  <h2 class="fw-panel-titulo">Registrar nuevo oficio</h2>
+  <app-alerta-mensaje [error]="errorHttp()" [cerrable]="true" (cerrado)="errorHttp.set(null)" />
+
+  <form class="fw-form" (submit)="alEnviar($event)" novalidate>
+    <div class="fw-campo">
+      <label class="fw-label" for="oficio-nombre">Nombre del oficio</label>
+      <input
+        id="oficio-nombre"
+        type="text"
+        class="fw-input"
+        placeholder="Ej. Carpintería"
+        [formField]="formulario.nombreOficio"
+      />
+      @if (formulario.nombreOficio().touched() && formulario.nombreOficio().invalid()) {
+        <span class="fw-error-texto">{{ formulario.nombreOficio().errors()[0]?.message }}</span>
+      }
+    </div>
+
+    <div class="fw-campo">
+      <label class="fw-label" for="oficio-desc">Descripción (opcional)</label>
+      <textarea
+        id="oficio-desc"
+        rows="3"
+        class="fw-textarea"
+        placeholder="Trabajos comprendidos en este oficio técnico..."
+        [formField]="formulario.descripcion"
+      ></textarea>
+    </div>
+
+    <button type="submit" class="fw-btn-primario" [disabled]="guardando()">
+      {{ guardando() ? 'Registrando...' : 'Agregar oficio al catálogo' }}
+    </button>
+  </form>
+</section>

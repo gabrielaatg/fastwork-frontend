@@ -1,0 +1,63 @@
+<article class="fw-card-solicitud" [class.fw-card-activa]="seleccionada()">
+  <header class="fw-card-cabecera">
+    <div>
+      <span class="fw-solicitud-id">Solicitud #{{ solicitud().idSolicitud }}</span>
+      <h2 class="fw-solicitud-oficio">{{ solicitud().nombreOficio }}</h2>
+    </div>
+    <app-badge-estado [estado]="solicitud().estado" />
+  </header>
+
+  <div class="fw-solicitud-meta">
+    @if (rolActual() === 'CLIENTE') {
+      <div>
+        <strong>Proveedor:</strong> {{ solicitud().nombreProveedor }} (Tel.
+        {{ solicitud().telefonoProveedor }})
+      </div>
+    } @else {
+      <div>
+        <strong>Cliente:</strong> {{ solicitud().nombreCliente }} (Tel.
+        {{ solicitud().telefonoCliente }})
+      </div>
+    }
+    <div>
+      <strong>Programación:</strong> {{ solicitud().fechaProgramada }} a las
+      {{ solicitud().horaProgramada }}
+    </div>
+    <div><strong>Dirección:</strong> {{ solicitud().direccionTrujillo }}</div>
+    @if (solicitud().presupuestoReferencial !== null) {
+      <div>
+        <strong>Presupuesto referencial:</strong> S/
+        {{ solicitud().presupuestoReferencial | number: '1.2-2' }}
+      </div>
+    }
+    <div class="fw-fecha-registro">
+      Creada el {{ solicitud().fechaCreacion | date: 'dd/MM/yyyy HH:mm' }}
+    </div>
+  </div>
+
+  <p class="fw-solicitud-desc">{{ solicitud().descripcionTrabajo }}</p>
+
+  <footer class="fw-card-acciones">
+    <div class="fw-acciones-estado">
+      @for (destino of transiciones(); track destino) {
+        <button
+          type="button"
+          class="fw-btn-estado"
+          [class.fw-btn-peligro]="esAccionPeligro(destino)"
+          (click)="cambiarEstado.emit(destino)"
+        >
+          {{ etiquetaAccion(destino) }}
+        </button>
+      }
+    </div>
+
+    <div class="fw-acciones-extra">
+      <button type="button" class="fw-btn-secundario" (click)="abrirChat.emit()">Mensajes</button>
+      @if (puedeCalificar()) {
+        <button type="button" class="fw-btn-primario" (click)="calificar.emit()">
+          Calificar servicio
+        </button>
+      }
+    </div>
+  </footer>
+</article>
