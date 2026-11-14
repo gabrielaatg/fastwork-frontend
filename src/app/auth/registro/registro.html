@@ -1,0 +1,184 @@
+<section class="fw-registro-pagina">
+  <div class="fw-registro-tarjeta">
+    <div class="fw-registro-cabecera">
+      <h1 class="fw-registro-titulo">Crear cuenta en Fast Work</h1>
+      <p class="fw-registro-subtitulo">
+        Regístrate como cliente o proveedor de oficios técnicos en Trujillo.
+      </p>
+    </div>
+
+    <div class="fw-selector-rol" role="group" aria-label="Tipo de cuenta">
+      <button
+        type="button"
+        class="fw-rol-btn"
+        [class.fw-rol-btn-activo]="modelo().rol === 'CLIENTE'"
+        (click)="seleccionarRol('CLIENTE')"
+      >
+        Soy Cliente
+        <span>Busco servicios técnicos</span>
+      </button>
+      <button
+        type="button"
+        class="fw-rol-btn"
+        [class.fw-rol-btn-activo]="modelo().rol === 'PROVEEDOR'"
+        (click)="seleccionarRol('PROVEEDOR')"
+      >
+        Soy Proveedor
+        <span>Ofrezco mis servicios</span>
+      </button>
+    </div>
+
+    <app-alerta-mensaje [error]="errorHttp()" [cerrable]="true" (cerrado)="errorHttp.set(null)" />
+
+    <form class="fw-registro-form" (submit)="alEnviar($event)" novalidate>
+      <div class="fw-fila-dos">
+        <div class="fw-campo">
+          <label class="fw-label" for="reg-nombres">Nombres</label>
+          <input
+            id="reg-nombres"
+            type="text"
+            class="fw-input"
+            placeholder="Carlos Alberto"
+            [formField]="formulario.nombres"
+          />
+          @if (formulario.nombres().touched() && formulario.nombres().invalid()) {
+            <ul class="fw-errores-campo">
+              @for (error of formulario.nombres().errors(); track error.kind) {
+                <li>{{ error.message }}</li>
+              }
+            </ul>
+          }
+        </div>
+
+        <div class="fw-campo">
+          <label class="fw-label" for="reg-apellidos">Apellidos</label>
+          <input
+            id="reg-apellidos"
+            type="text"
+            class="fw-input"
+            placeholder="Mendoza Paredes"
+            [formField]="formulario.apellidos"
+          />
+          @if (formulario.apellidos().touched() && formulario.apellidos().invalid()) {
+            <ul class="fw-errores-campo">
+              @for (error of formulario.apellidos().errors(); track error.kind) {
+                <li>{{ error.message }}</li>
+              }
+            </ul>
+          }
+        </div>
+      </div>
+
+      <div class="fw-fila-dos">
+        <div class="fw-campo">
+          <label class="fw-label" for="reg-correo">Correo electrónico</label>
+          <input
+            id="reg-correo"
+            type="email"
+            autocomplete="email"
+            class="fw-input"
+            placeholder="carlos@correo.com"
+            [formField]="formulario.correo"
+          />
+          @if (formulario.correo().touched() && formulario.correo().invalid()) {
+            <ul class="fw-errores-campo">
+              @for (error of formulario.correo().errors(); track error.kind) {
+                <li>{{ error.message }}</li>
+              }
+            </ul>
+          }
+        </div>
+
+        <div class="fw-campo">
+          <label class="fw-label" for="reg-telefono">Teléfono / WhatsApp</label>
+          <input
+            id="reg-telefono"
+            type="tel"
+            class="fw-input"
+            placeholder="948123456"
+            [formField]="formulario.telefono"
+          />
+          @if (formulario.telefono().touched() && formulario.telefono().invalid()) {
+            <ul class="fw-errores-campo">
+              @for (error of formulario.telefono().errors(); track error.kind) {
+                <li>{{ error.message }}</li>
+              }
+            </ul>
+          }
+        </div>
+      </div>
+
+      <div class="fw-fila-dos">
+        <div class="fw-campo">
+          <label class="fw-label" for="reg-password">Contraseña</label>
+          <input
+            id="reg-password"
+            type="password"
+            autocomplete="new-password"
+            class="fw-input"
+            placeholder="Mínimo 6 caracteres"
+            [formField]="formulario.password"
+          />
+          @if (formulario.password().touched() && formulario.password().invalid()) {
+            <ul class="fw-errores-campo">
+              @for (error of formulario.password().errors(); track error.kind) {
+                <li>{{ error.message }}</li>
+              }
+            </ul>
+          }
+        </div>
+
+        @if (modelo().rol === 'PROVEEDOR') {
+          <div class="fw-campo">
+            <label class="fw-label" for="reg-documento">Documento de identidad (DNI)</label>
+            <input
+              id="reg-documento"
+              type="text"
+              class="fw-input"
+              placeholder="Ej. 71234567"
+              [formField]="formulario.documentoIdentidad"
+            />
+            @if (
+              formulario.documentoIdentidad().touched() && formulario.documentoIdentidad().invalid()
+            ) {
+              <ul class="fw-errores-campo">
+                @for (error of formulario.documentoIdentidad().errors(); track error.kind) {
+                  <li>{{ error.message }}</li>
+                }
+              </ul>
+            }
+          </div>
+        }
+      </div>
+
+      <div class="fw-consentimiento">
+        <label class="fw-check-label">
+          <input type="checkbox" [formField]="formulario.aceptoPoliticaDatos" />
+          <span>
+            Acepto el tratamiento de mis datos personales conforme a la
+            <strong>Ley N.° 29733 (Ley de Protección de Datos Personales)</strong> para la
+            intermediación de servicios en Fast Work Trujillo.
+          </span>
+        </label>
+        @if (
+          formulario.aceptoPoliticaDatos().touched() && formulario.aceptoPoliticaDatos().invalid()
+        ) {
+          <ul class="fw-errores-campo">
+            @for (error of formulario.aceptoPoliticaDatos().errors(); track error.kind) {
+              <li>{{ error.message }}</li>
+            }
+          </ul>
+        }
+      </div>
+
+      <button type="submit" class="fw-btn-primario" [disabled]="cargando()">
+        {{ cargando() ? 'Creando cuenta...' : 'Registrarme' }}
+      </button>
+    </form>
+
+    <p class="fw-registro-pie">
+      ¿Ya tienes cuenta?
+      <a routerLink="/login">Inicia sesión</a>
+    </p>
+  </div>
+</section>
