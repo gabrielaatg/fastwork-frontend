@@ -1,0 +1,94 @@
+<section class="fw-agenda-pagina">
+  <header class="fw-agenda-cabecera">
+    <div>
+      <h1 class="fw-agenda-titulo">
+        {{ rolActual() === 'PROVEEDOR' ? 'Agenda de Solicitudes' : 'Mis Solicitudes de Servicio' }}
+      </h1>
+      <p class="fw-agenda-subtitulo">
+        Gestiona el ciclo de vida de cada servicio y coordina directamente por mensajería interna.
+      </p>
+    </div>
+  </header>
+
+  <app-alerta-mensaje [error]="errorHttp()" [cerrable]="true" (cerrado)="errorHttp.set(null)" />
+  @if (mensajeExito()) {
+    <app-alerta-mensaje
+      tipo="exito"
+      [mensaje]="mensajeExito()"
+      [cerrable]="true"
+      (cerrado)="mensajeExito.set(null)"
+    />
+  }
+
+  <div class="fw-tabs" role="tablist" aria-label="Filtrar solicitudes por estado">
+    @for (tab of estadosFiltro; track tab.valor) {
+      <button
+        type="button"
+        class="fw-tab"
+        [class.fw-tab-activo]="filtroEstado() === tab.valor"
+        (click)="seleccionarFiltro(tab.valor)"
+      >
+        {{ tab.etiqueta }}
+      </button>
+    }
+  </div>
+
+  <div class="fw-agenda-layout" [class.fw-con-panel]="modoPanel() !== 'ninguno'">
+    <div class="fw-lista-col">
+      @if (cargando()) {
+        <div class="fw-estado-caja">Cargando solicitudes...</div>
+      } @else if (solicitudesFiltradas().length === 0) {
+        <div class="fw-estado-caja">No tienes solicitudes para el filtro seleccionado.</div>
+      } @else {
+        <div class="fw-cards-lista">
+          @for (solicitud of solicitudesFiltradas(); track solicitud.idSolicitud) {
+            <app-tarjeta-solicitud
+              [solicitud]="solicitud"
+              [rolActual]="rolActual()"
+              [seleccionada]="solicitudActiva()?.idSolicitud === solicitud.idSolicitud"
+              (cambiarEstado)="alSolicitarCambioEstado(solicitud, $event)"
+              (abrirChat)="abrirChat(solicitud)"
+              (calificar)="abrirResena(solicitud)"
+            />
+          }
+        </div>
+      }
+    </div>
+
+    @if (modoPanel() === 'chat' && solicitudActiva(); as activa) {
+      <aside class="fw-panel-col">
+        <app-chat-solicitud
+          [idSolicitud]="activa.idSolicitud"
+          [tituloConversacion]="
+            activa.nombreOficio +
+            ' — ' +
+            (rolActual() === 'CLIENTE' ? activa.nombreProveedor : activa.nombreCliente)
+          "
+          (cerrado)="cerrarPanel()"
+        />
+      </aside>
+    }
+
+    @if (modoPanel() === 'resena' && solicitudActiva(); as activa) {
+      <aside class="fw-panel-col">
+        <app-formulario-resena
+          [idSolicitud]="activa.idSolicitud"
+          [nombreProveedor]="activa.nombreProveedor"
+          (resenaCreada)="alCrearResena()"
+          (cancelar)="cerrarPanel()"
+        />
+      </aside>
+    }
+  </div>
+
+  <app-modal-confirmacion
+    [abierto]="transicionPendiente() !== null"
+    [titulo]="tituloModalConfirmacion()"
+    [mensaje]="mensajeModalConfirmacion()"
+    variante="peligro"
+    textoConfirmar="Sí, confirmar"
+    [cargando]="procesandoTransicion()"
+    (confirmar)="confirmarTransicionPendiente()"
+    (cancelar)="transicionPendiente.set(null)"
+  />
+</section>

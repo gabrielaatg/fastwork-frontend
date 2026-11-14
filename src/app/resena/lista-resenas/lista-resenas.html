@@ -1,0 +1,24 @@
+@if (resenas().length === 0) {
+  <p class="fw-resenas-vacio">Este proveedor aún no registra reseñas de clientes.</p>
+} @else {
+  <ul class="fw-resenas-lista">
+    @for (resena of resenas(); track resena.idResena) {
+      <li class="fw-resena-item">
+        <div class="fw-resena-cabecera">
+          <div class="fw-resena-autor">
+            <strong>{{ resena.nombreCliente }}</strong>
+            <span class="fw-resena-fecha">{{ resena.fechaResena | date: 'dd/MM/yyyy HH:mm' }}</span>
+          </div>
+          <app-calificacion-estrellas
+            [valor]="resena.puntuacion"
+            [soloLectura]="true"
+            [mostrarNumero]="true"
+          />
+        </div>
+        @if (resena.comentario) {
+          <p class="fw-resena-comentario">{{ resena.comentario }}</p>
+        }
+      </li>
+    }
+  </ul>
+}

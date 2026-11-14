@@ -1,0 +1,51 @@
+.fw-resenas-vacio {
+  margin: 0;
+  padding: 1rem;
+  border-radius: var(--fw-radius);
+  border: 1px dashed var(--fw-border);
+  color: var(--fw-muted);
+  font-size: 0.9rem;
+}
+
+.fw-resenas-lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.fw-resena-item {
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--fw-border);
+  border-radius: var(--fw-radius);
+  background-color: var(--fw-surface);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.fw-resena-cabecera {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.fw-resena-autor {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.fw-resena-fecha {
+  color: var(--fw-muted);
+  font-size: 0.8rem;
+}
+
+.fw-resena-comentario {
+  margin: 0;
+  font-size: 0.925rem;
+  color: var(--fw-text);
+}

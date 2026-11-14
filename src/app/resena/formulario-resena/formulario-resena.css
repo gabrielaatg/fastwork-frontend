@@ -1,0 +1,92 @@
+.fw-panel-resena {
+  background-color: var(--fw-surface);
+  border: 1px solid var(--fw-border);
+  border-radius: var(--fw-radius);
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.fw-panel-cabecera {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.fw-panel-titulo {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.fw-panel-subtitulo {
+  margin: 0.2rem 0 0;
+  color: var(--fw-muted);
+  font-size: 0.875rem;
+}
+
+.fw-form-resena {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.fw-campo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.fw-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.fw-textarea {
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--fw-border);
+  border-radius: var(--fw-radius);
+  resize: vertical;
+}
+
+.fw-error-texto,
+.fw-errores-campo {
+  margin: 0;
+  color: var(--fw-danger);
+  font-size: 0.8rem;
+}
+
+.fw-errores-campo {
+  padding-left: 1.1rem;
+}
+
+.fw-acciones {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
+}
+
+.fw-btn-primario {
+  padding: 0.55rem 1rem;
+  border: none;
+  border-radius: var(--fw-radius);
+  background-color: var(--fw-primary);
+  color: #ffffff;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.fw-btn-primario:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.fw-btn-secundario {
+  padding: 0.55rem 0.9rem;
+  border: 1px solid var(--fw-border);
+  border-radius: var(--fw-radius);
+  background-color: var(--fw-surface);
+  cursor: pointer;
+}

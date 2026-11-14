@@ -1,0 +1,52 @@
+<section class="fw-panel-resena">
+  <header class="fw-panel-cabecera">
+    <div>
+      <h2 class="fw-panel-titulo">Calificar servicio</h2>
+      @if (nombreProveedor()) {
+        <p class="fw-panel-subtitulo">Proveedor: {{ nombreProveedor() }}</p>
+      }
+    </div>
+    <button type="button" class="fw-btn-secundario" (click)="cancelar.emit()">Cerrar</button>
+  </header>
+
+  <app-alerta-mensaje [error]="errorHttp()" [cerrable]="true" (cerrado)="errorHttp.set(null)" />
+
+  <form class="fw-form-resena" (submit)="alEnviar($event)" novalidate>
+    <div class="fw-campo">
+      <span class="fw-label">Puntuación</span>
+      <app-calificacion-estrellas
+        [(valor)]="puntuacion"
+        [soloLectura]="false"
+        [mostrarNumero]="true"
+      />
+      @if (errorPuntuacion()) {
+        <p class="fw-error-texto">{{ errorPuntuacion() }}</p>
+      }
+    </div>
+
+    <div class="fw-campo">
+      <label class="fw-label" for="resena-comentario">Comentario (opcional)</label>
+      <textarea
+        id="resena-comentario"
+        rows="4"
+        class="fw-textarea"
+        placeholder="Describe la puntualidad, calidad del trabajo y trato del proveedor..."
+        [formField]="formulario.comentario"
+      ></textarea>
+      @if (formulario.comentario().touched() && formulario.comentario().invalid()) {
+        <ul class="fw-errores-campo">
+          @for (error of formulario.comentario().errors(); track error.kind) {
+            <li>{{ error.message }}</li>
+          }
+        </ul>
+      }
+    </div>
+
+    <div class="fw-acciones">
+      <button type="button" class="fw-btn-secundario" (click)="cancelar.emit()">Cancelar</button>
+      <button type="submit" class="fw-btn-primario" [disabled]="cargando()">
+        {{ cargando() ? 'Enviando...' : 'Publicar reseña' }}
+      </button>
+    </div>
+  </form>
+</section>

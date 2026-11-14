@@ -1,0 +1,96 @@
+.fw-card-solicitud {
+  background-color: var(--fw-surface);
+  border: 1px solid var(--fw-border);
+  border-radius: var(--fw-radius);
+  padding: 1.15rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.fw-card-activa {
+  border-color: var(--fw-primary);
+  box-shadow: 0 0 0 2px var(--fw-primary-soft);
+}
+
+.fw-card-cabecera {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.fw-solicitud-id {
+  font-size: 0.75rem;
+  color: var(--fw-muted);
+  font-weight: 600;
+}
+
+.fw-solicitud-oficio {
+  margin: 0.1rem 0 0;
+  font-size: 1.05rem;
+}
+
+.fw-solicitud-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.875rem;
+}
+
+.fw-fecha-registro {
+  color: var(--fw-muted);
+  font-size: 0.8rem;
+}
+
+.fw-solicitud-desc {
+  margin: 0;
+  padding: 0.6rem 0.75rem;
+  border-radius: var(--fw-radius);
+  background-color: var(--fw-surface-alt);
+  font-size: 0.9rem;
+}
+
+.fw-card-acciones {
+  padding-top: 0.6rem;
+  border-top: 1px solid var(--fw-border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.fw-acciones-estado,
+.fw-acciones-extra {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.fw-btn-estado,
+.fw-btn-secundario,
+.fw-btn-primario {
+  padding: 0.42rem 0.8rem;
+  border-radius: var(--fw-radius);
+  font-size: 0.825rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.fw-btn-estado,
+.fw-btn-primario {
+  border: none;
+  background-color: var(--fw-primary);
+  color: #ffffff;
+}
+
+.fw-btn-peligro {
+  background-color: var(--fw-danger);
+}
+
+.fw-btn-secundario {
+  border: 1px solid var(--fw-border);
+  background-color: var(--fw-surface);
+  color: var(--fw-text);
+}
