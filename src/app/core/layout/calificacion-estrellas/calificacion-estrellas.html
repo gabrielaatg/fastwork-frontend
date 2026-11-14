@@ -1,0 +1,40 @@
+@if (soloLectura()) {
+  <div class="fw-estrellas" [attr.aria-label]="etiquetaLectura()">
+    <span class="fw-estrellas-lista" aria-hidden="true">
+      @for (estrella of estrellas; track estrella) {
+        <span class="fw-estrella" [class.fw-estrella-activa]="estrella <= valorRedondeado()">
+          ★
+        </span>
+      }
+    </span>
+
+    @if (mostrarNumero()) {
+      <span class="fw-estrellas-texto">
+        {{ valorFormateado() }}
+        @if (totalResenas() !== null) {
+          <span class="fw-estrellas-total">({{ totalResenas() }})</span>
+        }
+      </span>
+    }
+  </div>
+} @else {
+  <div
+    class="fw-estrellas fw-estrellas-interactivo"
+    role="radiogroup"
+    aria-label="Seleccionar calificación"
+  >
+    @for (estrella of estrellas; track estrella) {
+      <button
+        type="button"
+        role="radio"
+        class="fw-estrella-btn"
+        [class.fw-estrella-activa]="estrella <= valor()"
+        [attr.aria-checked]="valor() === estrella"
+        [attr.aria-label]="estrella + (estrella === 1 ? ' estrella' : ' estrellas')"
+        (click)="seleccionar(estrella)"
+      >
+        ★
+      </button>
+    }
+  </div>
+}

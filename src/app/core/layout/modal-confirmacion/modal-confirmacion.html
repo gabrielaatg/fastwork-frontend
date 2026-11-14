@@ -1,0 +1,35 @@
+@if (abierto()) {
+  <div class="fw-modal-backdrop" (click)="intentarCancelar()">
+    <div
+      class="fw-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="fw-modal-titulo"
+      (click)="$event.stopPropagation()"
+    >
+      <h2 id="fw-modal-titulo" class="fw-modal-titulo">{{ titulo() }}</h2>
+      <p class="fw-modal-mensaje">{{ mensaje() }}</p>
+
+      <div class="fw-modal-acciones">
+        <button
+          type="button"
+          class="fw-btn-secundario"
+          [disabled]="cargando()"
+          (click)="intentarCancelar()"
+        >
+          {{ textoCancelar() }}
+        </button>
+
+        <button
+          type="button"
+          class="fw-btn-confirmar"
+          [class.fw-btn-peligro]="variante() === 'peligro'"
+          [disabled]="cargando()"
+          (click)="confirmar.emit()"
+        >
+          {{ cargando() ? 'Procesando...' : textoConfirmar() }}
+        </button>
+      </div>
+    </div>
+  </div>
+}

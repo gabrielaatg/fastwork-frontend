@@ -1,0 +1,32 @@
+@if (textoPrincipal(); as texto) {
+  <div
+    class="fw-alerta"
+    [class]="'fw-alerta fw-alerta-' + tipoEfectivo()"
+    [attr.role]="tipoEfectivo() === 'error' ? 'alert' : 'status'"
+  >
+    <div class="fw-alerta-cuerpo">
+      <p class="fw-alerta-texto">{{ texto }}</p>
+
+      @if (listaErroresCampo().length > 0) {
+        <ul class="fw-alerta-lista">
+          @for (item of listaErroresCampo(); track item.campo) {
+            <li>
+              <strong>{{ item.campo }}:</strong> {{ item.mensaje }}
+            </li>
+          }
+        </ul>
+      }
+    </div>
+
+    @if (cerrable()) {
+      <button
+        type="button"
+        class="fw-alerta-cerrar"
+        aria-label="Cerrar mensaje"
+        (click)="cerrado.emit()"
+      >
+        ×
+      </button>
+    }
+  </div>
+}

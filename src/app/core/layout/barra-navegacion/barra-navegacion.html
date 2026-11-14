@@ -1,0 +1,33 @@
+<header class="fw-navbar">
+  <div class="fw-navbar-inner">
+    <a class="fw-marca" [routerLink]="estaAutenticado() ? '/directorio' : '/login'">
+      <span class="fw-marca-titulo">Fast Work</span>
+      <span class="fw-marca-ciudad">Trujillo</span>
+    </a>
+
+    @if (estaAutenticado()) {
+      <nav class="fw-nav-links" aria-label="Navegación principal">
+        @for (enlace of enlaces(); track enlace.ruta) {
+          <a class="fw-nav-link" [routerLink]="enlace.ruta" routerLinkActive="fw-nav-link-activo">
+            {{ enlace.etiqueta }}
+          </a>
+        }
+      </nav>
+
+      <div class="fw-nav-usuario">
+        @if (usuario(); as actual) {
+          <span class="fw-usuario-nombre">{{ actual.nombres }}</span>
+          <span class="fw-usuario-rol">{{ actual.rol }}</span>
+        }
+        <button type="button" class="fw-btn-salir" (click)="cerrarSesion()">Cerrar sesión</button>
+      </div>
+    } @else {
+      <div class="fw-nav-acciones">
+        <a class="fw-nav-link" routerLink="/login" routerLinkActive="fw-nav-link-activo">
+          Iniciar sesión
+        </a>
+        <a class="fw-btn-registro" routerLink="/registro">Registrarse</a>
+      </div>
+    }
+  </div>
+</header>
