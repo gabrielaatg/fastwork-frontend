@@ -1,0 +1,108 @@
+.fw-admin-pagina {
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
+}
+
+.fw-admin-titulo {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.fw-admin-subtitulo {
+  margin: 0.25rem 0 0;
+  color: var(--fw-muted);
+}
+
+.fw-tabs {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.fw-tab {
+  padding: 0.45rem 0.9rem;
+  border: 1px solid var(--fw-border);
+  border-radius: 999px;
+  background-color: var(--fw-surface);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.fw-tab-activo {
+  border-color: var(--fw-primary);
+  background-color: var(--fw-primary);
+  color: #ffffff;
+}
+
+.fw-estado-caja,
+.fw-tabla-contenedor {
+  background-color: var(--fw-surface);
+  border: 1px solid var(--fw-border);
+  border-radius: var(--fw-radius);
+}
+
+.fw-estado-caja {
+  padding: 2.5rem;
+  text-align: center;
+  color: var(--fw-muted);
+}
+
+.fw-tabla {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.fw-tabla th,
+.fw-tabla td {
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid var(--fw-border);
+  text-align: left;
+  vertical-align: middle;
+}
+
+.fw-tabla th {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  color: var(--fw-muted);
+  background-color: var(--fw-surface-alt);
+}
+
+.fw-desc-corta {
+  margin-top: 0.2rem;
+  color: var(--fw-muted);
+  font-size: 0.8rem;
+  max-width: 36ch;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.fw-muted {
+  color: var(--fw-muted);
+}
+
+.fw-acciones {
+  display: flex;
+  gap: 0.45rem;
+}
+
+.fw-btn-aprobar,
+.fw-btn-rechazar {
+  padding: 0.4rem 0.75rem;
+  border: none;
+  border-radius: var(--fw-radius);
+  color: #ffffff;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.fw-btn-aprobar {
+  background-color: var(--fw-success);
+}
+
+.fw-btn-rechazar {
+  background-color: var(--fw-danger);
+}

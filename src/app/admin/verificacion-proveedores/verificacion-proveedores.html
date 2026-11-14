@@ -1,0 +1,125 @@
+<section class="fw-admin-pagina">
+  <header class="fw-admin-cabecera">
+    <div>
+      <h1 class="fw-admin-titulo">Verificación de Proveedores</h1>
+      <p class="fw-admin-subtitulo">
+        Revisa los perfiles técnicos registrados en Trujillo y aprueba o rechaza su verificación.
+      </p>
+    </div>
+  </header>
+
+  <app-alerta-mensaje [error]="errorHttp()" [cerrable]="true" (cerrado)="errorHttp.set(null)" />
+  @if (mensajeExito()) {
+    <app-alerta-mensaje
+      tipo="exito"
+      [mensaje]="mensajeExito()"
+      [cerrable]="true"
+      (cerrado)="mensajeExito.set(null)"
+    />
+  }
+
+  <div class="fw-tabs" role="tablist" aria-label="Filtrar por verificación">
+    @for (
+      tab of [
+        { valor: 'PENDIENTE', etiqueta: 'Pendientes' },
+        { valor: 'VERIFICADO', etiqueta: 'Verificados' },
+        { valor: 'RECHAZADO', etiqueta: 'Rechazados' },
+        { valor: 'TODOS', etiqueta: 'Todos' },
+      ];
+      track tab.valor
+    ) {
+      <button
+        type="button"
+        class="fw-tab"
+        [class.fw-tab-activo]="filtro() === tab.valor"
+        (click)="filtro.set($any(tab.valor))"
+      >
+        {{ tab.etiqueta }}
+      </button>
+    }
+  </div>
+
+  @if (cargando()) {
+    <div class="fw-estado-caja">Cargando proveedores registrados...</div>
+  } @else if (proveedoresFiltrados().length === 0) {
+    <div class="fw-estado-caja">No hay proveedores en el estado seleccionado.</div>
+  } @else {
+    <div class="fw-tabla-contenedor">
+      <table class="fw-tabla">
+        <thead>
+          <tr>
+            <th>Proveedor</th>
+            <th>Teléfono</th>
+            <th>Oficios declarados</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (proveedor of proveedoresFiltrados(); track proveedor.idPerfilProveedor) {
+            <tr>
+              <td>
+                <strong>{{ proveedor.nombres }} {{ proveedor.apellidos }}</strong>
+                @if (proveedor.descripcionPerfil) {
+                  <div class="fw-desc-corta">{{ proveedor.descripcionPerfil }}</div>
+                }
+              </td>
+              <td>{{ proveedor.telefono }}</td>
+              <td>
+                @if (proveedor.oficios.length === 0) {
+                  <span class="fw-muted">Sin oficios</span>
+                } @else {
+                  @for (
+                    oficio of proveedor.oficios;
+                    track oficio.idProveedorOficio;
+                    let ultimo = $last
+                  ) {
+                    <span>{{ oficio.nombreOficio }}</span>
+                    @if (!ultimo) {
+                      <span>, </span>
+                    }
+                  }
+                }
+              </td>
+              <td>
+                <app-badge-estado [estado]="proveedor.estadoVerificacion" />
+              </td>
+              <td>
+                <div class="fw-acciones">
+                  @if (proveedor.estadoVerificacion !== 'VERIFICADO') {
+                    <button
+                      type="button"
+                      class="fw-btn-aprobar"
+                      (click)="solicitarDecision(proveedor, 'VERIFICADO')"
+                    >
+                      Verificar
+                    </button>
+                  }
+                  @if (proveedor.estadoVerificacion !== 'RECHAZADO') {
+                    <button
+                      type="button"
+                      class="fw-btn-rechazar"
+                      (click)="solicitarDecision(proveedor, 'RECHAZADO')"
+                    >
+                      Rechazar
+                    </button>
+                  }
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+
+  <app-modal-confirmacion
+    [abierto]="decisionPendiente() !== null"
+    [titulo]="tituloModal()"
+    [mensaje]="mensajeModal()"
+    [variante]="decisionPendiente()?.nuevoEstado === 'RECHAZADO' ? 'peligro' : 'primario'"
+    [cargando]="procesando()"
+    (confirmar)="confirmarDecision()"
+    (cancelar)="decisionPendiente.set(null)"
+  />
+</section>

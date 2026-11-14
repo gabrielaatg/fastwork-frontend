@@ -1,0 +1,69 @@
+.fw-oficios-pagina {
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
+}
+
+.fw-titulo {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.fw-subtitulo {
+  margin: 0.25rem 0 0;
+  color: var(--fw-muted);
+}
+
+.fw-oficios-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) 360px;
+  gap: 1.25rem;
+  align-items: start;
+}
+
+.fw-tabla-contenedor {
+  background-color: var(--fw-surface);
+  border: 1px solid var(--fw-border);
+  border-radius: var(--fw-radius);
+}
+
+.fw-estado-caja {
+  padding: 2.5rem;
+  text-align: center;
+  color: var(--fw-muted);
+}
+
+.fw-tabla {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.fw-tabla th,
+.fw-tabla td {
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid var(--fw-border);
+  text-align: left;
+}
+
+.fw-tabla th {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  color: var(--fw-muted);
+  background-color: var(--fw-surface-alt);
+}
+
+.fw-estado-activo {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 999px;
+  background-color: var(--fw-success-soft);
+  color: var(--fw-success);
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.fw-form-col {
+  position: sticky;
+  top: 1rem;
+}
