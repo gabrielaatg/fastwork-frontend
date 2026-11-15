@@ -49,7 +49,6 @@ export interface ActualizarOficioTarifaRequest {
 
 export interface ActualizarPerfilProveedorRequest {
   descripcionPerfil?: string;
-  documentoIdentidad: string;
   oficios?: ActualizarOficioTarifaRequest[];
 }
 

@@ -20,7 +20,7 @@ Implementa el directorio tipo agenda de trabajadores independientes en Trujillo 
 
 ### 1. Buscar Proveedores en Directorio
 * **Método y Ruta:** `GET /api/v1/proveedores`
-* **Acceso:** Protegido — Cualquier usuario autenticado (`CLIENTE`, `PROVEEDOR`, `ADMIN`).
+* **Acceso:** Protegido — Cualquier usuario autenticado (`CLIENTE`, `PROVEEDOR`, `ADMIN`). Excluye automáticamente el propio perfil del usuario autenticado (cuando posea uno) para que no vea su propia tarjeta.
 * **Body Esperado:** Ninguno.
 
 #### Parámetros Query (Opcionales)
@@ -126,16 +126,22 @@ Implementa el directorio tipo agenda de trabajadores independientes en Trujillo 
 
 ---
 
-### 3. Actualizar Mi Perfil Comercial
-* **Método y Ruta:** `PUT /api/v1/proveedores/mi-perfil`
+### 3. Obtener Mi Perfil Comercial
+* **Método y Ruta:** `GET /api/v1/proveedores/mi-perfil`
 * **Acceso:** Protegido — Solo rol **`PROVEEDOR`** (identificado por el JWT).
+* **Posibles Respuestas:** `200 OK` (`Jsend<ProveedorDetalleResponse>`), `401 Unauthorized`, `403 Forbidden`, `404 Not Found`.
+
+---
+
+### 4. Actualizar Mi Perfil Comercial
+* **Método y Ruta:** `PUT /api/v1/proveedores/mi-perfil`
+* **Acceso:** Protegido — Solo rol **`PROVEEDOR`** (identificado por el JWT). El campo `documentoIdentidad` no es modificable desde este endpoint.
 
 #### Body Esperado (`ActualizarPerfilProveedorRequest`)
 
 | Campo | Tipo | Obligatorio | Validaciones |
 | :--- | :--- | :---: | :--- |
 | `descripcionPerfil` | `String` | No | Descripción comercial libre. |
-| `documentoIdentidad` | `String` | Sí | `@NotBlank`, máximo 20 caracteres. |
 | `oficios` | `List<ActualizarOficioTarifaRequest>` | No | Si se envía, reemplaza los oficios/tarifas actuales del proveedor (sin duplicar `idOficio`). |
 
 **Estructura de cada elemento en `oficios` (`ActualizarOficioTarifaRequest`):**
@@ -151,7 +157,6 @@ Implementa el directorio tipo agenda de trabajadores independientes en Trujillo 
 ```json
 {
   "descripcionPerfil": "Técnico gasfitero y electricista en todo Trujillo",
-  "documentoIdentidad": "70123456",
   "oficios": [
     {
       "idOficio": 1,
@@ -179,7 +184,7 @@ Implementa el directorio tipo agenda de trabajadores independientes en Trujillo 
 
 ---
 
-### 4. Actualizar Mi Disponibilidad
+### 5. Actualizar Mi Disponibilidad
 * **Método y Ruta:** `PATCH /api/v1/proveedores/mi-disponibilidad`
 * **Acceso:** Protegido — Solo rol **`PROVEEDOR`**.
 

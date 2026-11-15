@@ -43,7 +43,7 @@ describe('Interceptores de autenticación (token y sesión vencida)', () => {
     localStorage.clear();
   });
 
-  it('debe adjuntar Bearer token en rutas protegidas y omitirlo en /auth/', () => {
+  it('debe adjuntar Bearer token en rutas protegidas y en /auth/cambiar-modo, pero omitirlo en /auth/login y /auth/register', () => {
     const token = crearJwtVigente();
     authApi.establecerSesion({
       token,
@@ -58,15 +58,25 @@ describe('Interceptores de autenticación (token y sesión vencida)', () => {
     expect(reqProtegida.request.headers.get('Authorization')).toBe(`Bearer ${token}`);
     reqProtegida.flush({ status: 'success', data: [] });
 
+    http.post(`${environment.apiUrl}/auth/cambiar-modo`, { modo: 'PROVEEDOR' }).subscribe();
+    const reqCambiarModo = httpMock.expectOne(`${environment.apiUrl}/auth/cambiar-modo`);
+    expect(reqCambiarModo.request.headers.get('Authorization')).toBe(`Bearer ${token}`);
+    reqCambiarModo.flush({ status: 'success', data: {} });
+
     http
       .post(`${environment.apiUrl}/auth/login`, { correo: 'a@b.com', password: '123' })
       .subscribe();
-    const reqAuth = httpMock.expectOne(`${environment.apiUrl}/auth/login`);
-    expect(reqAuth.request.headers.has('Authorization')).toBe(false);
-    reqAuth.flush({ status: 'success', data: {} });
+    const reqLogin = httpMock.expectOne(`${environment.apiUrl}/auth/login`);
+    expect(reqLogin.request.headers.has('Authorization')).toBe(false);
+    reqLogin.flush({ status: 'success', data: {} });
+
+    http.post(`${environment.apiUrl}/auth/register`, { correo: 'a@b.com' }).subscribe();
+    const reqRegister = httpMock.expectOne(`${environment.apiUrl}/auth/register`);
+    expect(reqRegister.request.headers.has('Authorization')).toBe(false);
+    reqRegister.flush({ status: 'success', data: {} });
   });
 
-  it('debe cerrar sesión, redirigir a /login y emitir ErrorHttp cuando recibe 401 fuera de /auth/', () => {
+  it('debe cerrar sesión, redirigir a /login y emitir ErrorHttp cuando recibe 401 en rutas protegidas incluyendo /auth/cambiar-modo', () => {
     const navigateSpy = vi.spyOn(router, 'navigate').mockResolvedValue(true);
     authApi.establecerSesion({
       token: crearJwtVigente(),
@@ -95,6 +105,36 @@ describe('Interceptores de autenticación (token y sesión vencida)', () => {
       statusHttp: 401,
       tipo: 'NO_AUTORIZADO',
       mensaje: 'Token expirado',
+    });
+
+    navigateSpy.mockClear();
+    authApi.establecerSesion({
+      token: crearJwtVigente(),
+      tipo: 'Bearer',
+      idUsuario: 4,
+      rol: 'CLIENTE',
+      nombres: 'Lucía',
+    });
+
+    let errorCambioModo: ErrorHttp | undefined;
+    http.post(`${environment.apiUrl}/auth/cambiar-modo`, { modo: 'PROVEEDOR' }).subscribe({
+      error: (err: ErrorHttp) => {
+        errorCambioModo = err;
+      },
+    });
+
+    const reqModo = httpMock.expectOne(`${environment.apiUrl}/auth/cambiar-modo`);
+    reqModo.flush(
+      { status: 'error', message: 'No autorizado', code: 401 },
+      { status: 401, statusText: 'Unauthorized' },
+    );
+
+    expect(authApi.estaAutenticado()).toBe(false);
+    expect(navigateSpy).toHaveBeenCalledWith(['/login']);
+    expect(errorCambioModo).toEqual({
+      statusHttp: 401,
+      tipo: 'NO_AUTORIZADO',
+      mensaje: 'No autorizado',
     });
   });
 

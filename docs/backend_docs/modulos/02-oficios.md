@@ -9,7 +9,7 @@
 
 Administra el catálogo maestro de especialidades u oficios eventuales ofrecidos en toda la ciudad de Trujillo. Provee el listado público de oficios activos para selectores del frontend y permite al administrador incorporar nuevas especialidades.
 
-### Carga Inicial Base (`ScriptFastWork.sql`)
+### Carga Inicial Base (`FastWorkDB.sql`)
 El catálogo inicial cuenta con 6 oficios activos:
 1. Gasfitería
 2. Plomería

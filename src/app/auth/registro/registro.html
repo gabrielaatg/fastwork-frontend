@@ -128,27 +128,25 @@
           }
         </div>
 
-        @if (modelo().rol === 'PROVEEDOR') {
-          <div class="fw-campo">
-            <label class="fw-label" for="reg-documento">Documento de identidad (DNI)</label>
-            <input
-              id="reg-documento"
-              type="text"
-              class="fw-input"
-              placeholder="Ej. 71234567"
-              [formField]="formulario.documentoIdentidad"
-            />
-            @if (
-              formulario.documentoIdentidad().touched() && formulario.documentoIdentidad().invalid()
-            ) {
-              <ul class="fw-errores-campo">
-                @for (error of formulario.documentoIdentidad().errors(); track error.kind) {
-                  <li>{{ error.message }}</li>
-                }
-              </ul>
-            }
-          </div>
-        }
+        <div class="fw-campo">
+          <label class="fw-label" for="reg-documento">Documento de identidad (DNI)</label>
+          <input
+            id="reg-documento"
+            type="text"
+            class="fw-input"
+            placeholder="Ej. 71234567"
+            [formField]="formulario.documentoIdentidad"
+          />
+          @if (
+            formulario.documentoIdentidad().touched() && formulario.documentoIdentidad().invalid()
+          ) {
+            <ul class="fw-errores-campo">
+              @for (error of formulario.documentoIdentidad().errors(); track error.kind) {
+                <li>{{ error.message }}</li>
+              }
+            </ul>
+          }
+        </div>
       </div>
 
       <div class="fw-consentimiento">

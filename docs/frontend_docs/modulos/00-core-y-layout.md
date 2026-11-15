@@ -34,15 +34,15 @@ Documentación de la infraestructura transversal en `src/app/core/`, la configur
 Servicio `providedIn: 'root'` contra `${environment.apiUrl}/auth` que centraliza la sesión en `localStorage` bajo la clave `fastwork_sesion`:
 
 - **Señales públicas de solo lectura**: `usuario`, `token`, `rol`, `idUsuario`, `estaAutenticado` (verifica existencia y expiración del JWT).
-- **Métodos**: `registrar(request)` (`POST /auth/register`), `iniciarSesion(request)` (`POST /auth/login`), `establecerSesion(respuesta)`, `cerrarSesion()`, `esSesionVigente()` y `tieneRol(...rolesPermitidos)`.
+- **Métodos**: `registrar(request)` (`POST /auth/register`), `iniciarSesion(request)` (`POST /auth/login`), `cambiarModo(modo)` (`POST /auth/cambiar-modo`), `establecerSesion(respuesta)`, `cerrarSesion()`, `esSesionVigente()` y `tieneRol(...rolesPermitidos)`.
 - Decodifica el claim `exp` del JWT en el cliente para invalidar tokens vencidos antes de enviar peticiones.
 
 ### Interceptores HTTP
 
 | Interceptor                | Archivo                         | Comportamiento                                                                                                                                                                          |
 | :------------------------- | :------------------------------ | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `tokenInterceptor`         | `token-interceptor.ts`          | Clona la petición e inyecta `Authorization: Bearer <token>` solo si la URL apunta a `environment.apiUrl`, no pertenece a `/auth/` y `esSesionVigente()` es verdadero.                   |
-| `sesionVencidaInterceptor` | `sesion-vencida-interceptor.ts` | Intercepta `HttpErrorResponse`, lo normaliza a `ErrorHttp` con `normalizarError(...)` y, si recibe HTTP `401` fuera de `/auth/`, invoca `authApi.cerrarSesion()` y redirige a `/login`. |
+| `tokenInterceptor`         | `token-interceptor.ts`          | Clona la petición e inyecta `Authorization: Bearer <token>` solo si la URL apunta a `environment.apiUrl`, no pertenece a `/auth/login` ni `/auth/register` (usando `esRutaAuthPublica` de `rutas-auth.ts`) y `esSesionVigente()` es verdadero. |
+| `sesionVencidaInterceptor` | `sesion-vencida-interceptor.ts` | Intercepta `HttpErrorResponse`, lo normaliza a `ErrorHttp` con `normalizarError(...)` y, si recibe HTTP `401` fuera de `/auth/login` y `/auth/register`, invoca `authApi.cerrarSesion()` y redirige a `/login`. |
 
 ### Guards Funcionales (`sesion-guard.ts`)
 
@@ -51,6 +51,7 @@ Servicio `providedIn: 'root'` contra `${environment.apiUrl}/auth` que centraliza
 | `sesionGuard`        | Permite acceso solo si `authApi.esSesionVigente()` es verdadero.               | `/login?returnUrl=<url>`                        |
 | `rolGuard(...roles)` | Verifica sesión vigente y que el usuario posea alguno de los roles permitidos. | `/login` (sin sesión) o `/` (rol no autorizado) |
 | `invitadoGuard`      | Impide que usuarios ya autenticados entren a `/login` o `/registro`.           | `/`                                             |
+| `inicioRedirectGuard`| Redirige la ruta raíz `/` hacia la vista inicial correspondiente al rol activo (`CLIENTE` → `/directorio`, `PROVEEDOR` → `/solicitudes`, `ADMIN` → `/admin/verificaciones`, sin sesión → `/login`). | Ruta por rol |
 
 ---
 
@@ -61,9 +62,10 @@ Servicio `providedIn: 'root'` contra `${environment.apiUrl}/auth` que centraliza
 - **Ubicación**: `src/app/core/layout/barra-navegacion/`
 - **Funcionamiento**: Lee `estaAutenticado` y `usuario` de `AuthApi`. Calcula enlaces dinámicos según el rol activo:
   - **Invitado**: `Iniciar sesión` (`/login`), `Registrarse` (`/registro`).
-  - **`CLIENTE`**: `Directorio` (`/directorio`), `Mis Solicitudes` (`/solicitudes`), `Encuesta Piloto` (`/piloto`).
-  - **`PROVEEDOR`**: `Directorio` (`/directorio`), `Mi Perfil` (`/proveedor/perfil`), `Agenda` (`/solicitudes`), `Encuesta Piloto` (`/piloto`).
+  - **`CLIENTE`**: `Directorio` (`/directorio`), `Mis Solicitudes` (`/solicitudes`), `Encuesta Piloto` (`/piloto`) y botón `Cambiar a Modo Proveedor`.
+  - **`PROVEEDOR`**: `Mi Perfil` (`/proveedor/perfil`), `Agenda` (`/solicitudes`), `Encuesta Piloto` (`/piloto`) y botón `Cambiar a Modo Cliente`.
   - **`ADMIN`**: `Directorio` (`/directorio`), `Verificaciones` (`/admin/verificaciones`), `Oficios` (`/admin/oficios`), `Resumen Piloto` (`/admin/piloto`).
+- Al cambiar entre modo `CLIENTE` y `PROVEEDOR`, invoca `authApi.cambiarModo(...)`, actualiza el JWT y redirige a `/directorio` o `/proveedor/perfil` respectivamente.
 - Incluye botón `Cerrar sesión` que limpia la sesión y navega a `/login`.
 
 ### `CalificacionEstrellas` (`app-calificacion-estrellas`)

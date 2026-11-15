@@ -3,7 +3,6 @@ import { ErrorHttp } from '../../core/api/errores';
 import { AlertaMensaje } from '../../core/layout/alerta-mensaje/alerta-mensaje';
 import { Oficio } from '../../dominio/oficio';
 import {
-  EstadoDisponibilidad,
   FiltroProveedoresQuery,
   ProveedorDirectorio,
 } from '../../dominio/proveedor';
@@ -28,7 +27,7 @@ export class ListaProveedores implements OnInit {
   protected readonly errorHttp = signal<ErrorHttp | null>(null);
 
   protected readonly oficiosSeleccionados = signal<number[]>([]);
-  protected readonly disponibilidadSeleccionada = signal<EstadoDisponibilidad | ''>('');
+  protected readonly disponibilidadSeleccionada = signal<'' | 'DISPONIBLE'>('');
   protected readonly calificacionMinima = signal<number | null>(null);
 
   ngOnInit(): void {
@@ -48,7 +47,7 @@ export class ListaProveedores implements OnInit {
   }
 
   protected cambiarDisponibilidad(valor: string): void {
-    this.disponibilidadSeleccionada.set((valor as EstadoDisponibilidad) || '');
+    this.disponibilidadSeleccionada.set(valor === 'DISPONIBLE' ? 'DISPONIBLE' : '');
     this.buscarProveedores();
   }
 

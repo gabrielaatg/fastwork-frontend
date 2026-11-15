@@ -58,8 +58,7 @@ export class Registro {
       message: 'La contraseña debe tener al menos 6 caracteres.',
     });
     required(ruta.documentoIdentidad, {
-      when: ({ valueOf }) => valueOf(ruta.rol) === 'PROVEEDOR',
-      message: 'El DNI o documento de identidad es obligatorio para proveedores.',
+      message: 'El DNI o documento de identidad es obligatorio.',
     });
     validate(ruta.aceptoPoliticaDatos, ({ value }) => {
       if (!value()) {
@@ -79,7 +78,6 @@ export class Registro {
     this.modelo.update((actual) => ({
       ...actual,
       rol,
-      documentoIdentidad: rol === 'PROVEEDOR' ? actual.documentoIdentidad : '',
     }));
   }
 
@@ -100,9 +98,7 @@ export class Registro {
           password: datos.password,
           rol: datos.rol,
           aceptoPoliticaDatos: datos.aceptoPoliticaDatos,
-          ...(datos.rol === 'PROVEEDOR'
-            ? { documentoIdentidad: datos.documentoIdentidad.trim() }
-            : {}),
+          documentoIdentidad: datos.documentoIdentidad.trim(),
         })
         .subscribe({
           next: () => {

@@ -46,3 +46,23 @@ export const invitadoGuard: CanActivateFn = () => {
 
   return authApi.esSesionVigente() ? router.parseUrl('/') : true;
 };
+
+/** Redirige la ruta raíz hacia el panel inicial correspondiente al rol activo. */
+export const inicioRedirectGuard: CanActivateFn = () => {
+  const authApi = inject(AuthApi);
+  const router = inject(Router);
+
+  if (!authApi.esSesionVigente()) {
+    authApi.cerrarSesion();
+    return router.parseUrl('/login');
+  }
+
+  switch (authApi.rol()) {
+    case 'ADMIN':
+      return router.parseUrl('/admin/verificaciones');
+    case 'PROVEEDOR':
+      return router.parseUrl('/solicitudes');
+    default:
+      return router.parseUrl('/directorio');
+  }
+};

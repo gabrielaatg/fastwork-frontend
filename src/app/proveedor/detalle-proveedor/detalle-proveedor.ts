@@ -39,6 +39,7 @@ export class DetalleProveedor {
   readonly idPerfilProveedor = input.required<string>();
 
   protected readonly esCliente = computed(() => this.authApi.tieneRol('CLIENTE'));
+  protected readonly idUsuarioActual = this.authApi.idUsuario;
   protected readonly detalle = signal<ProveedorDetalle | null>(null);
   protected readonly cargando = signal(false);
   protected readonly errorHttp = signal<ErrorHttp | null>(null);

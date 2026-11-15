@@ -3,7 +3,7 @@
     <div>
       <h1 class="fw-perfil-titulo">Mi Perfil Comercial</h1>
       <p class="fw-perfil-subtitulo">
-        Configura tu disponibilidad, documento de identidad y tarifas referenciales en Trujillo.
+        Configura tu disponibilidad, descripción comercial y tarifas referenciales en Trujillo.
       </p>
     </div>
 
@@ -64,18 +64,14 @@
         <input
           id="prov-dni"
           type="text"
-          class="fw-input fw-input-corto"
-          [formField]="formulario.documentoIdentidad"
+          class="fw-input fw-input-corto fw-input-bloqueado"
+          [value]="documentoIdentidad()"
+          readonly
+          disabled
         />
-        @if (
-          formulario.documentoIdentidad().touched() && formulario.documentoIdentidad().invalid()
-        ) {
-          <ul class="fw-errores-campo">
-            @for (error of formulario.documentoIdentidad().errors(); track error.kind) {
-              <li>{{ error.message }}</li>
-            }
-          </ul>
-        }
+        <p class="fw-bloque-ayuda">
+          El documento de identidad registrado no puede modificarse.
+        </p>
       </div>
 
       <div class="fw-campo">

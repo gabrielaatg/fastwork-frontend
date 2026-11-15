@@ -4,11 +4,12 @@ import { map, Observable, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import {
   AuthResponse,
+  CambiarModoRequest,
   LoginRequest,
   RegistroUsuarioRequest,
   UsuarioSesion,
 } from '../../dominio/auth';
-import { RolUsuario } from '../../dominio/rol';
+import { RolRegistro, RolUsuario } from '../../dominio/rol';
 import { extraerData, JsendResponse } from '../api/jsend';
 
 const CLAVE_SESION_STORAGE = 'fastwork_sesion';
@@ -40,6 +41,14 @@ export class AuthApi {
 
   iniciarSesion(request: LoginRequest): Observable<AuthResponse> {
     return this.http.post<JsendResponse<AuthResponse>>(`${this.baseUrl}/login`, request).pipe(
+      map(extraerData),
+      tap((respuesta) => this.establecerSesion(respuesta)),
+    );
+  }
+
+  cambiarModo(modo: RolRegistro): Observable<AuthResponse> {
+    const body: CambiarModoRequest = { modo };
+    return this.http.post<JsendResponse<AuthResponse>>(`${this.baseUrl}/cambiar-modo`, body).pipe(
       map(extraerData),
       tap((respuesta) => this.establecerSesion(respuesta)),
     );

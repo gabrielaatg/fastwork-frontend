@@ -1,6 +1,6 @@
 <header class="fw-navbar">
   <div class="fw-navbar-inner">
-    <a class="fw-marca" [routerLink]="estaAutenticado() ? '/directorio' : '/login'">
+    <a class="fw-marca" [routerLink]="estaAutenticado() ? '/' : '/login'">
       <span class="fw-marca-titulo">Fast Work</span>
       <span class="fw-marca-ciudad">Trujillo</span>
     </a>
@@ -15,6 +15,16 @@
       </nav>
 
       <div class="fw-nav-usuario">
+        @if (puedeCambiarModo()) {
+          <button
+            type="button"
+            class="fw-btn-modo"
+            [disabled]="cambiandoModo()"
+            (click)="alternarModo()"
+          >
+            {{ cambiandoModo() ? 'Cambiando...' : 'Cambiar a ' + etiquetaCambioModo() }}
+          </button>
+        }
         @if (usuario(); as actual) {
           <span class="fw-usuario-nombre">{{ actual.nombres }}</span>
           <span class="fw-usuario-rol">{{ actual.rol }}</span>

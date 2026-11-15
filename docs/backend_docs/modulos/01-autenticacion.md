@@ -1,19 +1,20 @@
 # Módulo 1: Autenticación (`/api/v1/auth`)
 
 **Componentes:** `AuthController`, `AuthService`, `JwtService`, `PasswordEncoderConfig`  
-**DTOs:** `RegistroUsuarioRequest`, `LoginRequest`, `AuthResponse`
+**DTOs:** `RegistroUsuarioRequest`, `LoginRequest`, `CambiarModoRequest`, `AuthResponse`
 
 ---
 
 ## Descripción Funcional
 
-Gestiona el registro público de cuentas (`CLIENTE` o `PROVEEDOR`) y el inicio de sesión mediante credenciales verificadas con **BCrypt**, emitiendo tokens JWT Bearer.
+Gestiona el registro público de cuentas (`CLIENTE` o `PROVEEDOR`), el inicio de sesión mediante credenciales verificadas con **BCrypt** y el cambio bidireccional de modo activo (`CLIENTE` ↔ `PROVEEDOR`), emitiendo tokens JWT Bearer.
 
 ### Reglas de Negocio
 1. **Ley N.° 29733 (Protección de Datos Personales):** El registro exige `aceptoPoliticaDatos = true`, registrando automáticamente `fechaConsentimiento` con la fecha y hora del servidor.
 2. **Unicidad de correo:** El correo se normaliza (`trim().toLowerCase()`) y no puede duplicarse en `usuarios`.
 3. **Control de roles permitidos:** Solo se permite registrar `CLIENTE` (por defecto si se omite) o `PROVEEDOR`. Intentar registrarse como `ADMIN` u otro valor es rechazado.
-4. **Inicialización automática de proveedor:** Si el rol es `PROVEEDOR`, `documentoIdentidad` es obligatorio y se crea automáticamente su registro en `perfiles_proveedores` con `estadoDisponibilidad = "DISPONIBLE"`, `estadoVerificacion = "PENDIENTE"`, `calificacionPromedio = 0.00` y `totalResenas = 0`.
+4. **DNI obligatorio e inmutable:** `documentoIdentidad` es obligatorio en el registro tanto para `CLIENTE` como para `PROVEEDOR` y no puede modificarse posteriormente desde ningún endpoint.
+5. **Inicialización automática de proveedor:** Si el usuario se registra como `PROVEEDOR` (o cambia por primera vez de `CLIENTE` a `PROVEEDOR` vía `/cambiar-modo`), se crea automáticamente su registro en `perfiles_proveedores` usando su `documentoIdentidad` con `estadoDisponibilidad = "DISPONIBLE"`, `estadoVerificacion = "PENDIENTE"`, `calificacionPromedio = 0.00` y `totalResenas = 0`.
 
 ---
 
@@ -34,7 +35,7 @@ Gestiona el registro público de cuentas (`CLIENTE` o `PROVEEDOR`) y el inicio d
 | `telefono` | `String` | Sí | `@NotBlank`, máximo 20 caracteres. |
 | `rol` | `String` | No | `"CLIENTE"` (por defecto) o `"PROVEEDOR"`. |
 | `aceptoPoliticaDatos` | `Boolean` | Sí | `@NotNull`; debe ser `true` por regla de negocio. |
-| `documentoIdentidad` | `String` | Condicional | Obligatorio (no vacío) cuando `rol` es `"PROVEEDOR"`. |
+| `documentoIdentidad` | `String` | Sí | `@NotBlank`, máximo 20 caracteres (obligatorio para `CLIENTE` y `PROVEEDOR`, inmutable tras el registro). |
 
 **Ejemplo de Body (Registro Proveedor):**
 ```json
@@ -138,3 +139,22 @@ Gestiona el registro público de cuentas (`CLIENTE` o `PROVEEDOR`) y el inicio d
   "code": 401
 }
 ```
+
+---
+
+### 3. Cambiar Modo Activo (`CLIENTE` ↔ `PROVEEDOR`)
+* **Método y Ruta:** `POST /api/v1/auth/cambiar-modo`
+* **Acceso:** Protegido — Roles **`CLIENTE`** o **`PROVEEDOR`** (`ADMIN` recibe `403 Forbidden`).
+
+#### Body Esperado (`CambiarModoRequest`)
+
+| Campo | Tipo | Obligatorio | Validaciones |
+| :--- | :--- | :---: | :--- |
+| `modo` | `String` | Sí | `@NotBlank`. Valores permitidos: `CLIENTE` o `PROVEEDOR`. |
+
+#### Posibles Respuestas
+
+* **`200 OK` (`Jsend<AuthResponse>`):** Actualiza el rol activo del usuario (creando su `PerfilProveedor` inicial si pasa por primera vez a `PROVEEDOR`) y emite un nuevo JWT.
+* **`400 Bad Request` (`Jsend`):** Modo inválido o vacío.
+* **`401 Unauthorized` (`Jsend`):** Token ausente o inválido.
+* **`403 Forbidden` (`Jsend`):** Usuario con rol `ADMIN`.

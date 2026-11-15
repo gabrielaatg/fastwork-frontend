@@ -30,7 +30,7 @@
         </div>
       </div>
 
-      @if (esCliente()) {
+      @if (esCliente() && proveedor.idUsuario !== idUsuarioActual()) {
         <div class="fw-detalle-cta">
           <a
             class="fw-btn-solicitar"

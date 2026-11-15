@@ -90,4 +90,25 @@ describe('AuthApi', () => {
     expect(authApi.idUsuario()).toBe(4);
     expect(authApi.usuario()?.nombres).toBe('Lucía');
   });
+
+  it('cambiarModo() debe enviar POST /auth/cambiar-modo y actualizar el rol y token', () => {
+    const mockRespuesta: AuthResponse = {
+      token: crearJwtVigente(),
+      tipo: 'Bearer',
+      idUsuario: 12,
+      rol: 'CLIENTE',
+      nombres: 'Carlos',
+    };
+
+    let recibido: AuthResponse | undefined;
+    authApi.cambiarModo('CLIENTE').subscribe((res) => (recibido = res));
+
+    const req = httpMock.expectOne(`${environment.apiUrl}/auth/cambiar-modo`);
+    expect(req.request.method).toBe('POST');
+    expect(req.request.body).toEqual({ modo: 'CLIENTE' });
+    req.flush({ status: 'success', message: 'Modo actualizado exitosamente', data: mockRespuesta });
+
+    expect(recibido).toEqual(mockRespuesta);
+    expect(authApi.rol()).toBe('CLIENTE');
+  });
 });

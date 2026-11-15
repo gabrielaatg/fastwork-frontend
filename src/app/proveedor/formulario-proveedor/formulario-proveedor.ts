@@ -10,7 +10,6 @@ import {
 } from '@angular/forms/signals';
 import { forkJoin } from 'rxjs';
 import { ErrorHttp } from '../../core/api/errores';
-import { AuthApi } from '../../core/auth/auth-api';
 import { AlertaMensaje } from '../../core/layout/alerta-mensaje/alerta-mensaje';
 import { BadgeEstado } from '../../core/layout/badge-estado/badge-estado';
 import { Oficio } from '../../dominio/oficio';
@@ -31,7 +30,6 @@ interface OficioTarifaModelo {
 }
 
 interface PerfilProveedorModelo {
-  documentoIdentidad: string;
   descripcionPerfil: string;
   oficios: OficioTarifaModelo[];
 }
@@ -46,9 +44,9 @@ interface PerfilProveedorModelo {
 export class FormularioProveedor implements OnInit {
   private readonly proveedorApi = inject(ProveedorApi);
   private readonly oficioApi = inject(OficioApi);
-  private readonly authApi = inject(AuthApi);
 
   protected readonly catalogoOficios = signal<Oficio[]>([]);
+  protected readonly documentoIdentidad = signal('');
   protected readonly estadoDisponibilidad = signal<EstadoDisponibilidad>('DISPONIBLE');
   protected readonly estadoVerificacion = signal<EstadoVerificacion | null>(null);
   protected readonly cargandoInicial = signal(true);
@@ -59,15 +57,11 @@ export class FormularioProveedor implements OnInit {
   protected readonly errorDuplicados = signal<string | null>(null);
 
   protected readonly modelo = signal<PerfilProveedorModelo>({
-    documentoIdentidad: '',
     descripcionPerfil: '',
     oficios: [],
   });
 
   protected readonly formulario = form(this.modelo, (ruta) => {
-    required(ruta.documentoIdentidad, {
-      message: 'El documento de identidad es obligatorio.',
-    });
     applyEach(ruta.oficios, (fila) => {
       required(fila.idOficio, { message: 'Selecciona un oficio.' });
       min(fila.precioMinimo, 0, { message: 'El precio mínimo debe ser mayor o igual a 0.' });
@@ -161,7 +155,6 @@ export class FormularioProveedor implements OnInit {
 
       this.proveedorApi
         .actualizarMiPerfil({
-          documentoIdentidad: datos.documentoIdentidad.trim(),
           ...(descripcion ? { descripcionPerfil: descripcion } : {}),
           oficios: oficiosPayload,
         })
@@ -188,38 +181,22 @@ export class FormularioProveedor implements OnInit {
 
     forkJoin({
       oficios: this.oficioApi.listarActivos(),
-      directorio: this.proveedorApi.buscarDirectorio(),
+      detalle: this.proveedorApi.obtenerMiPerfil(),
     }).subscribe({
-      next: ({ oficios, directorio }) => {
+      next: ({ oficios, detalle }) => {
+        this.cargandoInicial.set(false);
         this.catalogoOficios.set(oficios);
-        const idUsuarioActual = this.authApi.idUsuario();
-        const propio = directorio.find((p) => p.idUsuario === idUsuarioActual);
-
-        if (!propio) {
-          this.cargandoInicial.set(false);
-          return;
-        }
-
-        this.proveedorApi.obtenerDetalle(propio.idPerfilProveedor).subscribe({
-          next: (detalle) => {
-            this.cargandoInicial.set(false);
-            this.estadoVerificacion.set(detalle.estadoVerificacion);
-            this.estadoDisponibilidad.set(detalle.estadoDisponibilidad);
-            this.modelo.set({
-              documentoIdentidad: detalle.documentoIdentidad ?? '',
-              descripcionPerfil: detalle.descripcionPerfil ?? '',
-              oficios: detalle.oficios.map((o) => ({
-                idOficio: String(o.idOficio),
-                precioMinimo: o.precioMinimo,
-                precioMaximo: o.precioMaximo,
-                detalleTarifa: o.detalleTarifa ?? '',
-              })),
-            });
-          },
-          error: (error: ErrorHttp) => {
-            this.cargandoInicial.set(false);
-            this.errorHttp.set(error);
-          },
+        this.documentoIdentidad.set(detalle.documentoIdentidad ?? '');
+        this.estadoVerificacion.set(detalle.estadoVerificacion);
+        this.estadoDisponibilidad.set(detalle.estadoDisponibilidad);
+        this.modelo.set({
+          descripcionPerfil: detalle.descripcionPerfil ?? '',
+          oficios: detalle.oficios.map((o) => ({
+            idOficio: String(o.idOficio),
+            precioMinimo: o.precioMinimo,
+            precioMaximo: o.precioMaximo,
+            detalleTarifa: o.detalleTarifa ?? '',
+          })),
         });
       },
       error: (error: ErrorHttp) => {

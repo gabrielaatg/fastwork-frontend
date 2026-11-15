@@ -1,11 +1,18 @@
 import { Routes } from '@angular/router';
-import { invitadoGuard, rolGuard, sesionGuard } from './core/auth/sesion-guard';
+import {
+  inicioRedirectGuard,
+  invitadoGuard,
+  rolGuard,
+  sesionGuard,
+} from './core/auth/sesion-guard';
 
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'directorio',
     pathMatch: 'full',
+    canActivate: [inicioRedirectGuard],
+    loadComponent: () =>
+      import('./proveedor/lista-proveedores/lista-proveedores').then((m) => m.ListaProveedores),
   },
   {
     path: 'login',
@@ -21,14 +28,14 @@ export const routes: Routes = [
   },
   {
     path: 'directorio',
-    canActivate: [sesionGuard],
+    canActivate: [sesionGuard, rolGuard('CLIENTE', 'ADMIN')],
     title: 'Directorio en Trujillo — Fast Work',
     loadComponent: () =>
       import('./proveedor/lista-proveedores/lista-proveedores').then((m) => m.ListaProveedores),
   },
   {
     path: 'proveedores/:idPerfilProveedor',
-    canActivate: [sesionGuard],
+    canActivate: [sesionGuard, rolGuard('CLIENTE', 'ADMIN')],
     title: 'Perfil de proveedor — Fast Work',
     loadComponent: () =>
       import('./proveedor/detalle-proveedor/detalle-proveedor').then((m) => m.DetalleProveedor),
@@ -89,6 +96,6 @@ export const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: 'directorio',
+    redirectTo: '',
   },
 ];

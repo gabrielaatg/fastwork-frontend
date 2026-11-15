@@ -107,6 +107,12 @@
   max-width: 280px;
 }
 
+.fw-input-bloqueado {
+  background-color: var(--fw-surface-alt);
+  color: var(--fw-muted);
+  cursor: not-allowed;
+}
+
 .fw-oficios-cabecera {
   display: flex;
   justify-content: space-between;

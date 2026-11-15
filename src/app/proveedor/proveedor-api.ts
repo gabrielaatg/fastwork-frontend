@@ -35,6 +35,12 @@ export class ProveedorApi {
       .pipe(map(extraerData));
   }
 
+  obtenerMiPerfil(): Observable<ProveedorDetalle> {
+    return this.http
+      .get<JsendResponse<ProveedorDetalle>>(`${this.baseUrl}/mi-perfil`)
+      .pipe(map(extraerData));
+  }
+
   obtenerDetalle(idPerfilProveedor: number): Observable<ProveedorDetalle> {
     return this.http
       .get<JsendResponse<ProveedorDetalle>>(`${this.baseUrl}/${idPerfilProveedor}`)

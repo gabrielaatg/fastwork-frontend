@@ -65,6 +65,7 @@ export class Login {
   }
 
   private obtenerRutaPorRol(rol: RolUsuario): string {
-    return rol === 'ADMIN' ? '/admin/verificaciones' : '/directorio';
+    if (rol === 'ADMIN') return '/admin/verificaciones';
+    return rol === 'PROVEEDOR' ? '/solicitudes' : '/directorio';
   }
 }

@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
-import { RolUsuario } from '../../../dominio/rol';
+import { RolRegistro, RolUsuario } from '../../../dominio/rol';
 import { AuthApi } from '../../auth/auth-api';
 
 interface EnlaceNavegacion {
@@ -15,7 +15,6 @@ const ENLACES_POR_ROL: Record<RolUsuario, readonly EnlaceNavegacion[]> = {
     { ruta: '/piloto', etiqueta: 'Encuesta Piloto' },
   ],
   PROVEEDOR: [
-    { ruta: '/directorio', etiqueta: 'Directorio' },
     { ruta: '/proveedor/perfil', etiqueta: 'Mi Perfil' },
     { ruta: '/solicitudes', etiqueta: 'Agenda' },
     { ruta: '/piloto', etiqueta: 'Encuesta Piloto' },
@@ -41,6 +40,8 @@ export class BarraNavegacion {
 
   protected readonly estaAutenticado = this.authApi.estaAutenticado;
   protected readonly usuario = this.authApi.usuario;
+  protected readonly cambiandoModo = signal(false);
+
   protected readonly enlaces = computed<readonly EnlaceNavegacion[]>(() => {
     const rol = this.authApi.rol();
     if (!this.estaAutenticado() || !rol) {
@@ -48,6 +49,40 @@ export class BarraNavegacion {
     }
     return ENLACES_POR_ROL[rol];
   });
+
+  protected readonly puedeCambiarModo = computed(() => {
+    const rol = this.authApi.rol();
+    return this.estaAutenticado() && (rol === 'CLIENTE' || rol === 'PROVEEDOR');
+  });
+
+  protected readonly etiquetaCambioModo = computed(() =>
+    this.authApi.rol() === 'PROVEEDOR' ? 'Modo Cliente' : 'Modo Proveedor',
+  );
+
+  protected alternarModo(): void {
+    if (this.cambiandoModo()) {
+      return;
+    }
+
+    const rolActual = this.authApi.rol();
+    if (rolActual !== 'CLIENTE' && rolActual !== 'PROVEEDOR') {
+      return;
+    }
+
+    const nuevoModo: RolRegistro = rolActual === 'PROVEEDOR' ? 'CLIENTE' : 'PROVEEDOR';
+    const rutaDestino = nuevoModo === 'CLIENTE' ? '/directorio' : '/proveedor/perfil';
+
+    this.cambiandoModo.set(true);
+    this.authApi.cambiarModo(nuevoModo).subscribe({
+      next: () => {
+        this.cambiandoModo.set(false);
+        void this.router.navigate([rutaDestino]);
+      },
+      error: () => {
+        this.cambiandoModo.set(false);
+      },
+    });
+  }
 
   protected cerrarSesion(): void {
     this.authApi.cerrarSesion();

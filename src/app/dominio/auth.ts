@@ -13,8 +13,11 @@ export interface RegistroUsuarioRequest {
   telefono: string;
   rol?: RolRegistro;
   aceptoPoliticaDatos: boolean;
-  /** Obligatorio cuando `rol === 'PROVEEDOR'`. */
-  documentoIdentidad?: string;
+  documentoIdentidad: string;
+}
+
+export interface CambiarModoRequest {
+  modo: RolRegistro;
 }
 
 export interface AuthResponse {

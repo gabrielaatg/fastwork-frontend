@@ -9,7 +9,7 @@ import {
 import { AuthResponse } from '../../dominio/auth';
 import { RolUsuario } from '../../dominio/rol';
 import { AuthApi } from './auth-api';
-import { invitadoGuard, rolGuard, sesionGuard } from './sesion-guard';
+import { inicioRedirectGuard, invitadoGuard, rolGuard, sesionGuard } from './sesion-guard';
 
 function crearJwtPrueba(expSegundosOffset: number): string {
   const header = btoa(JSON.stringify({ alg: 'HS256', typ: 'JWT' }));
@@ -87,5 +87,30 @@ describe('Guards de sesión y rol (sesion-guard)', () => {
     const redir = runInInjectionContext(injector, () => invitadoGuard(rutaFalsa, estadoFalso));
     expect(redir instanceof UrlTree).toBe(true);
     expect((redir as UrlTree).toString()).toBe('/');
+  });
+
+  it('inicioRedirectGuard debe redirigir según el rol vigente', () => {
+    const sinSesion = runInInjectionContext(injector, () =>
+      inicioRedirectGuard(rutaFalsa, estadoFalso),
+    );
+    expect((sinSesion as UrlTree).toString()).toBe('/login');
+
+    authApi.establecerSesion(sesionPrueba('CLIENTE'));
+    const cliente = runInInjectionContext(injector, () =>
+      inicioRedirectGuard(rutaFalsa, estadoFalso),
+    );
+    expect((cliente as UrlTree).toString()).toBe('/directorio');
+
+    authApi.establecerSesion(sesionPrueba('PROVEEDOR'));
+    const proveedor = runInInjectionContext(injector, () =>
+      inicioRedirectGuard(rutaFalsa, estadoFalso),
+    );
+    expect((proveedor as UrlTree).toString()).toBe('/solicitudes');
+
+    authApi.establecerSesion(sesionPrueba('ADMIN'));
+    const admin = runInInjectionContext(injector, () =>
+      inicioRedirectGuard(rutaFalsa, estadoFalso),
+    );
+    expect((admin as UrlTree).toString()).toBe('/admin/verificaciones');
   });
 });
