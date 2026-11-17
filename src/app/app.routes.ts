@@ -10,9 +10,9 @@ export const routes: Routes = [
   {
     path: '',
     pathMatch: 'full',
-    canActivate: [inicioRedirectGuard],
+    title: 'Fast Work — Servicios para tu hogar en Trujillo',
     loadComponent: () =>
-      import('./proveedor/lista-proveedores/lista-proveedores').then((m) => m.ListaProveedores),
+      import('./landing-page/landing-page').then((m) => m.LandingPageComponent),
   },
   {
     path: 'login',

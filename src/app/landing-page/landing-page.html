@@ -1,0 +1,276 @@
+
+<main class="fw-landing">
+
+  <!-- NAVEGACIÓN -->
+  <header class="fw-header">
+    <a routerLink="/" class="fw-brand">
+      <span class="fw-brand-mark">FW</span>
+      <span>Fast<span class="fw-brand-accent">Work</span></span>
+    </a>
+
+    <nav class="fw-nav">
+      <a href="#servicios">Servicios</a>
+      <a href="#proveedores">Profesionales</a>
+      <a href="#como-funciona">Cómo funciona</a>
+    </nav>
+
+    <div class="fw-header-actions">
+      <a routerLink="/login" class="fw-login-link">Iniciar sesión</a>
+      <a routerLink="/registro" class="fw-header-button">Crear cuenta</a>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="fw-hero">
+    <div class="fw-hero-content">
+
+      <span class="fw-eyebrow">
+        <span class="fw-eyebrow-line"></span>
+        SERVICIOS TÉCNICOS EN TRUJILLO
+      </span>
+
+      <h1>
+        Encuentra al profesional que
+        <span>necesitas.</span>
+      </h1>
+
+      <p class="fw-hero-description">
+        Conectamos personas que necesitan soluciones para su hogar
+        con profesionales independientes de distintos oficios técnicos.
+      </p>
+
+      <div class="fw-hero-actions">
+        <a routerLink="/registro" class="fw-button-primary">
+          Encuentra un profesional
+          <span>↗</span>
+        </a>
+
+        <a href="#como-funciona" class="fw-button-secondary">
+          Conoce cómo funciona
+        </a>
+      </div>
+
+      <div class="fw-hero-footer">
+        <span>Una plataforma local</span>
+        <span class="fw-footer-separator"></span>
+        <span>Trujillo, La Libertad</span>
+      </div>
+
+    </div>
+
+    <div class="fw-hero-visual">
+      <div class="fw-visual-top">
+        <span>FAST WORK / SERVICIOS</span>
+        <span>01 — 03</span>
+      </div>
+
+      <div class="fw-visual-main">
+        <div class="fw-visual-image">
+          <div class="fw-visual-overlay"></div>
+
+          <div class="fw-visual-caption">
+            <span>CONEXIONES LOCALES</span>
+            <h2>Tu próximo servicio comienza aquí.</h2>
+          </div>
+        </div>
+      </div>
+
+      <div class="fw-visual-bottom">
+        <span>Profesionales independientes</span>
+        <span>Trujillo / Perú</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- FRANJA INFORMATIVA -->
+  <section class="fw-info-strip">
+    <div>
+      <span class="fw-info-number">01</span>
+      <div>
+        <strong>Encuentra</strong>
+        <p>Profesionales por oficio.</p>
+      </div>
+    </div>
+
+    <div>
+      <span class="fw-info-number">02</span>
+      <div>
+        <strong>Compara</strong>
+        <p>Conoce sus perfiles.</p>
+      </div>
+    </div>
+
+    <div>
+      <span class="fw-info-number">03</span>
+      <div>
+        <strong>Contacta</strong>
+        <p>Coordina directamente.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICIOS -->
+  <section class="fw-section" id="servicios">
+    <div class="fw-section-heading">
+      <div>
+        <span class="fw-section-kicker">QUÉ PUEDES ENCONTRAR</span>
+        <h2>Soluciones para cada necesidad.</h2>
+      </div>
+
+      <p>
+        Explora diferentes especialidades y encuentra
+        personas que ofrecen servicios técnicos.
+      </p>
+    </div>
+
+    <div class="fw-category-grid">
+      @for (categoria of categorias; track categoria.nombre) {
+        <a
+          class="fw-category-item"
+          [routerLink]="['/servicios']"
+        >
+          <span class="fw-category-number">{{ categoria.numero }}</span>
+
+          <div class="fw-category-content">
+            <h3>{{ categoria.nombre }}</h3>
+            <p>{{ categoria.descripcion }}</p>
+          </div>
+
+          <span class="fw-category-arrow">↗</span>
+        </a>
+      }
+    </div>
+  </section>
+
+  <!-- PROFESIONALES -->
+  <section class="fw-providers-section" id="proveedores">
+    <div class="fw-section">
+      <div class="fw-section-heading">
+        <div>
+          <span class="fw-section-kicker">PROFESIONALES INDEPENDIENTES</span>
+          <h2>Personas que ofrecen soluciones.</h2>
+        </div>
+
+        <a routerLink="/servicios" class="fw-text-link">
+          Explorar profesionales ↗
+        </a>
+      </div>
+
+      <div class="fw-provider-grid">
+        @for (proveedor of proveedores; track proveedor.nombre) {
+          <article class="fw-provider-card">
+            <div class="fw-provider-top">
+              <div class="fw-provider-avatar">
+                {{ proveedor.iniciales }}
+              </div>
+
+              <span class="fw-provider-status">
+                {{ proveedor.estado }}
+              </span>
+            </div>
+
+            <h3>{{ proveedor.nombre }}</h3>
+            <p>{{ proveedor.oficio }}</p>
+
+            <div class="fw-provider-divider"></div>
+
+            <div class="fw-provider-bottom">
+              <span>Especialidad</span>
+              <a routerLink="/servicios">Ver perfil ↗</a>
+            </div>
+          </article>
+        }
+      </div>
+
+      <p class="fw-demo-note">
+        Los perfiles mostrados son ilustrativos.
+      </p>
+    </div>
+  </section>
+
+  <!-- CÓMO FUNCIONA -->
+  <section class="fw-how-section" id="como-funciona">
+    <div class="fw-how-inner">
+
+      <div class="fw-how-intro">
+        <span class="fw-section-kicker fw-light-kicker">
+          UN PROCESO SENCILLO
+        </span>
+
+        <h2>Encontrar ayuda no debería ser complicado.</h2>
+
+        <p>
+          Fast Work facilita el contacto entre clientes
+          y profesionales independientes en un mismo espacio.
+        </p>
+
+        <a routerLink="/registro" class="fw-button-light">
+          Comenzar ahora ↗
+        </a>
+      </div>
+
+      <div class="fw-steps">
+        <article class="fw-step">
+          <span>01</span>
+          <div>
+            <h3>Busca un servicio</h3>
+            <p>Identifica el oficio que necesitas.</p>
+          </div>
+        </article>
+
+        <article class="fw-step">
+          <span>02</span>
+          <div>
+            <h3>Revisa los perfiles</h3>
+            <p>Consulta la información de los profesionales.</p>
+          </div>
+        </article>
+
+        <article class="fw-step">
+          <span>03</span>
+          <div>
+            <h3>Establece contacto</h3>
+            <p>Comunícate y coordina los detalles del servicio.</p>
+          </div>
+        </article>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="fw-final-cta">
+    <div>
+      <span class="fw-section-kicker">FORMA PARTE DE FAST WORK</span>
+      <h2>Tu próximo servicio puede comenzar hoy.</h2>
+      <p>
+        Si buscas un profesional o quieres ofrecer tus servicios,
+        este espacio es para ti.
+      </p>
+    </div>
+
+    <div class="fw-final-actions">
+      <a routerLink="/registro" class="fw-button-primary">
+        Crear una cuenta ↗
+      </a>
+      <a routerLink="/login" class="fw-text-link">
+        Ya tengo una cuenta
+      </a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="fw-footer">
+    <a routerLink="/" class="fw-brand">
+      <span class="fw-brand-mark">FW</span>
+      <span>Fast<span class="fw-brand-accent">Work</span></span>
+    </a>
+
+    <p>Conectando necesidades con soluciones en Trujillo.</p>
+
+    <span class="fw-copyright">
+      © {{ anioActual }} Fast Work
+    </span>
+  </footer>
+
+</main>

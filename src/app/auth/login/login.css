@@ -1,101 +1,186 @@
+
+:host {
+  --green-950: #12372f;
+  --green-900: #17483d;
+  --green-800: #216451;
+  --green-700: #2c8066;
+  --green-600: #389879;
+  --green-100: #e5f1eb;
+  --green-50: #f2f7f3;
+  --gray-900: #26332f;
+  --gray-700: #596761;
+  --gray-500: #87938d;
+  --gray-300: #dce3df;
+  --gray-200: #e9eeeb;
+  --gray-100: #f5f7f5;
+
+  display: block;
+  font-family: 'DM Sans', sans-serif;
+  color: var(--gray-900);
+}
+
+* {
+  box-sizing: border-box;
+}
+
 .fw-auth-pagina {
+  min-height: calc(100vh - 82px);
   display: flex;
   justify-content: center;
-  padding: 2rem 0;
+  align-items: center;
+  padding: 45px 20px;
+  background: linear-gradient(
+    110deg,
+    #f3f7f3 0%,
+    #f3f7f3 57%,
+    #e7f0e9 100%
+  );
 }
 
 .fw-auth-tarjeta {
   width: 100%;
   max-width: 460px;
-  background-color: var(--fw-surface);
-  border: 1px solid var(--fw-border);
-  border-radius: var(--fw-radius);
-  box-shadow: var(--fw-shadow-sm);
-  padding: 2rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
+  padding: 38px;
+  background: #fff;
+  border: 1px solid var(--gray-200);
+  border-radius: 18px;
+  box-shadow: 0 20px 50px #193f3015;
 }
 
 .fw-auth-cabecera {
-  display: flex;
-  flex-direction: column;
-  gap: 0.35rem;
+  margin-bottom: 30px;
+  text-align: center;
 }
 
 .fw-auth-titulo {
   margin: 0;
-  font-size: 1.5rem;
-  font-weight: 700;
+  color: var(--green-950);
+  font: 800 30px/1.2 'Manrope', sans-serif;
+  letter-spacing: -1px;
 }
 
 .fw-auth-subtitulo {
-  margin: 0;
-  color: var(--fw-muted);
-  font-size: 0.925rem;
+  margin: 12px 0 0;
+  color: var(--gray-500);
+  font-size: 13px;
+  line-height: 1.7;
 }
 
 .fw-auth-form {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 21px;
+  margin-top: 25px;
 }
 
 .fw-campo {
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
+  gap: 8px;
 }
 
 .fw-label {
-  font-size: 0.875rem;
-  font-weight: 600;
+  color: var(--gray-900);
+  font-size: 12px;
+  font-weight: 700;
 }
 
 .fw-input {
   width: 100%;
-  padding: 0.6rem 0.75rem;
-  border: 1px solid var(--fw-border);
-  border-radius: var(--fw-radius);
-  background-color: var(--fw-surface);
-  font-size: 0.95rem;
+  height: 46px;
+  padding: 0 14px;
+  color: var(--gray-900);
+  background: #fff;
+  border: 1px solid var(--gray-300);
+  border-radius: 9px;
+  outline: none;
+  font: inherit;
+  font-size: 12px;
+  transition: border-color .2s, box-shadow .2s;
+}
+
+.fw-input::placeholder {
+  color: #9ba6a0;
+}
+
+.fw-input:hover {
+  border-color: #b7d2c0;
 }
 
 .fw-input:focus {
-  outline: 2px solid var(--fw-primary-soft);
-  border-color: var(--fw-primary);
+  border-color: var(--green-600);
+  box-shadow: 0 0 0 3px #38987920;
 }
 
 .fw-errores-campo {
   margin: 0;
-  padding-left: 1.1rem;
-  color: var(--fw-danger);
-  font-size: 0.8rem;
+  padding-left: 18px;
+  color: #b54747;
+  font-size: 11px;
+  line-height: 1.6;
 }
 
 .fw-btn-primario {
-  margin-top: 0.25rem;
-  padding: 0.68rem 1rem;
-  border: none;
-  border-radius: var(--fw-radius);
-  background-color: var(--fw-primary);
-  color: #ffffff;
-  font-weight: 600;
-  cursor: pointer;
+  width: 100%;
+  min-height: 47px;
+  margin-top: 5px;
+  padding: 12px 18px;
+  border: 0;
+  border-radius: 9px;
+  color: #fff;
+  background: var(--green-800);
+  box-shadow: 0 7px 18px #17483d20;
+  font: 700 13px 'DM Sans', sans-serif;
+  transition: background .2s, transform .2s, box-shadow .2s;
 }
 
 .fw-btn-primario:hover:not(:disabled) {
-  background-color: var(--fw-primary-hover);
+  background: var(--green-900);
+  box-shadow: 0 9px 22px #17483d30;
+  transform: translateY(-2px);
+}
+
+.fw-btn-primario:focus-visible {
+  outline: 3px solid #38987950;
+  outline-offset: 3px;
 }
 
 .fw-btn-primario:disabled {
-  opacity: 0.65;
   cursor: not-allowed;
+  opacity: .65;
 }
 
 .fw-auth-pie {
-  margin: 0;
+  margin: 27px 0 0;
+  color: var(--gray-700);
+  font-size: 12px;
   text-align: center;
-  font-size: 0.9rem;
-  color: var(--fw-muted);
+}
+
+.fw-auth-pie a {
+  color: var(--green-700);
+  font-weight: 800;
+  text-decoration: none;
+  transition: color .2s;
+}
+
+.fw-auth-pie a:hover {
+  color: var(--green-900);
+  text-decoration: underline;
+}
+
+@media (max-width: 480px) {
+  .fw-auth-pagina {
+    min-height: calc(100vh - 70px);
+    padding: 25px 16px;
+  }
+
+  .fw-auth-tarjeta {
+    padding: 28px 22px;
+    border-radius: 14px;
+  }
+
+  .fw-auth-titulo {
+    font-size: 26px;
+  }
 }
