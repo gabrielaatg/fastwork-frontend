@@ -118,30 +118,6 @@
   color: var(--fw-danger);
 }
 
-.fw-btn-modo {
-  padding: 0.42rem 0.85rem;
-  border: 1px solid var(--fw-primary);
-  border-radius: var(--fw-radius);
-  background-color: var(--fw-primary-soft);
-  color: var(--fw-primary);
-  font-size: 0.83rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition:
-    background-color 0.15s ease,
-    color 0.15s ease;
-}
-
-.fw-btn-modo:hover:not(:disabled) {
-  background-color: var(--fw-primary);
-  color: #ffffff;
-}
-
-.fw-btn-modo:disabled {
-  opacity: 0.65;
-  cursor: not-allowed;
-}
-
 .fw-btn-registro {
   padding: 0.45rem 0.95rem;
   border-radius: var(--fw-radius);

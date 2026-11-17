@@ -38,19 +38,6 @@
       </div>
 
       <div class="fw-filtro-grupo">
-        <label class="fw-filtro-label" for="filtro-disponibilidad">Disponibilidad</label>
-        <select
-          id="filtro-disponibilidad"
-          class="fw-select"
-          [value]="disponibilidadSeleccionada()"
-          (change)="cambiarDisponibilidad($any($event.target).value)"
-        >
-          <option value="">Todos</option>
-          <option value="DISPONIBLE">Disponibles</option>
-        </select>
-      </div>
-
-      <div class="fw-filtro-grupo">
         <label class="fw-filtro-label" for="filtro-calificacion">Calificación mínima</label>
         <select
           id="filtro-calificacion"

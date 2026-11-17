@@ -4,12 +4,12 @@ import { map, Observable, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import {
   AuthResponse,
-  CambiarModoRequest,
   LoginRequest,
+  RegistroProveedorRequest,
   RegistroUsuarioRequest,
   UsuarioSesion,
 } from '../../dominio/auth';
-import { RolRegistro, RolUsuario } from '../../dominio/rol';
+import { RolUsuario } from '../../dominio/rol';
 import { extraerData, JsendResponse } from '../api/jsend';
 
 const CLAVE_SESION_STORAGE = 'fastwork_sesion';
@@ -39,22 +39,37 @@ export class AuthApi {
     );
   }
 
+  registrarProveedor(
+    request: RegistroProveedorRequest,
+    archivoCul: File,
+  ): Observable<AuthResponse> {
+    const formData = new FormData();
+    formData.append('datos', new Blob([JSON.stringify(request)], { type: 'application/json' }));
+    formData.append('archivoCul', archivoCul, archivoCul.name);
+
+    return this.http
+      .post<JsendResponse<AuthResponse>>(`${this.baseUrl}/register-proveedor`, formData)
+      .pipe(
+        map(extraerData),
+        tap((respuesta) => this.establecerSesion(respuesta)),
+      );
+  }
+
   iniciarSesion(request: LoginRequest): Observable<AuthResponse> {
     return this.http.post<JsendResponse<AuthResponse>>(`${this.baseUrl}/login`, request).pipe(
       map(extraerData),
-      tap((respuesta) => this.establecerSesion(respuesta)),
-    );
-  }
-
-  cambiarModo(modo: RolRegistro): Observable<AuthResponse> {
-    const body: CambiarModoRequest = { modo };
-    return this.http.post<JsendResponse<AuthResponse>>(`${this.baseUrl}/cambiar-modo`, body).pipe(
-      map(extraerData),
-      tap((respuesta) => this.establecerSesion(respuesta)),
+      tap((respuesta) => {
+        if (!respuesta.requiereSeleccionRol && respuesta.token) {
+          this.establecerSesion(respuesta);
+        }
+      }),
     );
   }
 
   establecerSesion(respuesta: AuthResponse): void {
+    if (!respuesta.token || !respuesta.idUsuario || !respuesta.rol) {
+      return;
+    }
     const sesion: UsuarioSesion = {
       idUsuario: respuesta.idUsuario,
       nombres: respuesta.nombres,

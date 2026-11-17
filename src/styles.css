@@ -59,3 +59,41 @@ textarea {
   font: inherit;
   color: inherit;
 }
+
+.fw-password-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.fw-input-password {
+  padding-right: 2.6rem !important;
+}
+
+.fw-btn-ojo {
+  position: absolute;
+  right: 0.45rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  border: none;
+  border-radius: 0.35rem;
+  background: transparent;
+  color: var(--fw-muted);
+  cursor: pointer;
+}
+
+.fw-btn-ojo:hover {
+  background: var(--fw-surface-alt);
+  color: var(--fw-text);
+}
+
+.fw-ok-campo {
+  margin: 0;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--fw-success);
+}

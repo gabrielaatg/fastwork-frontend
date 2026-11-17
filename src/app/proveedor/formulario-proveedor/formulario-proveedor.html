@@ -60,17 +60,17 @@
       <h2 class="fw-bloque-titulo">Datos del perfil</h2>
 
       <div class="fw-campo">
-        <label class="fw-label" for="prov-dni">Documento de identidad (DNI)</label>
+        <label class="fw-label" for="prov-dni">DNI</label>
         <input
           id="prov-dni"
           type="text"
           class="fw-input fw-input-corto fw-input-bloqueado"
-          [value]="documentoIdentidad()"
+          [value]="dni()"
           readonly
           disabled
         />
         <p class="fw-bloque-ayuda">
-          El documento de identidad registrado no puede modificarse.
+          El DNI registrado no puede modificarse.
         </p>
       </div>
 

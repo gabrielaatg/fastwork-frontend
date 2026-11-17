@@ -11,18 +11,22 @@
 
     <form class="fw-auth-form" (submit)="alEnviar($event)" novalidate>
       <div class="fw-campo">
-        <label class="fw-label" for="login-correo">Correo electrónico</label>
+        <label class="fw-label" for="login-identificador">Correo electrónico o DNI</label>
         <input
-          id="login-correo"
-          type="email"
-          autocomplete="email"
+          id="login-identificador"
+          type="text"
+          inputmode="email"
+          autocomplete="username"
           class="fw-input"
-          placeholder="usuario@correo.com"
-          [formField]="formulario.correo"
+          placeholder="usuario@correo.com o 70112233"
+          [formField]="formulario.identificador"
         />
-        @if (formulario.correo().touched() && formulario.correo().invalid()) {
+        <span class="fw-hint">
+          Clientes y proveedores pueden ingresar con correo o DNI (8 dígitos). Administradores solo con correo.
+        </span>
+        @if (formulario.identificador().touched() && formulario.identificador().invalid()) {
           <ul class="fw-errores-campo">
-            @for (error of formulario.correo().errors(); track error.kind) {
+            @for (error of formulario.identificador().errors(); track error.kind) {
               <li>{{ error.message }}</li>
             }
           </ul>
@@ -31,14 +35,36 @@
 
       <div class="fw-campo">
         <label class="fw-label" for="login-password">Contraseña</label>
-        <input
-          id="login-password"
-          type="password"
-          autocomplete="current-password"
-          class="fw-input"
-          placeholder="Ingresa tu contraseña"
-          [formField]="formulario.password"
-        />
+        <div class="fw-password-wrap">
+          <input
+            id="login-password"
+            [type]="mostrarPassword() ? 'text' : 'password'"
+            autocomplete="current-password"
+            class="fw-input fw-input-password"
+            placeholder="Ingresa tu contraseña"
+            [formField]="formulario.password"
+          />
+          <button
+            type="button"
+            class="fw-btn-ojo"
+            [attr.aria-label]="mostrarPassword() ? 'Ocultar contraseña' : 'Ver contraseña'"
+            [attr.aria-pressed]="mostrarPassword()"
+            (click)="alternarMostrarPassword()"
+          >
+            @if (mostrarPassword()) {
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a21.77 21.77 0 0 1 5.06-5.94"/>
+                <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a21.8 21.8 0 0 1-2.16 3.19"/>
+                <line x1="1" y1="1" x2="23" y2="23"/>
+              </svg>
+            } @else {
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+            }
+          </button>
+        </div>
         @if (formulario.password().touched() && formulario.password().invalid()) {
           <ul class="fw-errores-campo">
             @for (error of formulario.password().errors(); track error.kind) {
@@ -58,4 +84,48 @@
       <a routerLink="/registro">Regístrate aquí</a>
     </p>
   </div>
+
+  @if (rolesDisponibles(); as roles) {
+    <div
+      class="fw-modal-backdrop"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="fw-selector-rol-titulo"
+      (click)="cerrarSelectorRol()"
+    >
+      <div class="fw-modal" (click)="$event.stopPropagation()">
+        <h2 id="fw-selector-rol-titulo" class="fw-modal-titulo">¿Cómo deseas ingresar?</h2>
+        <p class="fw-modal-mensaje">
+          Tu correo tiene más de una cuenta asociada. Elige con qué perfil deseas iniciar sesión:
+        </p>
+
+        <div class="fw-modal-roles">
+          @for (rol of roles; track rol) {
+            <button
+              type="button"
+              class="fw-modal-rol-btn"
+              [disabled]="rolCargando() !== null"
+              (click)="ingresarConRol(rol)"
+            >
+              <strong>
+                {{ rolCargando() === rol ? 'Ingresando...' : tituloRol(rol) }}
+              </strong>
+              <span>{{ descripcionRol(rol) }}</span>
+            </button>
+          }
+        </div>
+
+        <div class="fw-modal-acciones">
+          <button
+            type="button"
+            class="fw-btn-secundario"
+            [disabled]="rolCargando() !== null"
+            (click)="cerrarSelectorRol()"
+          >
+            Cancelar
+          </button>
+        </div>
+      </div>
+    </div>
+  }
 </section>

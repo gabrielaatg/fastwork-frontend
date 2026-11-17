@@ -27,7 +27,6 @@ export class ListaProveedores implements OnInit {
   protected readonly errorHttp = signal<ErrorHttp | null>(null);
 
   protected readonly oficiosSeleccionados = signal<number[]>([]);
-  protected readonly disponibilidadSeleccionada = signal<'' | 'DISPONIBLE'>('');
   protected readonly calificacionMinima = signal<number | null>(null);
 
   ngOnInit(): void {
@@ -46,11 +45,6 @@ export class ListaProveedores implements OnInit {
     this.buscarProveedores();
   }
 
-  protected cambiarDisponibilidad(valor: string): void {
-    this.disponibilidadSeleccionada.set(valor === 'DISPONIBLE' ? 'DISPONIBLE' : '');
-    this.buscarProveedores();
-  }
-
   protected cambiarCalificacion(valor: string): void {
     const numero = Number(valor);
     this.calificacionMinima.set(valor && Number.isFinite(numero) ? numero : null);
@@ -59,7 +53,6 @@ export class ListaProveedores implements OnInit {
 
   protected limpiarFiltros(): void {
     this.oficiosSeleccionados.set([]);
-    this.disponibilidadSeleccionada.set('');
     this.calificacionMinima.set(null);
     this.buscarProveedores();
   }
@@ -72,15 +65,12 @@ export class ListaProveedores implements OnInit {
   }
 
   private buscarProveedores(): void {
-    const filtros: FiltroProveedoresQuery = {};
+    const filtros: FiltroProveedoresQuery = {
+      disponibilidad: 'DISPONIBLE',
+    };
     const idsOficios = this.oficiosSeleccionados();
     if (idsOficios.length > 0) {
       filtros.oficios = idsOficios;
-    }
-
-    const disponibilidad = this.disponibilidadSeleccionada();
-    if (disponibilidad) {
-      filtros.disponibilidad = disponibilidad;
     }
 
     const calificacionMin = this.calificacionMinima();

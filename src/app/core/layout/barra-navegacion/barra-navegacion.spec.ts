@@ -40,7 +40,7 @@ describe('BarraNavegacion', () => {
     localStorage.clear();
   });
 
-  it('debe mostrar enlaces de cliente y botón Cambiar a Modo Proveedor cuando está en modo CLIENTE', () => {
+  it('debe mostrar solo enlaces de cliente y sin botón de cambio de modo para CLIENTE', () => {
     authApi.establecerSesion(sesionPara('CLIENTE'));
     const fixture = TestBed.createComponent(BarraNavegacion);
     fixture.detectChanges();
@@ -48,13 +48,13 @@ describe('BarraNavegacion', () => {
     const enlaces = Array.from(
       fixture.nativeElement.querySelectorAll('.fw-nav-link') as NodeListOf<HTMLAnchorElement>,
     ).map((a) => a.textContent?.trim());
-    const btnModo = fixture.nativeElement.querySelector('.fw-btn-modo') as HTMLButtonElement | null;
+    const btnModo = fixture.nativeElement.querySelector('.fw-btn-modo');
 
     expect(enlaces).toEqual(['Directorio', 'Mis Solicitudes', 'Encuesta Piloto']);
-    expect(btnModo?.textContent?.trim()).toBe('Cambiar a Modo Proveedor');
+    expect(btnModo).toBeNull();
   });
 
-  it('debe mostrar enlaces de proveedor y botón Cambiar a Modo Cliente cuando está en modo PROVEEDOR', () => {
+  it('debe mostrar solo enlaces de proveedor y sin botón de cambio de modo para PROVEEDOR', () => {
     authApi.establecerSesion(sesionPara('PROVEEDOR'));
     const fixture = TestBed.createComponent(BarraNavegacion);
     fixture.detectChanges();
@@ -62,18 +62,23 @@ describe('BarraNavegacion', () => {
     const enlaces = Array.from(
       fixture.nativeElement.querySelectorAll('.fw-nav-link') as NodeListOf<HTMLAnchorElement>,
     ).map((a) => a.textContent?.trim());
-    const btnModo = fixture.nativeElement.querySelector('.fw-btn-modo') as HTMLButtonElement | null;
+    const btnModo = fixture.nativeElement.querySelector('.fw-btn-modo');
 
     expect(enlaces).toEqual(['Mi Perfil', 'Agenda', 'Encuesta Piloto']);
-    expect(btnModo?.textContent?.trim()).toBe('Cambiar a Modo Cliente');
+    expect(btnModo).toBeNull();
   });
 
-  it('no debe mostrar botón de cambio de modo para ADMIN', () => {
+  it('debe mostrar enlaces administrativos y sin botón de cambio de modo para ADMIN', () => {
     authApi.establecerSesion(sesionPara('ADMIN'));
     const fixture = TestBed.createComponent(BarraNavegacion);
     fixture.detectChanges();
 
+    const enlaces = Array.from(
+      fixture.nativeElement.querySelectorAll('.fw-nav-link') as NodeListOf<HTMLAnchorElement>,
+    ).map((a) => a.textContent?.trim());
     const btnModo = fixture.nativeElement.querySelector('.fw-btn-modo');
+
+    expect(enlaces).toEqual(['Directorio', 'Verificaciones', 'Oficios', 'Resumen Piloto']);
     expect(btnModo).toBeNull();
   });
 });

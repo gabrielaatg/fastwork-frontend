@@ -7,38 +7,54 @@
 .fw-registro-tarjeta {
   width: 100%;
   max-width: 660px;
-  background-color: var(--fw-surface);
+  background: var(--fw-surface);
   border: 1px solid var(--fw-border);
   border-radius: var(--fw-radius);
   box-shadow: var(--fw-shadow-sm);
-  padding: 2rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
+  padding: 1.75rem;
+  gap: 1.15rem;
 }
 
-.fw-registro-cabecera {
+.fw-registro-tarjeta,
+.fw-registro-cabecera,
+.fw-registro-form,
+.fw-campo,
+.fw-cul-caja,
+.fw-cul-cabecera,
+.fw-consentimiento,
+.fw-modal {
   display: flex;
   flex-direction: column;
+}
+
+.fw-registro-cabecera,
+.fw-campo {
   gap: 0.35rem;
 }
 
-.fw-registro-titulo {
+.fw-registro-titulo,
+.fw-modal-titulo {
   margin: 0;
-  font-size: 1.5rem;
   font-weight: 700;
 }
 
-.fw-registro-subtitulo {
-  margin: 0;
-  color: var(--fw-muted);
-  font-size: 0.925rem;
+.fw-registro-titulo {
+  font-size: 1.5rem;
 }
 
-.fw-selector-rol {
+.fw-registro-subtitulo,
+.fw-registro-pie,
+.fw-modal-mensaje {
+  margin: 0;
+  color: var(--fw-muted);
+  font-size: 0.9rem;
+}
+
+.fw-selector-rol,
+.fw-fila-dos {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 0.75rem;
+  gap: 0.9rem;
 }
 
 .fw-rol-btn {
@@ -49,7 +65,7 @@
   padding: 0.85rem 1rem;
   border: 1px solid var(--fw-border);
   border-radius: var(--fw-radius);
-  background-color: var(--fw-surface);
+  background: var(--fw-surface);
   font-weight: 600;
   cursor: pointer;
 }
@@ -62,26 +78,13 @@
 
 .fw-rol-btn-activo {
   border-color: var(--fw-primary);
-  background-color: var(--fw-primary-soft);
+  background: var(--fw-primary-soft);
   color: var(--fw-primary);
 }
 
-.fw-registro-form {
-  display: flex;
-  flex-direction: column;
+.fw-registro-form,
+.fw-modal {
   gap: 1rem;
-}
-
-.fw-fila-dos {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1rem;
-}
-
-.fw-campo {
-  display: flex;
-  flex-direction: column;
-  gap: 0.35rem;
 }
 
 .fw-label {
@@ -91,10 +94,10 @@
 
 .fw-input {
   width: 100%;
-  padding: 0.6rem 0.75rem;
+  padding: 0.58rem 0.72rem;
   border: 1px solid var(--fw-border);
   border-radius: var(--fw-radius);
-  background-color: var(--fw-surface);
+  background: var(--fw-surface);
 }
 
 .fw-input:focus {
@@ -102,13 +105,66 @@
   border-color: var(--fw-primary);
 }
 
+.fw-cul-caja,
 .fw-consentimiento {
-  padding: 0.85rem;
+  padding: 0.9rem;
   border-radius: var(--fw-radius);
+}
+
+.fw-cul-caja {
+  border: 1px solid var(--fw-primary);
+  background: var(--fw-primary-soft);
+  gap: 0.75rem;
+}
+
+.fw-cul-cabecera {
+  gap: 0.6rem;
+}
+
+.fw-cul-titulo {
+  margin: 0 0 0.25rem;
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: var(--fw-primary);
+}
+
+.fw-cul-descripcion {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--fw-text);
+}
+
+.fw-cul-link {
+  align-self: flex-start;
+  padding: 0.48rem 0.8rem;
+  border-radius: var(--fw-radius);
+  background: var(--fw-surface);
+  border: 1px solid var(--fw-primary);
+  color: var(--fw-primary);
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.fw-cul-link:hover {
+  background: var(--fw-primary);
+  color: #fff;
+}
+
+.fw-input-archivo {
+  padding: 0.45rem 0.6rem;
+  cursor: pointer;
+}
+
+.fw-cul-archivo-ok {
+  margin: 0;
+  font-size: 0.82rem;
+  color: #166534;
+}
+
+.fw-consentimiento {
   border: 1px solid var(--fw-border);
-  background-color: var(--fw-surface-alt);
-  display: flex;
-  flex-direction: column;
+  background: var(--fw-surface-alt);
   gap: 0.4rem;
 }
 
@@ -135,14 +191,14 @@
   padding: 0.72rem 1rem;
   border: none;
   border-radius: var(--fw-radius);
-  background-color: var(--fw-primary);
-  color: #ffffff;
+  background: var(--fw-primary);
+  color: #fff;
   font-weight: 600;
   cursor: pointer;
 }
 
 .fw-btn-primario:hover:not(:disabled) {
-  background-color: var(--fw-primary-hover);
+  background: var(--fw-primary-hover);
 }
 
 .fw-btn-primario:disabled {
@@ -151,8 +207,44 @@
 }
 
 .fw-registro-pie {
-  margin: 0;
   text-align: center;
-  font-size: 0.9rem;
-  color: var(--fw-muted);
+}
+
+.fw-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: rgb(15 23 42 / 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.fw-modal {
+  width: 100%;
+  max-width: 440px;
+  background: var(--fw-surface);
+  border: 1px solid var(--fw-border);
+  border-radius: var(--fw-radius);
+  padding: 1.5rem;
+  text-align: center;
+  align-items: center;
+}
+
+.fw-modal-titulo {
+  font-size: 1.15rem;
+}
+
+.fw-exito-icono {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  background: #dcfce7;
+  color: #166534;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 700;
 }

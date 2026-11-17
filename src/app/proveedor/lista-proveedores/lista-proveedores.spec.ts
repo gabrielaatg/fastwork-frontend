@@ -20,23 +20,17 @@ describe('ListaProveedores', () => {
     httpMock.verify();
   });
 
-  it('debe ofrecer únicamente Todos (por defecto) y Disponibles en el filtro de disponibilidad', () => {
+  it('no debe mostrar el filtro de disponibilidad y debe consultar solo proveedores DISPONIBLE', () => {
     const fixture = TestBed.createComponent(ListaProveedores);
     fixture.detectChanges();
 
     httpMock.expectOne(`${environment.apiUrl}/oficios`).flush({ status: 'success', data: [] });
-    httpMock.expectOne(`${environment.apiUrl}/proveedores`).flush({ status: 'success', data: [] });
+    const req = httpMock.expectOne(
+      `${environment.apiUrl}/proveedores?disponibilidad=DISPONIBLE`,
+    );
+    expect(req.request.method).toBe('GET');
+    req.flush({ status: 'success', data: [] });
 
-    const select = fixture.nativeElement.querySelector('#filtro-disponibilidad') as HTMLSelectElement;
-    const opciones = Array.from(select.options).map((o) => ({
-      value: o.value,
-      text: o.text.trim(),
-    }));
-
-    expect(opciones).toEqual([
-      { value: '', text: 'Todos' },
-      { value: 'DISPONIBLE', text: 'Disponibles' },
-    ]);
-    expect(select.value).toBe('');
+    expect(fixture.nativeElement.querySelector('#filtro-disponibilidad')).toBeNull();
   });
 });

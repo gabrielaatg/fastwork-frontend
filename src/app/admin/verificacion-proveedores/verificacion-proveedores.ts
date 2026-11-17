@@ -37,7 +37,7 @@ export class VerificacionProveedores implements OnInit {
   private readonly adminApi = inject(AdminApi);
 
   protected readonly proveedores = signal<ProveedorDirectorio[]>([]);
-  protected readonly filtro = signal<FiltroVerificacion>('PENDIENTE');
+  protected readonly filtro = signal<FiltroVerificacion>('TODOS');
   protected readonly cargando = signal(false);
   protected readonly procesando = signal(false);
   protected readonly errorHttp = signal<ErrorHttp | null>(null);

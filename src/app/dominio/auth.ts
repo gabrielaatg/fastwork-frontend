@@ -1,8 +1,9 @@
 import { RolRegistro, RolUsuario } from './rol';
 
 export interface LoginRequest {
-  correo: string;
+  identificador: string;
   password: string;
+  rol?: RolUsuario;
 }
 
 export interface RegistroUsuarioRequest {
@@ -10,22 +11,32 @@ export interface RegistroUsuarioRequest {
   apellidos: string;
   correo: string;
   password: string;
+  confirmarPassword: string;
   telefono: string;
   rol?: RolRegistro;
   aceptoPoliticaDatos: boolean;
-  documentoIdentidad: string;
+  dni: string;
 }
 
-export interface CambiarModoRequest {
-  modo: RolRegistro;
+export interface RegistroProveedorRequest {
+  nombres: string;
+  apellidos: string;
+  correo: string;
+  password: string;
+  confirmarPassword: string;
+  telefono: string;
+  aceptoPoliticaDatos: boolean;
+  dni: string;
 }
 
 export interface AuthResponse {
-  token: string;
-  tipo: string; // "Bearer"
-  idUsuario: number;
-  rol: RolUsuario;
+  token: string | null;
+  tipo: string | null; // "Bearer"
+  idUsuario: number | null;
+  rol: RolUsuario | null;
   nombres: string;
+  requiereSeleccionRol?: boolean;
+  rolesDisponibles?: RolUsuario[];
 }
 
 /** Estado de sesión autenticada en el cliente. */

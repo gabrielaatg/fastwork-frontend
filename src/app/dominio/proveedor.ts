@@ -29,7 +29,7 @@ export interface ProveedorDirectorio {
 
 export interface ProveedorDetalle extends ProveedorDirectorio {
   correo: string;
-  documentoIdentidad: string;
+  dni: string;
   resenas: Resena[];
 }
 

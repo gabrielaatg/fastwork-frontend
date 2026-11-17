@@ -46,7 +46,7 @@ export class FormularioProveedor implements OnInit {
   private readonly oficioApi = inject(OficioApi);
 
   protected readonly catalogoOficios = signal<Oficio[]>([]);
-  protected readonly documentoIdentidad = signal('');
+  protected readonly dni = signal('');
   protected readonly estadoDisponibilidad = signal<EstadoDisponibilidad>('DISPONIBLE');
   protected readonly estadoVerificacion = signal<EstadoVerificacion | null>(null);
   protected readonly cargandoInicial = signal(true);
@@ -186,7 +186,7 @@ export class FormularioProveedor implements OnInit {
       next: ({ oficios, detalle }) => {
         this.cargandoInicial.set(false);
         this.catalogoOficios.set(oficios);
-        this.documentoIdentidad.set(detalle.documentoIdentidad ?? '');
+        this.dni.set(detalle.dni ?? '');
         this.estadoVerificacion.set(detalle.estadoVerificacion);
         this.estadoDisponibilidad.set(detalle.estadoDisponibilidad);
         this.modelo.set({

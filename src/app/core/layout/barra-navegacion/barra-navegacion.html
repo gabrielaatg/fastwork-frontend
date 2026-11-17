@@ -15,16 +15,6 @@
       </nav>
 
       <div class="fw-nav-usuario">
-        @if (puedeCambiarModo()) {
-          <button
-            type="button"
-            class="fw-btn-modo"
-            [disabled]="cambiandoModo()"
-            (click)="alternarModo()"
-          >
-            {{ cambiandoModo() ? 'Cambiando...' : 'Cambiar a ' + etiquetaCambioModo() }}
-          </button>
-        }
         @if (usuario(); as actual) {
           <span class="fw-usuario-nombre">{{ actual.nombres }}</span>
           <span class="fw-usuario-rol">{{ actual.rol }}</span>
