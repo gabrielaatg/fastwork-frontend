@@ -1,8 +1,13 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { EstadoDisponibilidad, EstadoVerificacion } from '../../../dominio/proveedor';
-import { EstadoSolicitud } from '../../../dominio/solicitud';
+import { EstadoContratacion, EstadoOferta, EstadoSolicitud } from '../../../dominio/solicitud';
 
-export type EstadoBadge = EstadoVerificacion | EstadoDisponibilidad | EstadoSolicitud;
+export type EstadoBadge =
+  | EstadoVerificacion
+  | EstadoDisponibilidad
+  | EstadoSolicitud
+  | EstadoOferta
+  | EstadoContratacion;
 export type TonoBadge = 'exito' | 'advertencia' | 'peligro' | 'neutro';
 
 interface ConfigBadge {
@@ -14,7 +19,10 @@ const CONFIG_POR_ESTADO: Record<EstadoBadge, ConfigBadge> = {
   VERIFICADO: { etiqueta: 'Verificado', tono: 'exito' },
   DISPONIBLE: { etiqueta: 'Disponible', tono: 'exito' },
   ACEPTADA: { etiqueta: 'Aceptada', tono: 'exito' },
-  FINALIZADA: { etiqueta: 'Finalizada', tono: 'exito' },
+  CONTRATADA: { etiqueta: 'Contratada', tono: 'exito' },
+  COMPLETADA: { etiqueta: 'Completada', tono: 'exito' },
+  ABIERTA: { etiqueta: 'Abierta a ofertas', tono: 'advertencia' },
+  ACTIVA: { etiqueta: 'Activa', tono: 'advertencia' },
   PENDIENTE: { etiqueta: 'Pendiente', tono: 'advertencia' },
   OCUPADO: { etiqueta: 'Ocupado', tono: 'advertencia' },
   EN_PROCESO: { etiqueta: 'En proceso', tono: 'advertencia' },
@@ -22,6 +30,7 @@ const CONFIG_POR_ESTADO: Record<EstadoBadge, ConfigBadge> = {
   RECHAZADA: { etiqueta: 'Rechazada', tono: 'peligro' },
   NO_DISPONIBLE: { etiqueta: 'No disponible', tono: 'peligro' },
   CANCELADA: { etiqueta: 'Cancelada', tono: 'neutro' },
+  CERRADA: { etiqueta: 'Cerrada', tono: 'neutro' },
 };
 
 @Component({

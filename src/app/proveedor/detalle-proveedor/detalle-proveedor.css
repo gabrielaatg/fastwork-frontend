@@ -28,6 +28,21 @@
   gap: 1.5rem;
 }
 
+.fw-detalle-identidad {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.25rem;
+}
+
+.fw-avatar-detalle {
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--fw-primary);
+  flex-shrink: 0;
+}
+
 .fw-detalle-info {
   display: flex;
   flex-direction: column;

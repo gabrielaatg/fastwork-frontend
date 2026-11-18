@@ -40,10 +40,12 @@ describe('Login', () => {
     const botonesRol = fixture.nativeElement.querySelectorAll('.fw-rol-btn');
     const modal = fixture.nativeElement.querySelector('[role="dialog"]');
     const inputPass = fixture.nativeElement.querySelector('#login-password') as HTMLInputElement;
-    const btnOjo = fixture.nativeElement.querySelector('.fw-btn-ojo') as HTMLButtonElement;
+    const botonesOjo = fixture.nativeElement.querySelectorAll('.fw-btn-ojo') as NodeListOf<HTMLButtonElement>;
+    const btnOjo = botonesOjo[0];
 
     expect(botonesRol.length).toBe(0);
     expect(modal).toBeNull();
+    expect(botonesOjo.length).toBe(1);
     expect(inputPass.type).toBe('password');
 
     btnOjo.click();

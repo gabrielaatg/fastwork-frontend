@@ -1,9 +1,13 @@
 <section class="fw-panel-resena">
   <header class="fw-panel-cabecera">
     <div>
-      <h2 class="fw-panel-titulo">Calificar servicio</h2>
-      @if (nombreProveedor()) {
-        <p class="fw-panel-subtitulo">Proveedor: {{ nombreProveedor() }}</p>
+      <h2 class="fw-panel-titulo">
+        {{ rolEvaluador() === 'PROVEEDOR' ? 'Calificar al cliente' : 'Calificar al proveedor' }}
+      </h2>
+      @if (nombreEvaluado()) {
+        <p class="fw-panel-subtitulo">
+          {{ rolEvaluador() === 'PROVEEDOR' ? 'Cliente' : 'Proveedor' }}: {{ nombreEvaluado() }}
+        </p>
       }
     </div>
     <button type="button" class="fw-btn-secundario" (click)="cancelar.emit()">Cerrar</button>
@@ -30,7 +34,11 @@
         id="resena-comentario"
         rows="4"
         class="fw-textarea"
-        placeholder="Describe la puntualidad, calidad del trabajo y trato del proveedor..."
+        [placeholder]="
+          rolEvaluador() === 'PROVEEDOR'
+            ? 'Describe la puntualidad, claridad del requerimiento y trato del cliente...'
+            : 'Describe la puntualidad, calidad del trabajo y trato del proveedor...'
+        "
         [formField]="formulario.comentario"
       ></textarea>
       @if (formulario.comentario().touched() && formulario.comentario().invalid()) {

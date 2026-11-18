@@ -70,6 +70,15 @@ textarea {
   padding-right: 2.6rem !important;
 }
 
+input[type='password']::-ms-reveal,
+input[type='password']::-ms-clear,
+.fw-input-password::-ms-reveal,
+.fw-input-password::-ms-clear {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
 .fw-btn-ojo {
   position: absolute;
   right: 0.45rem;

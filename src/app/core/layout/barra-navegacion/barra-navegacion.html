@@ -8,7 +8,12 @@
     @if (estaAutenticado()) {
       <nav class="fw-nav-links" aria-label="Navegación principal">
         @for (enlace of enlaces(); track enlace.ruta) {
-          <a class="fw-nav-link" [routerLink]="enlace.ruta" routerLinkActive="fw-nav-link-activo">
+          <a
+            class="fw-nav-link"
+            [routerLink]="enlace.ruta"
+            routerLinkActive="fw-nav-link-activo"
+            [routerLinkActiveOptions]="{ exact: enlace.exacta ?? false }"
+          >
             {{ enlace.etiqueta }}
           </a>
         }

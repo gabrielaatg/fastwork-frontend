@@ -193,3 +193,35 @@
   font-weight: 600;
   cursor: pointer;
 }
+
+.fw-perfil-identidad {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.fw-avatar-mi-perfil {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--fw-primary);
+}
+
+.fw-zonas-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
+  gap: 0.5rem;
+}
+
+.fw-zona-check {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.45rem 0.65rem;
+  border: 1px solid var(--fw-border);
+  border-radius: var(--fw-radius);
+  background-color: var(--fw-surface-alt);
+  font-size: 0.875rem;
+  cursor: pointer;
+}

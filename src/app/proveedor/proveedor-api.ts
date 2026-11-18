@@ -23,6 +23,9 @@ export class ProveedorApi {
     if (filtros?.oficios && filtros.oficios.length > 0) {
       params = params.set('oficios', filtros.oficios.join(','));
     }
+    if (filtros?.idZona !== undefined) {
+      params = params.set('idZona', String(filtros.idZona));
+    }
     if (filtros?.disponibilidad) {
       params = params.set('disponibilidad', filtros.disponibilidad);
     }

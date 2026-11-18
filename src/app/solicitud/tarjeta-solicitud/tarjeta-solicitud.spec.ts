@@ -1,87 +1,162 @@
+import { ComponentRef } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { SolicitudServicio } from '../../dominio/solicitud';
 import { TarjetaSolicitud } from './tarjeta-solicitud';
 
-function crearSolicitudConCloudinary(): SolicitudServicio {
-  return {
-    idSolicitud: 42,
+describe('TarjetaSolicitud', () => {
+  const solicitudBase: SolicitudServicio = {
+    idSolicitud: 18,
     idCliente: 4,
     nombreCliente: 'Lucía Fernández',
     telefonoCliente: '944300400',
-    idPerfilProveedor: 1,
-    nombreProveedor: 'Carlos Mendoza',
-    telefonoProveedor: '944123456',
+    calificacionCliente: 4.5,
+    totalResenasCliente: 2,
+    idPerfilProveedor: null,
+    nombreProveedor: null,
+    telefonoProveedor: null,
+    fotoPerfilProveedor: null,
     idOficio: 1,
     nombreOficio: 'Gasfitería',
+    idZona: 1,
+    nombreZona: 'Trujillo',
     direccionTrujillo: 'Av. España 450, Trujillo',
     fechaProgramada: '2026-11-20',
     horaProgramada: '15:30:00',
-    descripcionTrabajo: 'Fuga de agua en cocina',
+    descripcionTrabajo: 'Fuga de agua debajo del lavadero',
     presupuestoReferencial: 95,
-    estado: 'PENDIENTE',
+    estado: 'ABIERTA',
     fechaCreacion: '2026-11-17T10:00:00',
     imagenes: [
       {
-        idImagen: 10,
-        nombreOriginal: 'fuga-1.png',
+        idImagen: 1,
+        nombreOriginal: 'fuga-cocina.png',
         contentType: 'image/png',
-        tamanoBytes: 120,
+        tamanoBytes: 1200,
         orden: 1,
-        url: 'https://res.cloudinary.com/demo/image/upload/v1/fastwork/solicitudes/42/fuga-1.png',
-      },
-      {
-        idImagen: 11,
-        nombreOriginal: 'fuga-2.jpg',
-        contentType: 'image/jpeg',
-        tamanoBytes: 220,
-        orden: 2,
-        url: 'https://res.cloudinary.com/demo/image/upload/v1/fastwork/solicitudes/42/fuga-2.jpg',
+        url: 'https://res.cloudinary.com/demo/image/upload/v1700000000/fastwork/solicitudes/18/fuga-cocina.png',
       },
     ],
+    contratacion: null,
+    miOferta: null,
+    totalOfertas: 2,
   };
-}
 
-describe('TarjetaSolicitud', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [TarjetaSolicitud],
     }).compileComponents();
   });
 
-  it('debe renderizar miniaturas optimizadas de Cloudinary y permitir navegar en el lightbox', () => {
+  it('debe renderizar miniaturas, zona, ofertas para cliente y abrir el visor lightbox al pulsar una', () => {
     const fixture = TestBed.createComponent(TarjetaSolicitud);
-    fixture.componentRef.setInput('solicitud', crearSolicitudConCloudinary());
-    fixture.componentRef.setInput('rolActual', 'PROVEEDOR');
+    const ref: ComponentRef<TarjetaSolicitud> = fixture.componentRef;
+    ref.setInput('solicitud', solicitudBase);
+    ref.setInput('rol', 'CLIENTE');
     fixture.detectChanges();
 
-    const el = fixture.nativeElement as HTMLElement;
-    const miniaturas = el.querySelectorAll('.fw-miniatura-btn');
-    expect(miniaturas.length).toBe(2);
-    expect(el.textContent).toContain('Fotos del problema (2)');
+    const host = fixture.nativeElement as HTMLElement;
+    expect(host.textContent).toContain('Trujillo');
+    expect(host.textContent).toContain('Ver ofertas (2)');
 
-    const primeraImg = el.querySelector('.fw-miniatura-img') as HTMLImageElement;
-    expect(primeraImg.src).toContain('/upload/w_320,h_320,c_fill,q_auto,f_auto/');
+    const miniaturaImg = host.querySelector('.fw-miniatura-img') as HTMLImageElement | null;
+    expect(miniaturaImg).toBeTruthy();
+    expect(miniaturaImg?.src).toContain('/upload/w_320,h_320,c_fill,q_auto,f_auto/');
 
-    // Abre lightbox en la primera foto
-    (miniaturas[0] as HTMLButtonElement).click();
+    (host.querySelector('.fw-miniatura-btn') as HTMLButtonElement).click();
     fixture.detectChanges();
 
-    expect(el.querySelector('.fw-lightbox-backdrop')).not.toBeNull();
-    expect(el.textContent).toContain('fuga-1.png (1 / 2)');
-    const imgLightbox = el.querySelector('.fw-lightbox-img') as HTMLImageElement;
-    expect(imgLightbox.src).toBe(
-      'https://res.cloudinary.com/demo/image/upload/v1/fastwork/solicitudes/42/fuga-1.png',
+    expect(host.querySelector('.fw-lightbox-backdrop')).toBeTruthy();
+    expect(host.querySelector('.fw-lightbox-img')?.getAttribute('src')).toBe(
+      solicitudBase.imagenes[0].url,
     );
+  });
 
-    // Navega a la siguiente imagen
-    const botonesNav = el.querySelectorAll('.fw-lightbox-nav');
-    (botonesNav[1] as HTMLButtonElement).click();
+  it('debe ocultar Mensajes si no hay contratación y mostrarlo cuando existe contrato', () => {
+    const fixture = TestBed.createComponent(TarjetaSolicitud);
+    const ref: ComponentRef<TarjetaSolicitud> = fixture.componentRef;
+    ref.setInput('solicitud', solicitudBase);
+    ref.setInput('rol', 'PROVEEDOR');
     fixture.detectChanges();
-    expect(el.textContent).toContain('fuga-2.jpg (2 / 2)');
 
-    // Cierra lightbox
-    (el.querySelector('.fw-lightbox-cerrar') as HTMLButtonElement).click();
+    const host = fixture.nativeElement as HTMLElement;
+    expect(host.textContent).not.toContain('Mensajes');
+    expect(host.textContent).toContain('4.50');
+
+    ref.setInput('solicitud', {
+      ...solicitudBase,
+      estado: 'CONTRATADA',
+      idPerfilProveedor: 1,
+      nombreProveedor: 'Carlos Mendoza',
+      contratacion: {
+        idContratacion: 30,
+        idSolicitud: 18,
+        idOferta: 9,
+        idCliente: 4,
+        nombreCliente: 'Lucía Fernández',
+        idPerfilProveedor: 1,
+        nombreProveedor: 'Carlos Mendoza',
+        fotoPerfilProveedor: null,
+        precioFinal: 110,
+        estado: 'ACTIVA',
+        completadoCliente: false,
+        completadoProveedor: false,
+        fechaContratacion: '2026-11-17T11:00:00',
+        fechaCompletado: null,
+        yaCalificoCliente: false,
+        yaCalificoProveedor: false,
+      },
+    });
     fixture.detectChanges();
-    expect(el.querySelector('.fw-lightbox-backdrop')).toBeNull();
+    expect(host.textContent).toContain('Mensajes');
+  });
+
+  it('debe habilitar Calificar independientemente para CLIENTE y PROVEEDOR cuando contratación está COMPLETADA', () => {
+    const fixture = TestBed.createComponent(TarjetaSolicitud);
+    const ref: ComponentRef<TarjetaSolicitud> = fixture.componentRef;
+    const contratacionCompletada = {
+      idContratacion: 30,
+      idSolicitud: 18,
+      idOferta: 9,
+      idCliente: 4,
+      nombreCliente: 'Lucía Fernández',
+      idPerfilProveedor: 1,
+      nombreProveedor: 'Carlos Mendoza',
+      fotoPerfilProveedor: null,
+      precioFinal: 110,
+      estado: 'COMPLETADA' as const,
+      completadoCliente: true,
+      completadoProveedor: true,
+      fechaContratacion: '2026-11-17T11:00:00',
+      fechaCompletado: '2026-11-17T14:00:00',
+      yaCalificoCliente: false,
+      yaCalificoProveedor: false,
+    };
+
+    ref.setInput('solicitud', {
+      ...solicitudBase,
+      estado: 'COMPLETADA',
+      idPerfilProveedor: 1,
+      nombreProveedor: 'Carlos Mendoza',
+      contratacion: contratacionCompletada,
+    });
+
+    ref.setInput('rol', 'PROVEEDOR');
+    fixture.detectChanges();
+    expect((fixture.nativeElement as HTMLElement).textContent).toContain('Calificar al cliente');
+
+    ref.setInput('rol', 'CLIENTE');
+    fixture.detectChanges();
+    expect((fixture.nativeElement as HTMLElement).textContent).toContain('Calificar al proveedor');
+
+    ref.setInput('solicitud', {
+      ...solicitudBase,
+      estado: 'COMPLETADA',
+      idPerfilProveedor: 1,
+      nombreProveedor: 'Carlos Mendoza',
+      contratacion: { ...contratacionCompletada, yaCalificoProveedor: true },
+    });
+    ref.setInput('rol', 'PROVEEDOR');
+    fixture.detectChanges();
+    expect((fixture.nativeElement as HTMLElement).textContent).toContain('Calificado');
   });
 });

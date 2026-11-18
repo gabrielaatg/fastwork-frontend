@@ -4,12 +4,17 @@ import { map, Observable, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import {
   AuthResponse,
+  DatosHeredadosDniResponse,
+  EnviarCodigoCorreoRequest,
+  EstadoVerificacionCorreoResponse,
   LoginRequest,
   RegistroProveedorRequest,
   RegistroUsuarioRequest,
   UsuarioSesion,
+  ValidacionCulResponse,
+  VerificarCodigoCorreoRequest,
 } from '../../dominio/auth';
-import { RolUsuario } from '../../dominio/rol';
+import { RolRegistro, RolUsuario } from '../../dominio/rol';
 import { extraerData, JsendResponse } from '../api/jsend';
 
 const CLAVE_SESION_STORAGE = 'fastwork_sesion';
@@ -32,6 +37,37 @@ export class AuthApi {
     return sesion !== null && !this.tokenExpirado(sesion.token);
   });
 
+  consultarDni(dni: string, rolDestino: RolRegistro): Observable<DatosHeredadosDniResponse> {
+    return this.http
+      .get<JsendResponse<DatosHeredadosDniResponse>>(
+        `${this.baseUrl}/consultar-dni/${encodeURIComponent(dni)}`,
+        { params: { rolDestino } },
+      )
+      .pipe(map(extraerData));
+  }
+
+  enviarCodigoCorreo(
+    request: EnviarCodigoCorreoRequest,
+  ): Observable<EstadoVerificacionCorreoResponse> {
+    return this.http
+      .post<JsendResponse<EstadoVerificacionCorreoResponse>>(
+        `${this.baseUrl}/enviar-codigo-correo`,
+        request,
+      )
+      .pipe(map(extraerData));
+  }
+
+  verificarCodigoCorreo(
+    request: VerificarCodigoCorreoRequest,
+  ): Observable<EstadoVerificacionCorreoResponse> {
+    return this.http
+      .post<JsendResponse<EstadoVerificacionCorreoResponse>>(
+        `${this.baseUrl}/verificar-codigo-correo`,
+        request,
+      )
+      .pipe(map(extraerData));
+  }
+
   registrar(request: RegistroUsuarioRequest): Observable<AuthResponse> {
     return this.http.post<JsendResponse<AuthResponse>>(`${this.baseUrl}/register`, request).pipe(
       map(extraerData),
@@ -39,13 +75,25 @@ export class AuthApi {
     );
   }
 
+  validarCul(dni: string, archivoCul: File): Observable<ValidacionCulResponse> {
+    const formData = new FormData();
+    formData.append('dni', dni);
+    formData.append('archivoCul', archivoCul, archivoCul.name);
+
+    return this.http
+      .post<JsendResponse<ValidacionCulResponse>>(`${this.baseUrl}/validar-cul`, formData)
+      .pipe(map(extraerData));
+  }
+
   registrarProveedor(
     request: RegistroProveedorRequest,
     archivoCul: File,
+    fotoPerfil: File,
   ): Observable<AuthResponse> {
     const formData = new FormData();
     formData.append('datos', new Blob([JSON.stringify(request)], { type: 'application/json' }));
     formData.append('archivoCul', archivoCul, archivoCul.name);
+    formData.append('fotoPerfil', fotoPerfil, fotoPerfil.name);
 
     return this.http
       .post<JsendResponse<AuthResponse>>(`${this.baseUrl}/register-proveedor`, formData)

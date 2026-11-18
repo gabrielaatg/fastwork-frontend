@@ -1,124 +1,127 @@
-import { DecimalPipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   DestroyRef,
-  effect,
   inject,
-  input,
+  OnInit,
   signal,
 } from '@angular/core';
-import { FormField, form, min, required, submit, validate } from '@angular/forms/signals';
+import {
+  FormField,
+  form,
+  min,
+  required,
+  submit,
+  validate,
+} from '@angular/forms/signals';
 import { Router, RouterLink } from '@angular/router';
+import { forkJoin } from 'rxjs';
 import { ErrorHttp } from '../../core/api/errores';
 import { AlertaMensaje } from '../../core/layout/alerta-mensaje/alerta-mensaje';
-import { ProveedorDetalle } from '../../dominio/proveedor';
-import { ProveedorApi } from '../../proveedor/proveedor-api';
+import { Oficio } from '../../dominio/oficio';
+import { Zona } from '../../dominio/zona';
+import { OficioApi } from '../../oficio/oficio-api';
+import { ZonaApi } from '../../zona/zona-api';
 import { SolicitudApi } from '../solicitud-api';
 
-export const MIN_IMAGENES_SOLICITUD = 1;
-export const MAX_IMAGENES_SOLICITUD = 5;
-export const MAX_BYTES_IMAGEN_SOLICITUD = 5 * 1024 * 1024;
-const MIME_IMAGENES_PERMITIDOS = new Set(['image/jpeg', 'image/png', 'image/webp']);
-const EXTENSIONES_IMAGEN_PERMITIDAS = ['.jpg', '.jpeg', '.png', '.webp'];
+const MIN_IMAGENES = 1;
+const MAX_IMAGENES = 5;
+const MAX_BYTES_IMAGEN = 5 * 1024 * 1024;
+const TIPOS_IMAGEN_PERMITIDOS = new Set(['image/jpeg', 'image/png', 'image/webp']);
+const EXTENSIONES_PERMITIDAS = ['.jpg', '.jpeg', '.png', '.webp'];
 
 interface ImagenSeleccionada {
-  id: string;
   archivo: File;
   previewUrl: string;
 }
 
-interface FormularioSolicitudModelo {
+interface SolicitudModelo {
   idOficio: string;
+  idZona: string;
   direccionTrujillo: string;
   fechaProgramada: string;
   horaProgramada: string;
+  presupuestoReferencial: number;
   descripcionTrabajo: string;
-  presupuestoReferencial: number | null;
 }
 
-function obtenerFechaLocalHoy(): string {
+function obtenerFechaLocalIso(): string {
   const ahora = new Date();
-  const anio = ahora.getFullYear();
-  const mes = String(ahora.getMonth() + 1).padStart(2, '0');
-  const dia = String(ahora.getDate()).padStart(2, '0');
-  return `${anio}-${mes}-${dia}`;
+  const y = ahora.getFullYear();
+  const m = String(ahora.getMonth() + 1).padStart(2, '0');
+  const d = String(ahora.getDate()).padStart(2, '0');
+  return `${y}-${m}-${d}`;
 }
 
 @Component({
   selector: 'app-formulario-solicitud',
-  imports: [DecimalPipe, FormField, RouterLink, AlertaMensaje],
+  imports: [FormField, RouterLink, AlertaMensaje],
   templateUrl: './formulario-solicitud.html',
   styleUrl: './formulario-solicitud.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FormularioSolicitud {
-  private readonly proveedorApi = inject(ProveedorApi);
-  private readonly solicitudApi = inject(SolicitudApi);
+export class FormularioSolicitud implements OnInit {
   private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
-  private secuenciaImagen = 0;
+  private readonly oficioApi = inject(OficioApi);
+  private readonly zonaApi = inject(ZonaApi);
+  private readonly solicitudApi = inject(SolicitudApi);
 
-  readonly idPerfilProveedor = input.required<string>();
-
-  protected readonly minImagenes = MIN_IMAGENES_SOLICITUD;
-  protected readonly maxImagenes = MAX_IMAGENES_SOLICITUD;
-  protected readonly fechaMinima = obtenerFechaLocalHoy();
-  protected readonly proveedor = signal<ProveedorDetalle | null>(null);
-  protected readonly cargandoProveedor = signal(false);
+  protected readonly fechaMinima = obtenerFechaLocalIso();
+  protected readonly oficios = signal<Oficio[]>([]);
+  protected readonly zonas = signal<Zona[]>([]);
+  protected readonly cargandoCatalogos = signal(true);
   protected readonly enviando = signal(false);
   protected readonly errorHttp = signal<ErrorHttp | null>(null);
-  protected readonly imagenes = signal<ImagenSeleccionada[]>([]);
+  protected readonly imagenesSeleccionadas = signal<ImagenSeleccionada[]>([]);
   protected readonly errorImagenes = signal<string | null>(null);
 
-  protected readonly modelo = signal<FormularioSolicitudModelo>({
+  protected readonly modelo = signal<SolicitudModelo>({
     idOficio: '',
+    idZona: '',
     direccionTrujillo: '',
     fechaProgramada: this.fechaMinima,
     horaProgramada: '09:00',
+    presupuestoReferencial: 50,
     descripcionTrabajo: '',
-    presupuestoReferencial: null,
   });
 
   protected readonly formulario = form(this.modelo, (ruta) => {
-    required(ruta.idOficio, { message: 'Selecciona el oficio que necesitas.' });
-    required(ruta.direccionTrujillo, {
-      message: 'Ingresa la dirección del servicio en Trujillo.',
-    });
+    required(ruta.idOficio, { message: 'Selecciona la categoría de oficio.' });
+    required(ruta.idZona, { message: 'Selecciona el distrito en Trujillo.' });
+    required(ruta.direccionTrujillo, { message: 'La dirección en Trujillo es obligatoria.' });
     required(ruta.fechaProgramada, { message: 'La fecha programada es obligatoria.' });
     validate(ruta.fechaProgramada, ({ value }) => {
       const fecha = value();
-      if (fecha && fecha < this.fechaMinima) {
+      if (fecha && fecha < obtenerFechaLocalIso()) {
         return {
           kind: 'fechaPasada',
-          message: 'La fecha programada debe ser hoy o posterior.',
+          message: 'La fecha programada no puede ser anterior a hoy.',
         };
       }
       return null;
     });
     required(ruta.horaProgramada, { message: 'La hora programada es obligatoria.' });
-    required(ruta.descripcionTrabajo, {
-      message: 'Describe brevemente el trabajo requerido.',
+    min(ruta.presupuestoReferencial, 1, {
+      message: 'El presupuesto inicial debe ser mayor o igual a S/ 1.00.',
     });
-    min(ruta.presupuestoReferencial, 0, {
-      message: 'El presupuesto referencial no puede ser negativo.',
+    required(ruta.descripcionTrabajo, {
+      message: 'Describe brevemente el problema o trabajo requerido.',
     });
   });
 
   constructor() {
     this.destroyRef.onDestroy(() => {
-      for (const item of this.imagenes()) {
-        URL.revokeObjectURL(item.previewUrl);
+      for (const item of this.imagenesSeleccionadas()) {
+        if (typeof URL.revokeObjectURL === 'function' && item.previewUrl) {
+          URL.revokeObjectURL(item.previewUrl);
+        }
       }
     });
+  }
 
-    effect(() => {
-      const id = Number(this.idPerfilProveedor());
-      if (!Number.isInteger(id) || id <= 0) {
-        return;
-      }
-      this.cargarProveedor(id);
-    });
+  ngOnInit(): void {
+    this.cargarCatalogos();
   }
 
   protected alSeleccionarImagenes(evento: Event): void {
@@ -127,139 +130,93 @@ export class FormularioSolicitud {
     if (input) {
       input.value = '';
     }
+
     if (archivos.length === 0) {
       return;
     }
 
-    const actuales = this.imagenes();
-    const espacioDisponible = MAX_IMAGENES_SOLICITUD - actuales.length;
-    if (espacioDisponible <= 0) {
-      this.errorImagenes.set(`Solo puedes adjuntar un máximo de ${MAX_IMAGENES_SOLICITUD} imágenes.`);
-      return;
-    }
-
-    let mensajeError: string | null = null;
-    const aAgregar = archivos.slice(0, espacioDisponible);
-    if (archivos.length > espacioDisponible) {
-      mensajeError = `Solo puedes adjuntar hasta ${MAX_IMAGENES_SOLICITUD} imágenes por solicitud. Se agregaron las primeras ${espacioDisponible}.`;
-    }
-
-    const nuevas: ImagenSeleccionada[] = [];
-    for (const archivo of aAgregar) {
-      const errorArchivo = this.validarArchivoImagen(archivo);
-      if (errorArchivo) {
-        mensajeError = errorArchivo;
-        continue;
-      }
-      this.secuenciaImagen += 1;
-      nuevas.push({
-        id: `img-${this.secuenciaImagen}`,
-        archivo,
-        previewUrl: URL.createObjectURL(archivo),
-      });
-    }
-
-    if (nuevas.length > 0) {
-      this.imagenes.set([...actuales, ...nuevas]);
-    }
-    this.errorImagenes.set(mensajeError);
-  }
-
-  protected alReemplazarImagen(indice: number, evento: Event): void {
-    const input = evento.target as HTMLInputElement | null;
-    const archivo = input?.files?.[0] ?? null;
-    if (input) {
-      input.value = '';
-    }
-    if (!archivo) {
-      return;
-    }
-
-    const errorArchivo = this.validarArchivoImagen(archivo);
-    if (errorArchivo) {
-      this.errorImagenes.set(errorArchivo);
-      return;
-    }
-
-    const lista = [...this.imagenes()];
-    const anterior = lista[indice];
-    if (!anterior) {
-      return;
-    }
-
-    URL.revokeObjectURL(anterior.previewUrl);
-    this.secuenciaImagen += 1;
-    lista[indice] = {
-      id: `img-${this.secuenciaImagen}`,
-      archivo,
-      previewUrl: URL.createObjectURL(archivo),
-    };
-    this.imagenes.set(lista);
     this.errorImagenes.set(null);
+    const actuales = [...this.imagenesSeleccionadas()];
+
+    if (actuales.length + archivos.length > MAX_IMAGENES) {
+      this.errorImagenes.set(`Solo puedes adjuntar como máximo ${MAX_IMAGENES} imágenes.`);
+      return;
+    }
+
+    for (const archivo of archivos) {
+      const nombreLower = archivo.name.toLowerCase();
+      const tipoValido =
+        TIPOS_IMAGEN_PERMITIDOS.has(archivo.type) ||
+        EXTENSIONES_PERMITIDAS.some((ext) => nombreLower.endsWith(ext));
+      if (!tipoValido) {
+        this.errorImagenes.set('Solo se permiten imágenes JPG, PNG o WEBP.');
+        return;
+      }
+      if (archivo.size === 0 || archivo.size > MAX_BYTES_IMAGEN) {
+        this.errorImagenes.set('Cada imagen debe pesar entre 1 byte y 5 MB.');
+        return;
+      }
+
+      const previewUrl =
+        typeof URL.createObjectURL === 'function' ? URL.createObjectURL(archivo) : '';
+      actuales.push({ archivo, previewUrl });
+    }
+
+    this.imagenesSeleccionadas.set(actuales);
   }
 
-  protected eliminarImagen(indice: number): void {
-    const lista = [...this.imagenes()];
-    const [eliminada] = lista.splice(indice, 1);
-    if (eliminada) {
-      URL.revokeObjectURL(eliminada.previewUrl);
+  protected quitarImagen(indice: number): void {
+    const lista = this.imagenesSeleccionadas();
+    const eliminado = lista[indice];
+    if (eliminado?.previewUrl && typeof URL.revokeObjectURL === 'function') {
+      URL.revokeObjectURL(eliminado.previewUrl);
     }
-    this.imagenes.set(lista);
-    if (lista.length === 0) {
+    this.imagenesSeleccionadas.set(lista.filter((_, i) => i !== indice));
+    if (lista.length - 1 < MIN_IMAGENES) {
       this.errorImagenes.set('Debes adjuntar al menos 1 imagen del problema.');
     } else {
       this.errorImagenes.set(null);
     }
   }
 
-  protected formatearTamanoArchivo(bytes: number): string {
-    if (bytes < 1024) {
-      return `${bytes} B`;
-    }
-    if (bytes < 1024 * 1024) {
-      return `${(bytes / 1024).toFixed(1)} KB`;
-    }
+  protected formatearTamano(bytes: number): string {
+    if (bytes < 1024) return `${bytes} B`;
+    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
     return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
   }
 
   protected alEnviar(evento: Event): void {
     evento.preventDefault();
     this.errorHttp.set(null);
-    const detalle = this.proveedor();
-    if (!detalle) {
-      return;
-    }
 
-    if (this.imagenes().length < MIN_IMAGENES_SOLICITUD) {
-      this.errorImagenes.set('Debes adjuntar al menos 1 imagen del problema (máximo 5).');
+    if (this.imagenesSeleccionadas().length < MIN_IMAGENES) {
+      this.errorImagenes.set('Debes adjuntar al menos 1 imagen del problema.');
     }
 
     void submit(this.formulario, () => {
-      const seleccionadas = this.imagenes();
-      if (seleccionadas.length < MIN_IMAGENES_SOLICITUD) {
-        this.errorImagenes.set('Debes adjuntar al menos 1 imagen del problema (máximo 5).');
+      const imagenes = this.imagenesSeleccionadas().map((item) => item.archivo);
+      if (imagenes.length < MIN_IMAGENES || imagenes.length > MAX_IMAGENES) {
+        this.errorImagenes.set(
+          `Debes adjuntar entre ${MIN_IMAGENES} y ${MAX_IMAGENES} imágenes del problema.`,
+        );
         return Promise.resolve();
       }
 
       const datos = this.modelo();
-      const horaNormalizada =
-        datos.horaProgramada.length === 5 ? `${datos.horaProgramada}:00` : datos.horaProgramada;
-
       this.enviando.set(true);
+
       this.solicitudApi
         .crear(
           {
-            idPerfilProveedor: detalle.idPerfilProveedor,
             idOficio: Number(datos.idOficio),
+            idZona: Number(datos.idZona),
             direccionTrujillo: datos.direccionTrujillo.trim(),
             fechaProgramada: datos.fechaProgramada,
-            horaProgramada: horaNormalizada,
+            horaProgramada: datos.horaProgramada,
             descripcionTrabajo: datos.descripcionTrabajo.trim(),
-            ...(datos.presupuestoReferencial !== null
-              ? { presupuestoReferencial: Number(datos.presupuestoReferencial) }
-              : {}),
+            presupuestoReferencial: Number(datos.presupuestoReferencial),
           },
-          seleccionadas.map((item) => item.archivo),
+          imagenes,
         )
         .subscribe({
           next: () => {
@@ -276,40 +233,24 @@ export class FormularioSolicitud {
     });
   }
 
-  private validarArchivoImagen(archivo: File): string | null {
-    const nombreLower = archivo.name.toLowerCase();
-    const extensionValida = EXTENSIONES_IMAGEN_PERMITIDAS.some((ext) => nombreLower.endsWith(ext));
-    const mimeValido = archivo.type ? MIME_IMAGENES_PERMITIDOS.has(archivo.type) : false;
-
-    if (!mimeValido && !extensionValida) {
-      return `El archivo "${archivo.name}" debe ser una imagen JPG, PNG o WEBP.`;
-    }
-    if (archivo.size === 0) {
-      return `La imagen "${archivo.name}" está vacía.`;
-    }
-    if (archivo.size > MAX_BYTES_IMAGEN_SOLICITUD) {
-      return `La imagen "${archivo.name}" excede el tamaño máximo permitido (5 MB).`;
-    }
-    return null;
-  }
-
-  private cargarProveedor(id: number): void {
-    this.cargandoProveedor.set(true);
-    this.errorHttp.set(null);
-
-    this.proveedorApi.obtenerDetalle(id).subscribe({
-      next: (datos) => {
-        this.cargandoProveedor.set(false);
-        this.proveedor.set(datos);
-        if (datos.oficios.length === 1) {
-          this.modelo.update((actual) => ({
-            ...actual,
-            idOficio: String(datos.oficios[0].idOficio),
-          }));
-        }
+  private cargarCatalogos(): void {
+    this.cargandoCatalogos.set(true);
+    forkJoin({
+      oficios: this.oficioApi.listarActivos(),
+      zonas: this.zonaApi.listarActivas(),
+    }).subscribe({
+      next: ({ oficios, zonas }) => {
+        this.cargandoCatalogos.set(false);
+        this.oficios.set(oficios);
+        this.zonas.set(zonas);
+        this.modelo.update((actual) => ({
+          ...actual,
+          idOficio: actual.idOficio || (oficios[0] ? String(oficios[0].idOficio) : ''),
+          idZona: actual.idZona || (zonas[0] ? String(zonas[0].idZona) : ''),
+        }));
       },
       error: (error: ErrorHttp) => {
-        this.cargandoProveedor.set(false);
+        this.cargandoCatalogos.set(false);
         this.errorHttp.set(error);
       },
     });

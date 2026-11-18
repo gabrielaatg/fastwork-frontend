@@ -23,7 +23,10 @@
       <p class="fw-chat-estado">Aún no hay mensajes. Inicia la coordinación aquí.</p>
     } @else {
       @for (msg of mensajes(); track msg.idMensaje) {
-        <article class="fw-burbuja" [class.fw-burbuja-propia]="msg.idEmisor === idUsuarioActual()">
+        <article
+          class="fw-burbuja"
+          [class.fw-burbuja-propia]="msg.idEmisor === idUsuarioActual() && msg.rolEmisor === rolActual()"
+        >
           <div class="fw-burbuja-meta">
             <strong>{{ msg.nombreEmisor }}</strong>
             <span>{{ msg.fechaEnvio | date: 'dd/MM HH:mm' }}</span>

@@ -35,6 +35,7 @@ export class ChatSolicitud {
   readonly cerrado = output<void>();
 
   protected readonly idUsuarioActual = this.authApi.idUsuario;
+  protected readonly rolActual = this.authApi.rol;
   protected readonly mensajes = signal<Mensaje[]>([]);
   protected readonly cargando = signal(false);
   protected readonly enviando = signal(false);

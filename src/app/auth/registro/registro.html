@@ -32,6 +32,41 @@
     <app-alerta-mensaje [error]="errorHttp()" [cerrable]="true" (cerrado)="errorHttp.set(null)" />
 
     <form class="fw-registro-form" (submit)="alEnviar($event)" novalidate>
+      <div class="fw-campo">
+        <label class="fw-label" for="reg-dni">DNI (8 dígitos)</label>
+        <input
+          id="reg-dni"
+          type="text"
+          inputmode="numeric"
+          class="fw-input"
+          placeholder="Ej. 71234567"
+          [formField]="formulario.dni"
+        />
+        @if (consultandoDni()) {
+          <p class="fw-sub-ayuda">Verificando DNI...</p>
+        }
+        @if (errorDniConsulta(); as errDni) {
+          <ul class="fw-errores-campo">
+            <li>{{ errDni }}</li>
+          </ul>
+        }
+        @if (formulario.dni().touched() && formulario.dni().invalid()) {
+          <ul class="fw-errores-campo">
+            @for (error of formulario.dni().errors(); track error.kind) {
+              <li>{{ error.message }}</li>
+            }
+          </ul>
+        }
+      </div>
+
+      @if (heredadoDeRol(); as origen) {
+        <div class="fw-herencia-banner" role="status">
+          <strong>Cuenta encontrada como {{ origen === 'CLIENTE' ? 'Cliente' : 'Proveedor' }}:</strong>
+          heredamos tus datos personales y correo. Ingresa <strong>la misma contraseña</strong> de tu
+          cuenta existente y verifica tu correo con el código.
+        </div>
+      }
+
       <div class="fw-fila-dos">
         <div class="fw-campo">
           <label class="fw-label" for="reg-nombres">Nombres</label>
@@ -39,6 +74,7 @@
             id="reg-nombres"
             type="text"
             class="fw-input"
+            [class.fw-input-bloqueado]="heredadoDeRol() !== null"
             placeholder="Carlos Alberto"
             [formField]="formulario.nombres"
           />
@@ -57,6 +93,7 @@
             id="reg-apellidos"
             type="text"
             class="fw-input"
+            [class.fw-input-bloqueado]="heredadoDeRol() !== null"
             placeholder="Mendoza Paredes"
             [formField]="formulario.apellidos"
           />
@@ -73,19 +110,47 @@
       <div class="fw-fila-dos">
         <div class="fw-campo">
           <label class="fw-label" for="reg-correo">Correo electrónico</label>
-          <input
-            id="reg-correo"
-            type="email"
-            autocomplete="email"
-            class="fw-input"
-            placeholder="carlos@correo.com"
-            [formField]="formulario.correo"
-          />
+          <div class="fw-correo-wrap">
+            <input
+              id="reg-correo"
+              type="email"
+              autocomplete="email"
+              class="fw-input"
+              [class.fw-input-bloqueado]="heredadoDeRol() !== null"
+              placeholder="carlos@correo.com"
+              [formField]="formulario.correo"
+            />
+            <button
+              type="button"
+              id="reg-btn-enviar-codigo"
+              class="fw-btn-codigo"
+              [disabled]="enviandoCodigo() || correoVerificado() || cooldownSegundos() > 0"
+              (click)="solicitarCodigoCorreo()"
+            >
+              @if (correoVerificado()) {
+                Verificado
+              } @else if (enviandoCodigo()) {
+                Enviando...
+              } @else if (cooldownSegundos() > 0) {
+                Reenviar ({{ cooldownSegundos() }}s)
+              } @else {
+                Enviar código
+              }
+            </button>
+          </div>
+          @if (correoVerificado()) {
+            <p class="fw-ok-campo">&#10003; Correo electrónico verificado</p>
+          }
           @if (formulario.correo().touched() && formulario.correo().invalid()) {
             <ul class="fw-errores-campo">
               @for (error of formulario.correo().errors(); track error.kind) {
                 <li>{{ error.message }}</li>
               }
+            </ul>
+          }
+          @if (errorCorreoVerificacion()) {
+            <ul class="fw-errores-campo">
+              <li>{{ errorCorreoVerificacion() }}</li>
             </ul>
           }
         </div>
@@ -96,6 +161,7 @@
             id="reg-telefono"
             type="tel"
             class="fw-input"
+            [class.fw-input-bloqueado]="heredadoDeRol() !== null"
             placeholder="948123456"
             [formField]="formulario.telefono"
           />
@@ -142,6 +208,9 @@
               }
             </button>
           </div>
+          @if (heredadoDeRol() !== null) {
+            <p class="fw-sub-ayuda">Debe ser exactamente la misma contraseña de tu cuenta existente.</p>
+          }
           @if (formulario.password().touched() && formulario.password().invalid()) {
             <ul class="fw-errores-campo">
               @for (error of formulario.password().errors(); track error.kind) {
@@ -202,26 +271,54 @@
         </div>
       </div>
 
-      <div class="fw-campo">
-        <label class="fw-label" for="reg-dni">DNI (8 dígitos)</label>
-        <input
-          id="reg-dni"
-          type="text"
-          inputmode="numeric"
-          class="fw-input"
-          placeholder="Ej. 71234567"
-          [formField]="formulario.dni"
-        />
-        @if (formulario.dni().touched() && formulario.dni().invalid()) {
-          <ul class="fw-errores-campo">
-            @for (error of formulario.dni().errors(); track error.kind) {
-              <li>{{ error.message }}</li>
-            }
-          </ul>
-        }
-      </div>
-
       @if (modelo().rol === 'PROVEEDOR') {
+        <div class="fw-cul-caja">
+          <div class="fw-campo">
+            <span class="fw-label">Distritos de atención en Trujillo (mín. 1)</span>
+            <div class="fw-checks-grid">
+              @for (zona of catalogoZonas(); track zona.idZona) {
+                <label class="fw-check-chip">
+                  <input
+                    type="checkbox"
+                    [checked]="estaZonaSeleccionada(zona.idZona)"
+                    (change)="alternarZona(zona.idZona)"
+                  />
+                  <span>{{ zona.nombreZona }}</span>
+                </label>
+              }
+            </div>
+            @if (errorZonas()) {
+              <ul class="fw-errores-campo">
+                <li>{{ errorZonas() }}</li>
+              </ul>
+            }
+          </div>
+
+          <div class="fw-campo">
+            <span class="fw-label">Oficio(s) que ofreces (mín. 1)</span>
+            <p class="fw-sub-ayuda">
+              Las tarifas referenciales podrás editarlas luego en Mi Perfil Comercial.
+            </p>
+            <div class="fw-checks-grid">
+              @for (oficio of catalogoOficios(); track oficio.idOficio) {
+                <label class="fw-check-chip">
+                  <input
+                    type="checkbox"
+                    [checked]="estaOficioSeleccionado(oficio.idOficio)"
+                    (change)="alternarOficio(oficio.idOficio)"
+                  />
+                  <span>{{ oficio.nombreOficio }}</span>
+                </label>
+              }
+            </div>
+            @if (errorOficios()) {
+              <ul class="fw-errores-campo">
+                <li>{{ errorOficios() }}</li>
+              </ul>
+            }
+          </div>
+        </div>
+
         <div class="fw-cul-caja">
           <div class="fw-cul-cabecera">
             <div>
@@ -240,16 +337,37 @@
 
           <div class="fw-campo">
             <label class="fw-label" for="reg-cul">Archivo PDF del Certificado Único Laboral</label>
-            <input
-              id="reg-cul"
-              type="file"
-              accept="application/pdf,.pdf"
-              class="fw-input fw-input-archivo"
-              (change)="alSeleccionarCul($event)"
-            />
+            <div class="fw-correo-wrap">
+              <input
+                id="reg-cul"
+                type="file"
+                accept="application/pdf,.pdf"
+                class="fw-input fw-input-archivo"
+                (change)="alSeleccionarCul($event)"
+              />
+              <button
+                type="button"
+                class="fw-btn-codigo"
+                [disabled]="validandoCul() || !archivoCul()"
+                (click)="validarCulEnServidor()"
+              >
+                @if (validandoCul()) {
+                  Validando...
+                } @else if (culVerificado()) {
+                  CUL verificado
+                } @else {
+                  Validar CUL
+                }
+              </button>
+            </div>
             @if (archivoCul(); as cul) {
               <p class="fw-cul-archivo-ok">
                 Archivo seleccionado: <strong>{{ cul.name }}</strong> ({{ formatearTamanoArchivo(cul.size) }})
+              </p>
+            }
+            @if (culVerificado()) {
+              <p class="fw-ok-campo">
+                {{ mensajeCulVerificado() || 'CUL validado correctamente sin antecedentes.' }}
               </p>
             }
             @if (errorCul()) {
@@ -258,6 +376,33 @@
               </ul>
             }
           </div>
+
+          @if (culVerificado()) {
+            <div class="fw-campo fw-foto-perfil-box">
+              <label class="fw-label" for="reg-foto-perfil">Foto de perfil profesional (obligatoria)</label>
+              <p class="fw-sub-ayuda">
+                Tu CUL fue verificado. Sube ahora una foto clara (JPG, PNG o WEBP, máx. 5 MB) para completar tu registro.
+              </p>
+              <input
+                id="reg-foto-perfil"
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+                class="fw-input fw-input-archivo"
+                (change)="alSeleccionarFotoPerfil($event)"
+              />
+              @if (previewFotoPerfil(); as preview) {
+                <div class="fw-foto-preview-wrap">
+                  <img [src]="preview" alt="Vista previa de foto de perfil" class="fw-foto-preview" />
+                  <span class="fw-cul-archivo-ok">{{ archivoFotoPerfil()?.name }}</span>
+                </div>
+              }
+              @if (errorFotoPerfil()) {
+                <ul class="fw-errores-campo">
+                  <li>{{ errorFotoPerfil() }}</li>
+                </ul>
+              }
+            </div>
+          }
         </div>
       }
 
@@ -291,6 +436,73 @@
       <a routerLink="/login">Inicia sesión</a>
     </p>
   </div>
+
+  @if (modalCodigoAbierto()) {
+    <div
+      class="fw-modal-backdrop fw-modal-codigo-backdrop"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="fw-modal-codigo-titulo"
+    >
+      <div class="fw-modal fw-modal-codigo">
+        <h2 id="fw-modal-codigo-titulo" class="fw-modal-titulo">Verifica tu correo electrónico</h2>
+        <p class="fw-modal-mensaje">
+          Enviamos un código de 6 dígitos a
+          <strong>{{ modelo().correo.trim() }}</strong>. Ingresa el código para validar tu correo
+          (válido por 10 minutos).
+        </p>
+
+        @if (errorVerificacionModal(); as errorModal) {
+          <div class="fw-modal-error" role="alert">{{ errorModal }}</div>
+        }
+
+        <div class="fw-campo fw-campo-codigo">
+          <label class="fw-label" for="reg-codigo-correo">Código de verificación</label>
+          <input
+            id="reg-codigo-correo"
+            type="text"
+            inputmode="numeric"
+            maxlength="6"
+            autocomplete="one-time-code"
+            class="fw-input fw-input-codigo"
+            placeholder="000000"
+            [value]="codigoIngresado()"
+            (input)="alEscribirCodigo($event)"
+          />
+        </div>
+
+        <div class="fw-modal-acciones">
+          <button
+            type="button"
+            id="reg-btn-validar-codigo"
+            class="fw-btn-primario"
+            [disabled]="verificandoCodigo()"
+            (click)="confirmarCodigoCorreo()"
+          >
+            {{ verificandoCodigo() ? 'Validando...' : 'Validar código' }}
+          </button>
+          <button
+            type="button"
+            id="reg-btn-reenviar-codigo"
+            class="fw-btn-codigo"
+            [disabled]="enviandoCodigo() || cooldownSegundos() > 0"
+            (click)="solicitarCodigoCorreo(true)"
+          >
+            @if (enviandoCodigo()) {
+              Reenviando...
+            } @else if (cooldownSegundos() > 0) {
+              Reenviar en {{ cooldownSegundos() }}s
+            } @else {
+              Reenviar código
+            }
+          </button>
+          <button type="button" class="fw-btn-cerrar-modal" (click)="cerrarModalCodigo()">
+            Cancelar
+          </button>
+        </div>
+      </div>
+    </div>
+  }
 
   @if (registroExitoso(); as exito) {
     <div

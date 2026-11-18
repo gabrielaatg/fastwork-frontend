@@ -25,6 +25,7 @@ describe('ListaProveedores', () => {
     fixture.detectChanges();
 
     httpMock.expectOne(`${environment.apiUrl}/oficios`).flush({ status: 'success', data: [] });
+    httpMock.expectOne(`${environment.apiUrl}/zonas`).flush({ status: 'success', data: [] });
     const req = httpMock.expectOne(
       `${environment.apiUrl}/proveedores?disponibilidad=DISPONIBLE`,
     );

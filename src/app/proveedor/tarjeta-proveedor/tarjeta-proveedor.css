@@ -16,6 +16,66 @@
   gap: 1rem;
 }
 
+.fw-card-identidad {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.fw-avatar-card,
+.fw-avatar-fallback {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.fw-avatar-card {
+  object-fit: cover;
+  border: 2px solid var(--fw-border);
+}
+
+.fw-avatar-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--fw-primary-soft);
+  color: var(--fw-primary);
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.fw-card-zonas {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.fw-zonas-titulo {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--fw-muted);
+}
+
+.fw-zonas-lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.fw-zona-chip {
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  border: 1px solid var(--fw-border);
+  background: var(--fw-surface-alt);
+  font-size: 0.75rem;
+  color: var(--fw-text);
+}
+
 .fw-card-nombre {
   margin: 0 0 0.35rem;
   font-size: 1.1rem;

@@ -1,13 +1,22 @@
 <article class="fw-card-proveedor">
   <header class="fw-card-cabecera">
-    <div>
-      <h2 class="fw-card-nombre">{{ proveedor().nombres }} {{ proveedor().apellidos }}</h2>
-      <div class="fw-card-rating">
-        <app-calificacion-estrellas
-          [valor]="proveedor().calificacionPromedio"
-          [soloLectura]="true"
-          [totalResenas]="proveedor().totalResenas"
-        />
+    <div class="fw-card-identidad">
+      @if (proveedor().fotoPerfilUrl; as fotoUrl) {
+        <img [src]="fotoUrl" [alt]="'Foto de ' + proveedor().nombres" class="fw-avatar-card" />
+      } @else {
+        <div class="fw-avatar-fallback" aria-hidden="true">
+          {{ proveedor().nombres.charAt(0) }}{{ proveedor().apellidos.charAt(0) }}
+        </div>
+      }
+      <div>
+        <h2 class="fw-card-nombre">{{ proveedor().nombres }} {{ proveedor().apellidos }}</h2>
+        <div class="fw-card-rating">
+          <app-calificacion-estrellas
+            [valor]="proveedor().calificacionPromedio"
+            [soloLectura]="true"
+            [totalResenas]="proveedor().totalResenas"
+          />
+        </div>
       </div>
     </div>
 
@@ -36,6 +45,19 @@
           </li>
         }
       </ul>
+    }
+  </div>
+
+  <div class="fw-card-zonas">
+    @if (proveedor().zonas.length > 0) {
+      <span class="fw-zonas-titulo">Zonas:</span>
+      <ul class="fw-zonas-lista">
+        @for (zona of proveedor().zonas; track zona.idZona) {
+          <li class="fw-zona-chip">{{ zona.nombreZona }}</li>
+        }
+      </ul>
+    } @else {
+      <span class="fw-sin-oficios">Sin distritos configurados</span>
     }
   </div>
 

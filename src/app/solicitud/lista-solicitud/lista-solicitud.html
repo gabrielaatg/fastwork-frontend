@@ -2,12 +2,25 @@
   <header class="fw-agenda-cabecera">
     <div>
       <h1 class="fw-agenda-titulo">
-        {{ rolActual() === 'PROVEEDOR' ? 'Agenda de Solicitudes' : 'Mis Solicitudes de Servicio' }}
+        {{
+          rolUsuario() === 'PROVEEDOR'
+            ? 'Oportunidades y Trabajos'
+            : 'Mis Solicitudes y Contrataciones'
+        }}
       </h1>
       <p class="fw-agenda-subtitulo">
-        Gestiona el ciclo de vida de cada servicio y coordina directamente por mensajería interna.
+        @if (rolUsuario() === 'PROVEEDOR') {
+          Responde solicitudes compatibles con tus oficios y distritos en Trujillo o gestiona tus
+          contrataciones activas.
+        } @else {
+          Publica trabajos, evalúa ofertas recibidas y confirma el completado de cada contratación.
+        }
       </p>
     </div>
+
+    @if (rolUsuario() === 'CLIENTE') {
+      <a routerLink="/solicitudes/nueva" class="fw-btn-primario-link">+ Publicar trabajo</a>
+    }
   </header>
 
   <app-alerta-mensaje [error]="errorHttp()" [cerrable]="true" (cerrado)="errorHttp.set(null)" />
@@ -20,75 +33,196 @@
     />
   }
 
-  <div class="fw-tabs" role="tablist" aria-label="Filtrar solicitudes por estado">
-    @for (tab of estadosFiltro; track tab.valor) {
+  @if (rolUsuario() === 'PROVEEDOR') {
+    <div class="fw-tabs" role="tablist" aria-label="Vista de proveedor">
       <button
         type="button"
         class="fw-tab"
-        [class.fw-tab-activo]="filtroEstado() === tab.valor"
-        (click)="seleccionarFiltro(tab.valor)"
+        [class.fw-tab-activo]="vistaProveedor() === 'DISPONIBLES'"
+        (click)="cambiarVistaProveedor('DISPONIBLES')"
       >
-        {{ tab.etiqueta }}
+        Solicitudes disponibles en mis zonas
       </button>
-    }
-  </div>
+      <button
+        type="button"
+        class="fw-tab"
+        [class.fw-tab-activo]="vistaProveedor() === 'MIS_SOLICITUDES'"
+        (click)="cambiarVistaProveedor('MIS_SOLICITUDES')"
+      >
+        Mis postulaciones y contrataciones
+      </button>
+    </div>
+  }
 
-  <div class="fw-agenda-layout" [class.fw-con-panel]="modoPanel() !== 'ninguno'">
+  @if (rolUsuario() === 'CLIENTE' || vistaProveedor() === 'MIS_SOLICITUDES') {
+    <div class="fw-tabs" role="tablist" aria-label="Filtrar por estado">
+      @for (
+        estado of ['TODAS', 'ABIERTA', 'CONTRATADA', 'EN_PROCESO', 'COMPLETADA', 'CANCELADA'];
+        track estado
+      ) {
+        <button
+          type="button"
+          class="fw-tab"
+          [class.fw-tab-activo]="filtroEstado() === estado"
+          (click)="cambiarFiltro($any(estado))"
+        >
+          {{ estado === 'TODAS' ? 'Todas' : estado === 'EN_PROCESO' ? 'En proceso' : estado }}
+        </button>
+      }
+    </div>
+  }
+
+  <div class="fw-agenda-layout" [class.fw-con-panel]="hayPanelAbierto()">
     <div class="fw-lista-col">
       @if (cargando()) {
         <div class="fw-estado-caja">Cargando solicitudes...</div>
       } @else if (solicitudesFiltradas().length === 0) {
-        <div class="fw-estado-caja">No tienes solicitudes para el filtro seleccionado.</div>
+        <div class="fw-estado-caja">
+          @if (rolUsuario() === 'PROVEEDOR' && vistaProveedor() === 'DISPONIBLES') {
+            <p>
+              No hay solicitudes abiertas para tus categorías y distritos configurados en este
+              momento.
+            </p>
+            <a routerLink="/proveedor/perfil">Configurar mis oficios y distritos</a>
+          } @else {
+            No hay solicitudes registradas en esta vista.
+          }
+        </div>
       } @else {
         <div class="fw-cards-lista">
           @for (solicitud of solicitudesFiltradas(); track solicitud.idSolicitud) {
             <app-tarjeta-solicitud
               [solicitud]="solicitud"
-              [rolActual]="rolActual()"
-              [seleccionada]="solicitudActiva()?.idSolicitud === solicitud.idSolicitud"
-              (cambiarEstado)="alSolicitarCambioEstado(solicitud, $event)"
-              (abrirChat)="abrirChat(solicitud)"
-              (calificar)="abrirResena(solicitud)"
+              [rol]="rolUsuario()"
+              [actualizando]="idProcesando() === solicitud.idSolicitud"
+              [activa]="
+                chatActivo()?.idSolicitud === solicitud.idSolicitud ||
+                resenaActiva()?.idSolicitud === solicitud.idSolicitud ||
+                solicitudOfertasActiva()?.idSolicitud === solicitud.idSolicitud
+              "
+              (cambiarEstado)="alCambiarEstado($event)"
+              (enviarOferta)="alEnviarOferta($event)"
+              (verOfertas)="abrirPanelOfertas($event)"
+              (iniciarContratacion)="alIniciarContratacion($event)"
+              (confirmarCompletado)="alConfirmarCompletado($event)"
+              (abrirChat)="abrirPanelChat($event)"
+              (abrirResena)="abrirPanelResena($event)"
             />
           }
         </div>
       }
     </div>
 
-    @if (modoPanel() === 'chat' && solicitudActiva(); as activa) {
+    @if (solicitudOfertasActiva(); as solOfertas) {
+      <aside class="fw-panel-col fw-ofertas-panel">
+        <div class="fw-ofertas-panel-cab">
+          <div>
+            <h2>Ofertas para Solicitud #{{ solOfertas.idSolicitud }}</h2>
+            <p class="fw-bloque-ayuda">
+              Presupuesto inicial: {{ solOfertas.presupuestoReferencial | currency: 'PEN' : 'S/ ' }}
+            </p>
+          </div>
+          <button type="button" class="fw-btn-cerrar-panel" (click)="cerrarPaneles()">&times;</button>
+        </div>
+
+        @if (cargandoOfertas()) {
+          <div class="fw-estado-caja">Cargando propuestas...</div>
+        } @else if (ofertasRecibidas().length === 0) {
+          <div class="fw-estado-caja">Aún no recibes propuestas de proveedores para esta solicitud.</div>
+        } @else {
+          <div class="fw-ofertas-lista">
+            @for (oferta of ofertasRecibidas(); track oferta.idOferta) {
+              <article class="fw-oferta-card">
+                <div class="fw-oferta-top">
+                  <div class="fw-oferta-prov">
+                    @if (oferta.fotoPerfilUrl; as fotoUrl) {
+                      <img
+                        [src]="fotoUrl"
+                        [alt]="oferta.nombreProveedor"
+                        class="fw-oferta-avatar"
+                      />
+                    }
+                    <div>
+                      <strong>{{ oferta.nombreProveedor }}</strong>
+                      <app-calificacion-estrellas
+                        [valor]="oferta.calificacionPromedio"
+                        [soloLectura]="true"
+                        [totalResenas]="oferta.totalResenas"
+                      />
+                    </div>
+                  </div>
+                  <app-badge-estado [estado]="oferta.estado" />
+                </div>
+
+                <div class="fw-oferta-precio">
+                  <span>
+                    {{
+                      oferta.tipoOferta === 'ACEPTA_PRESUPUESTO'
+                        ? 'Acepta tu presupuesto'
+                        : 'Contraoferta'
+                    }}:
+                  </span>
+                  <strong>{{ oferta.precioOfertado | currency: 'PEN' : 'S/ ' }}</strong>
+                </div>
+
+                @if (oferta.condiciones) {
+                  <p class="fw-oferta-cond">{{ oferta.condiciones }}</p>
+                }
+
+                <span class="fw-fecha-registro">
+                  Tel. {{ oferta.telefonoProveedor }} &bull;
+                  {{ oferta.fechaActualizacion | date: 'dd/MM/yyyy HH:mm' }}
+                </span>
+
+                @if (oferta.estado === 'PENDIENTE' && solOfertas.estado === 'ABIERTA') {
+                  <div class="fw-oferta-btns">
+                    <button
+                      type="button"
+                      class="fw-btn-rechazar"
+                      (click)="rechazarOferta(oferta.idOferta)"
+                    >
+                      Rechazar
+                    </button>
+                    <button
+                      type="button"
+                      class="fw-btn-aceptar"
+                      (click)="aceptarOferta(oferta.idOferta)"
+                    >
+                      Aceptar y contratar
+                    </button>
+                  </div>
+                }
+              </article>
+            }
+          </div>
+        }
+      </aside>
+    }
+
+    @if (chatActivo(); as solicitudChat) {
       <aside class="fw-panel-col">
         <app-chat-solicitud
-          [idSolicitud]="activa.idSolicitud"
-          [tituloConversacion]="
-            activa.nombreOficio +
-            ' — ' +
-            (rolActual() === 'CLIENTE' ? activa.nombreProveedor : activa.nombreCliente)
-          "
-          (cerrado)="cerrarPanel()"
+          [idSolicitud]="solicitudChat.idSolicitud"
+          [tituloConversacion]="solicitudChat.nombreOficio"
+          (cerrado)="cerrarPaneles()"
         />
       </aside>
     }
 
-    @if (modoPanel() === 'resena' && solicitudActiva(); as activa) {
+    @if (resenaActiva(); as solicitudResena) {
       <aside class="fw-panel-col">
         <app-formulario-resena
-          [idSolicitud]="activa.idSolicitud"
-          [nombreProveedor]="activa.nombreProveedor"
+          [idSolicitud]="solicitudResena.idSolicitud"
+          [rolEvaluador]="rolUsuario()"
+          [nombreEvaluado]="
+            rolUsuario() === 'CLIENTE'
+              ? (solicitudResena.nombreProveedor || 'Proveedor')
+              : solicitudResena.nombreCliente
+          "
           (resenaCreada)="alCrearResena()"
-          (cancelar)="cerrarPanel()"
+          (cancelar)="cerrarPaneles()"
         />
       </aside>
     }
   </div>
-
-  <app-modal-confirmacion
-    [abierto]="transicionPendiente() !== null"
-    [titulo]="tituloModalConfirmacion()"
-    [mensaje]="mensajeModalConfirmacion()"
-    variante="peligro"
-    textoConfirmar="Sí, confirmar"
-    [cargando]="procesandoTransicion()"
-    (confirmar)="confirmarTransicionPendiente()"
-    (cancelar)="transicionPendiente.set(null)"
-  />
 </section>

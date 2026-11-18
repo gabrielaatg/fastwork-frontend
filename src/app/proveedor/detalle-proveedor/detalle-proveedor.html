@@ -9,34 +9,45 @@
     <div class="fw-estado-caja">Cargando perfil del proveedor...</div>
   } @else if (detalle(); as proveedor) {
     <article class="fw-detalle-cabecera">
-      <div class="fw-detalle-info">
-        <div class="fw-badges">
-          <app-badge-estado [estado]="proveedor.estadoVerificacion" />
-          <app-badge-estado [estado]="proveedor.estadoDisponibilidad" />
-        </div>
-        <h1 class="fw-detalle-nombre">{{ proveedor.nombres }} {{ proveedor.apellidos }}</h1>
-        <app-calificacion-estrellas
-          [valor]="proveedor.calificacionPromedio"
-          [soloLectura]="true"
-          [totalResenas]="proveedor.totalResenas"
-        />
-        @if (proveedor.descripcionPerfil) {
-          <p class="fw-detalle-desc">{{ proveedor.descripcionPerfil }}</p>
+      <div class="fw-detalle-identidad">
+        @if (proveedor.fotoPerfilUrl; as fotoUrl) {
+          <img [src]="fotoUrl" [alt]="'Foto de ' + proveedor.nombres" class="fw-avatar-detalle" />
         }
-        <div class="fw-contacto-fila">
-          <span><strong>Teléfono:</strong> {{ proveedor.telefono }}</span>
-          <span><strong>Correo:</strong> {{ proveedor.correo }}</span>
-          <span><strong>Cobertura:</strong> Trujillo, Perú</span>
+        <div class="fw-detalle-info">
+          <div class="fw-badges">
+            <app-badge-estado [estado]="proveedor.estadoVerificacion" />
+            <app-badge-estado [estado]="proveedor.estadoDisponibilidad" />
+          </div>
+          <h1 class="fw-detalle-nombre">{{ proveedor.nombres }} {{ proveedor.apellidos }}</h1>
+          <app-calificacion-estrellas
+            [valor]="proveedor.calificacionPromedio"
+            [soloLectura]="true"
+            [totalResenas]="proveedor.totalResenas"
+          />
+          @if (proveedor.descripcionPerfil) {
+            <p class="fw-detalle-desc">{{ proveedor.descripcionPerfil }}</p>
+          }
+          <div class="fw-contacto-fila">
+            <span><strong>Teléfono:</strong> {{ proveedor.telefono }}</span>
+            <span><strong>Correo:</strong> {{ proveedor.correo }}</span>
+            <span>
+              <strong>Zonas:</strong>
+              @if (proveedor.zonas.length > 0) {
+                @for (z of proveedor.zonas; track z.idZona; let ultimo = $last) {
+                  {{ z.nombreZona }}@if (!ultimo) {, }
+                }
+              } @else {
+                Por configurar
+              }
+            </span>
+          </div>
         </div>
       </div>
 
       @if (esCliente() && proveedor.idUsuario !== idUsuarioActual()) {
         <div class="fw-detalle-cta">
-          <a
-            class="fw-btn-solicitar"
-            [routerLink]="['/solicitudes/nueva', proveedor.idPerfilProveedor]"
-          >
-            Solicitar servicio
+          <a class="fw-btn-solicitar" [routerLink]="['/solicitudes/nueva']">
+            Publicar trabajo
           </a>
         </div>
       }

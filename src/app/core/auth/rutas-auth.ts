@@ -1,6 +1,14 @@
 import { environment } from '../../../environments/environment';
 
-const RUTAS_AUTH_PUBLICAS = ['/auth/login', '/auth/register', '/auth/register-proveedor'] as const;
+const RUTAS_AUTH_PUBLICAS = [
+  '/auth/login',
+  '/auth/register',
+  '/auth/register-proveedor',
+  '/auth/consultar-dni',
+  '/auth/validar-cul',
+  '/auth/enviar-codigo-correo',
+  '/auth/verificar-codigo-correo',
+] as const;
 
 /**
  * Determina si una URL apunta a un endpoint público de autenticación (`/auth/*`).

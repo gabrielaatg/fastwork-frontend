@@ -4,6 +4,7 @@ import { ErrorHttp } from '../../core/api/errores';
 import { AlertaMensaje } from '../../core/layout/alerta-mensaje/alerta-mensaje';
 import { CalificacionEstrellas } from '../../core/layout/calificacion-estrellas/calificacion-estrellas';
 import { PuntuacionEstrellas, Resena } from '../../dominio/resena';
+import { RolUsuario } from '../../dominio/rol';
 import { ResenaApi } from '../resena-api';
 
 interface FormularioResenaModelo {
@@ -21,7 +22,8 @@ export class FormularioResena {
   private readonly resenaApi = inject(ResenaApi);
 
   readonly idSolicitud = input.required<number>();
-  readonly nombreProveedor = input<string>('');
+  readonly rolEvaluador = input<RolUsuario>('CLIENTE');
+  readonly nombreEvaluado = input<string>('');
   readonly resenaCreada = output<Resena>();
   readonly cancelar = output<void>();
 

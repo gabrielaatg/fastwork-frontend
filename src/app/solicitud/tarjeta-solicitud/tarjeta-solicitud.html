@@ -1,35 +1,50 @@
-<article class="fw-card-solicitud" [class.fw-card-activa]="seleccionada()">
+<article class="fw-card-solicitud" [class.fw-card-activa]="activa()">
   <header class="fw-card-cabecera">
     <div>
-      <span class="fw-solicitud-id">Solicitud #{{ solicitud().idSolicitud }}</span>
+      <span class="fw-solicitud-id">
+        Solicitud #{{ solicitud().idSolicitud }} &bull; {{ solicitud().nombreZona }}
+      </span>
       <h2 class="fw-solicitud-oficio">{{ solicitud().nombreOficio }}</h2>
     </div>
     <app-badge-estado [estado]="solicitud().estado" />
   </header>
 
   <div class="fw-solicitud-meta">
-    @if (rolActual() === 'CLIENTE') {
-      <div>
-        <strong>Proveedor:</strong> {{ solicitud().nombreProveedor }} (Tel.
-        {{ solicitud().telefonoProveedor }})
-      </div>
+    @if (rol() === 'CLIENTE') {
+      @if (solicitud().nombreProveedor) {
+        <div>
+          <strong>Proveedor contratado:</strong> {{ solicitud().nombreProveedor }} (Tel.
+          {{ solicitud().telefonoProveedor }})
+        </div>
+      } @else {
+        <div><strong>Estado de selección:</strong> En recepción de propuestas ({{ solicitud().totalOfertas }})</div>
+      }
     } @else {
-      <div>
-        <strong>Cliente:</strong> {{ solicitud().nombreCliente }} (Tel.
-        {{ solicitud().telefonoCliente }})
+      <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem;">
+        <span>
+          <strong>Cliente:</strong> {{ solicitud().nombreCliente }} (Tel.
+          {{ solicitud().telefonoCliente }})
+        </span>
+        <app-calificacion-estrellas
+          [valor]="solicitud().calificacionCliente"
+          [soloLectura]="true"
+          [mostrarNumero]="true"
+          [totalResenas]="solicitud().totalResenasCliente"
+        />
       </div>
     }
+    <div>
+      <strong>Distrito y dirección:</strong> {{ solicitud().nombreZona }} —
+      {{ solicitud().direccionTrujillo }}
+    </div>
     <div>
       <strong>Programación:</strong> {{ solicitud().fechaProgramada }} a las
       {{ solicitud().horaProgramada }}
     </div>
-    <div><strong>Dirección:</strong> {{ solicitud().direccionTrujillo }}</div>
-    @if (solicitud().presupuestoReferencial !== null) {
-      <div>
-        <strong>Presupuesto referencial:</strong> S/
-        {{ solicitud().presupuestoReferencial | number: '1.2-2' }}
-      </div>
-    }
+    <div>
+      <strong>Presupuesto inicial:</strong> S/
+      {{ solicitud().presupuestoReferencial | number: '1.2-2' }}
+    </div>
     <div class="fw-fecha-registro">
       Creada el {{ solicitud().fechaCreacion | date: 'dd/MM/yyyy HH:mm' }}
     </div>
@@ -60,26 +75,161 @@
     </div>
   }
 
+  @if (rol() === 'PROVEEDOR' && solicitud().miOferta; as miOferta) {
+    <div class="fw-mi-oferta-caja">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <strong>
+          Tu oferta ({{
+            miOferta.tipoOferta === 'ACEPTA_PRESUPUESTO' ? 'Aceptó presupuesto' : 'Contraoferta'
+          }}): S/ {{ miOferta.precioOfertado | number: '1.2-2' }}
+        </strong>
+        <app-badge-estado [estado]="miOferta.estado" />
+      </div>
+      @if (miOferta.condiciones) {
+        <span>Condiciones: {{ miOferta.condiciones }}</span>
+      }
+    </div>
+  }
+
+  @if (editandoOferta()) {
+    <form class="fw-oferta-form" (submit)="guardarOferta($event)">
+      <div class="fw-oferta-radios">
+        <label class="fw-oferta-radio">
+          <input
+            type="radio"
+            name="tipo-{{ solicitud().idSolicitud }}"
+            [checked]="tipoOfertaForm() === 'ACEPTA_PRESUPUESTO'"
+            (change)="tipoOfertaForm.set('ACEPTA_PRESUPUESTO')"
+          />
+          <span>Aceptar presupuesto (S/ {{ solicitud().presupuestoReferencial | number: '1.2-2' }})</span>
+        </label>
+        <label class="fw-oferta-radio">
+          <input
+            type="radio"
+            name="tipo-{{ solicitud().idSolicitud }}"
+            [checked]="tipoOfertaForm() === 'CONTRAOFERTA'"
+            (change)="tipoOfertaForm.set('CONTRAOFERTA')"
+          />
+          <span>Enviar contraoferta</span>
+        </label>
+      </div>
+
+      @if (tipoOfertaForm() === 'CONTRAOFERTA') {
+        <label>
+          <span>Precio ofertado (S/)</span>
+          <input
+            type="number"
+            min="1"
+            step="1"
+            class="fw-input-oferta"
+            [value]="precioOfertaForm()"
+            (input)="precioOfertaForm.set(+$any($event.target).value)"
+          />
+        </label>
+      }
+
+      <label>
+        <span>Condiciones u observaciones (opcional)</span>
+        <textarea
+          rows="2"
+          class="fw-input-oferta"
+          placeholder="Ej. Incluye diagnóstico, disponibilidad inmediata, repuestos aparte..."
+          [value]="condicionesOfertaForm()"
+          (input)="condicionesOfertaForm.set($any($event.target).value)"
+        ></textarea>
+      </label>
+
+      @if (errorOfertaForm(); as errOferta) {
+        <p class="fw-error-oferta">{{ errOferta }}</p>
+      }
+
+      <div class="fw-oferta-botones">
+        <button type="button" class="fw-btn-secundario" (click)="cerrarFormularioOferta()">
+          Cancelar
+        </button>
+        <button type="submit" class="fw-btn-primario" [disabled]="actualizando()">
+          {{ solicitud().miOferta ? 'Actualizar oferta' : 'Enviar oferta' }}
+        </button>
+      </div>
+    </form>
+  }
+
+  @if (solicitud().contratacion; as contratacion) {
+    <div class="fw-contratacion-caja">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h3 class="fw-contratacion-titulo">
+          Contratación #{{ contratacion.idContratacion }} &bull; Precio final: S/
+          {{ contratacion.precioFinal | number: '1.2-2' }}
+        </h3>
+        <app-badge-estado [estado]="contratacion.estado" />
+      </div>
+      <div class="fw-confirmaciones-fila">
+        <span [class.fw-confirmado-ok]="contratacion.completadoProveedor">
+          {{ contratacion.completadoProveedor ? '✓ Proveedor confirmó fin' : '○ Proveedor pendiente' }}
+        </span>
+        <span [class.fw-confirmado-ok]="contratacion.completadoCliente">
+          {{ contratacion.completadoCliente ? '✓ Cliente confirmó fin' : '○ Cliente pendiente' }}
+        </span>
+      </div>
+    </div>
+  }
+
   <footer class="fw-card-acciones">
     <div class="fw-acciones-estado">
-      @for (destino of transiciones(); track destino) {
+      @if (rol() === 'CLIENTE' && solicitud().estado === 'ABIERTA') {
+        <button type="button" class="fw-btn-primario" (click)="verOfertas.emit(solicitud())">
+          Ver ofertas ({{ solicitud().totalOfertas }})
+        </button>
+      }
+      @if (puedeOfertar() && !editandoOferta()) {
+        <button type="button" class="fw-btn-primario" (click)="abrirFormularioOferta()">
+          {{ solicitud().miOferta ? 'Editar mi oferta' : 'Ofertar / Contraoferta' }}
+        </button>
+      }
+      @if (puedeIniciarTrabajo()) {
         <button
           type="button"
           class="fw-btn-estado"
-          [class.fw-btn-peligro]="esAccionPeligro(destino)"
-          (click)="cambiarEstado.emit(destino)"
+          [disabled]="actualizando()"
+          (click)="iniciarContratacion.emit(solicitud().contratacion!.idContratacion)"
         >
-          {{ etiquetaAccion(destino) }}
+          Iniciar trabajo
+        </button>
+      }
+      @if (puedeConfirmarCompletado()) {
+        <button
+          type="button"
+          class="fw-btn-estado"
+          [disabled]="actualizando()"
+          (click)="confirmarCompletado.emit(solicitud().contratacion!.idContratacion)"
+        >
+          Confirmar completado
+        </button>
+      }
+      @if (puedeCancelar()) {
+        <button
+          type="button"
+          class="fw-btn-estado fw-btn-peligro"
+          [disabled]="actualizando()"
+          (click)="solicitarCancelacion()"
+        >
+          Cancelar solicitud
         </button>
       }
     </div>
 
     <div class="fw-acciones-extra">
-      <button type="button" class="fw-btn-secundario" (click)="abrirChat.emit()">Mensajes</button>
-      @if (puedeCalificar()) {
-        <button type="button" class="fw-btn-primario" (click)="calificar.emit()">
-          Calificar servicio
+      @if (puedeAbrirChat()) {
+        <button type="button" class="fw-btn-secundario" (click)="abrirChat.emit(solicitud())">
+          Mensajes
         </button>
+      }
+      @if (puedeCalificar()) {
+        <button type="button" class="fw-btn-primario" (click)="abrirResena.emit(solicitud())">
+          {{ rol() === 'PROVEEDOR' ? 'Calificar al cliente' : 'Calificar al proveedor' }}
+        </button>
+      } @else if (yaCalifico()) {
+        <span class="fw-fecha-registro">Calificado</span>
       }
     </div>
   </footer>

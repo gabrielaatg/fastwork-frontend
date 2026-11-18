@@ -232,3 +232,70 @@
 .fw-lightbox-nav:hover {
   background-color: rgb(255 255 255 / 0.28);
 }
+
+.fw-contratacion-caja,
+.fw-mi-oferta-caja,
+.fw-oferta-form {
+  padding: 0.75rem 0.9rem;
+  border-radius: var(--fw-radius);
+  border: 1px solid var(--fw-border);
+  background-color: var(--fw-surface-alt);
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  font-size: 0.85rem;
+}
+
+.fw-contratacion-titulo {
+  margin: 0;
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.fw-confirmaciones-fila {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.85rem;
+  font-size: 0.8rem;
+  color: var(--fw-muted);
+}
+
+.fw-confirmado-ok {
+  color: #166534;
+  font-weight: 600;
+}
+
+.fw-oferta-radios {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.fw-oferta-radio {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.fw-input-oferta {
+  width: 100%;
+  padding: 0.45rem 0.6rem;
+  border: 1px solid var(--fw-border);
+  border-radius: var(--fw-radius);
+  background-color: var(--fw-surface);
+  font-family: inherit;
+}
+
+.fw-error-oferta {
+  margin: 0;
+  color: var(--fw-danger);
+  font-size: 0.8rem;
+}
+
+.fw-oferta-botones {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}

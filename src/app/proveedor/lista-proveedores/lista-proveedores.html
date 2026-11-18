@@ -3,13 +3,18 @@
     <div>
       <h1 class="fw-directorio-titulo">Directorio de Proveedores en Trujillo</h1>
       <p class="fw-directorio-subtitulo">
-        Compara especialistas por oficio, rango referencial de tarifas y reputación verificada.
+        Compara especialistas por oficio, distrito de cobertura y reputación verificada.
       </p>
     </div>
-    <span class="fw-contador-resultados">
-      {{ proveedores().length }}
-      {{ proveedores().length === 1 ? 'proveedor encontrado' : 'proveedores encontrados' }}
-    </span>
+    <div class="fw-directorio-acciones">
+      @if (esCliente()) {
+        <a routerLink="/solicitudes/nueva" class="fw-btn-publicar">Publicar trabajo</a>
+      }
+      <span class="fw-contador-resultados">
+        {{ proveedores().length }}
+        {{ proveedores().length === 1 ? 'proveedor encontrado' : 'proveedores encontrados' }}
+      </span>
+    </div>
   </header>
 
   <app-alerta-mensaje [error]="errorHttp()" [cerrable]="true" (cerrado)="errorHttp.set(null)" />
@@ -35,6 +40,21 @@
             </label>
           }
         </div>
+      </div>
+
+      <div class="fw-filtro-grupo">
+        <label class="fw-filtro-label" for="filtro-zona">Distrito (Trujillo)</label>
+        <select
+          id="filtro-zona"
+          class="fw-select"
+          [value]="zonaSeleccionada() ?? ''"
+          (change)="cambiarZona($any($event.target).value)"
+        >
+          <option value="">Todos los distritos</option>
+          @for (zona of zonas(); track zona.idZona) {
+            <option [value]="zona.idZona">{{ zona.nombreZona }}</option>
+          }
+        </select>
       </div>
 
       <div class="fw-filtro-grupo">

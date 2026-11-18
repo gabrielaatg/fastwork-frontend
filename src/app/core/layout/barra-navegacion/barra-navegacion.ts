@@ -6,17 +6,19 @@ import { AuthApi } from '../../auth/auth-api';
 interface EnlaceNavegacion {
   ruta: string;
   etiqueta: string;
+  exacta?: boolean;
 }
 
 const ENLACES_POR_ROL: Record<RolUsuario, readonly EnlaceNavegacion[]> = {
   CLIENTE: [
     { ruta: '/directorio', etiqueta: 'Directorio' },
-    { ruta: '/solicitudes', etiqueta: 'Mis Solicitudes' },
+    { ruta: '/solicitudes/nueva', etiqueta: 'Publicar Trabajo' },
+    { ruta: '/solicitudes', etiqueta: 'Mis Solicitudes', exacta: true },
     { ruta: '/piloto', etiqueta: 'Encuesta Piloto' },
   ],
   PROVEEDOR: [
     { ruta: '/proveedor/perfil', etiqueta: 'Mi Perfil' },
-    { ruta: '/solicitudes', etiqueta: 'Agenda' },
+    { ruta: '/solicitudes', etiqueta: 'Solicitudes y Agenda' },
     { ruta: '/piloto', etiqueta: 'Encuesta Piloto' },
   ],
   ADMIN: [
@@ -27,6 +29,9 @@ const ENLACES_POR_ROL: Record<RolUsuario, readonly EnlaceNavegacion[]> = {
   ],
 };
 
+/**
+ * Barra superior de navegación adaptada al rol de la sesión activa.
+ */
 @Component({
   selector: 'app-barra-navegacion',
   imports: [RouterLink, RouterLinkActive],
@@ -49,6 +54,7 @@ export class BarraNavegacion {
     return ENLACES_POR_ROL[rol];
   });
 
+  /** Limpia la sesión actual y redirige a la pantalla de inicio de sesión. */
   protected cerrarSesion(): void {
     this.authApi.cerrarSesion();
     void this.router.navigate(['/login']);

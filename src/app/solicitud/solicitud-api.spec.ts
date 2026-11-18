@@ -2,7 +2,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { environment } from '../../environments/environment';
-import { SolicitudServicio } from '../dominio/solicitud';
+import { Contratacion, OfertaSolicitud, SolicitudServicio } from '../dominio/solicitud';
 import { SolicitudApi } from './solicitud-api';
 
 describe('SolicitudApi', () => {
@@ -21,23 +21,28 @@ describe('SolicitudApi', () => {
     httpMock.verify();
   });
 
-  it('crear() con imágenes debe enviar multipart FormData con datos e imagenes', () => {
+  it('crear() con imágenes debe enviar multipart FormData con datos (oficio, zona, presupuesto) e imagenes', () => {
     const mockSolicitud: SolicitudServicio = {
       idSolicitud: 18,
       idCliente: 4,
       nombreCliente: 'Lucía Fernández',
       telefonoCliente: '944300400',
-      idPerfilProveedor: 1,
-      nombreProveedor: 'Carlos Mendoza',
-      telefonoProveedor: '944123456',
+      calificacionCliente: 0,
+      totalResenasCliente: 0,
+      idPerfilProveedor: null,
+      nombreProveedor: null,
+      telefonoProveedor: null,
+      fotoPerfilProveedor: null,
       idOficio: 1,
       nombreOficio: 'Gasfitería',
+      idZona: 1,
+      nombreZona: 'Trujillo',
       direccionTrujillo: 'Av. España 450, Trujillo',
       fechaProgramada: '2026-11-20',
       horaProgramada: '15:30:00',
       descripcionTrabajo: 'Fuga de agua en cocina',
       presupuestoReferencial: 95,
-      estado: 'PENDIENTE',
+      estado: 'ABIERTA',
       fechaCreacion: '2026-11-17T10:00:00',
       imagenes: [
         {
@@ -46,9 +51,12 @@ describe('SolicitudApi', () => {
           contentType: 'image/png',
           tamanoBytes: 12,
           orden: 1,
-          url: '/api/v1/solicitudes/18/imagenes/1',
+          url: 'https://res.cloudinary.com/demo/image/upload/v1/fastwork/solicitudes/18/fuga.png',
         },
       ],
+      contratacion: null,
+      miOferta: null,
+      totalOfertas: 0,
     };
 
     const img1 = new File([new Uint8Array([0x89, 0x50, 0x4e, 0x47])], 'fuga.png', {
@@ -62,8 +70,8 @@ describe('SolicitudApi', () => {
     api
       .crear(
         {
-          idPerfilProveedor: 1,
           idOficio: 1,
+          idZona: 1,
           direccionTrujillo: 'Av. España 450, Trujillo',
           fechaProgramada: '2026-11-20',
           horaProgramada: '15:30:00',
@@ -81,12 +89,73 @@ describe('SolicitudApi', () => {
     expect(formData.get('datos')).toBeInstanceOf(Blob);
     expect(formData.getAll('imagenes').length).toBe(2);
 
-    req.flush({
-      status: 'success',
-      message: 'Solicitud creada exitosamente',
-      data: mockSolicitud,
-    });
-
+    req.flush({ status: 'success', message: 'Solicitud creada exitosamente', data: mockSolicitud });
     expect(respuesta).toEqual(mockSolicitud);
+  });
+
+  it('debe invocar endpoints de ofertas y contrataciones', () => {
+    let oferta: OfertaSolicitud | undefined;
+    api
+      .enviarOActualizarOferta(18, {
+        tipoOferta: 'CONTRAOFERTA',
+        precioOfertado: 110,
+        condiciones: 'Incluye repuestos',
+      })
+      .subscribe((res) => (oferta = res));
+
+    const reqOferta = httpMock.expectOne(`${environment.apiUrl}/solicitudes/18/ofertas`);
+    expect(reqOferta.request.method).toBe('POST');
+    reqOferta.flush({
+      status: 'success',
+      data: {
+        idOferta: 9,
+        idSolicitud: 18,
+        idPerfilProveedor: 2,
+        nombreProveedor: 'Pedro Gómez',
+        telefonoProveedor: '944555666',
+        fotoPerfilUrl: 'https://cdn.test/f.jpg',
+        calificacionPromedio: 4.8,
+        totalResenas: 5,
+        tipoOferta: 'CONTRAOFERTA',
+        precioOfertado: 110,
+        condiciones: 'Incluye repuestos',
+        estado: 'PENDIENTE',
+        fechaCreacion: '2026-11-17T11:00:00',
+        fechaActualizacion: '2026-11-17T11:00:00',
+      },
+    });
+    expect(oferta?.idOferta).toBe(9);
+
+    let cont: Contratacion | undefined;
+    api.aceptarOferta(9).subscribe((res) => (cont = res));
+    const reqAceptar = httpMock.expectOne(`${environment.apiUrl}/ofertas/9/aceptar`);
+    expect(reqAceptar.request.method).toBe('PATCH');
+    reqAceptar.flush({
+      status: 'success',
+      data: {
+        idContratacion: 30,
+        idSolicitud: 18,
+        idOferta: 9,
+        idCliente: 4,
+        nombreCliente: 'Lucía Fernández',
+        idPerfilProveedor: 2,
+        nombreProveedor: 'Pedro Gómez',
+        fotoPerfilProveedor: null,
+        precioFinal: 110,
+        estado: 'ACTIVA',
+        completadoCliente: false,
+        completadoProveedor: false,
+        fechaContratacion: '2026-11-17T11:05:00',
+        fechaCompletado: null,
+        yaCalificoCliente: false,
+        yaCalificoProveedor: false,
+      },
+    });
+    expect(cont?.precioFinal).toBe(110);
+
+    api.confirmarCompletado(30).subscribe();
+    const reqComp = httpMock.expectOne(`${environment.apiUrl}/contrataciones/30/completar`);
+    expect(reqComp.request.method).toBe('PATCH');
+    reqComp.flush({ status: 'success', data: cont });
   });
 });

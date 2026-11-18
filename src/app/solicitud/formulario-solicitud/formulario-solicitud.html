@@ -1,218 +1,201 @@
 <section class="fw-solicitud-pagina">
   <div class="fw-migas">
-    <a [routerLink]="['/proveedores', idPerfilProveedor()]"
-      >&larr; Volver al perfil del proveedor</a
-    >
+    <a routerLink="/directorio">&larr; Volver al directorio</a>
   </div>
 
-  <app-alerta-mensaje [error]="errorHttp()" [cerrable]="true" (cerrado)="errorHttp.set(null)" />
+  <div class="fw-solicitud-tarjeta">
+    <header>
+      <h1 class="fw-solicitud-titulo">Publicar solicitud de trabajo</h1>
+      <p class="fw-solicitud-subtitulo">
+        Elige la categoría, tu distrito en Trujillo, presupuesto inicial e imágenes del problema. Los
+        proveedores verificados de esa zona y categoría te enviarán sus ofertas.
+      </p>
+    </header>
 
-  @if (cargandoProveedor()) {
-    <div class="fw-estado-caja">Cargando datos del proveedor...</div>
-  } @else if (proveedor(); as detalle) {
-    <div class="fw-solicitud-tarjeta">
-      <header class="fw-solicitud-cabecera">
-        <h1>Nueva solicitud de servicio</h1>
-        <p>
-          Proveedor seleccionado:
-          <strong>{{ detalle.nombres }} {{ detalle.apellidos }}</strong> (Trujillo, Perú)
-        </p>
-      </header>
+    <app-alerta-mensaje [error]="errorHttp()" [cerrable]="true" (cerrado)="errorHttp.set(null)" />
 
-      @if (detalle.oficios.length === 0) {
-        <app-alerta-mensaje
-          tipo="info"
-          mensaje="Este proveedor aún no tiene oficios con tarifa configurados."
-        />
-      } @else {
-        <form class="fw-form" (submit)="alEnviar($event)" novalidate>
+    @if (cargandoCatalogos()) {
+      <div class="fw-estado-caja">Cargando categorías y distritos de Trujillo...</div>
+    } @else {
+      <form class="fw-form" (submit)="alEnviar($event)" novalidate>
+        <div class="fw-grid-campos">
           <div class="fw-campo">
-            <label class="fw-label" for="sol-oficio">Oficio requerido</label>
+            <label class="fw-label" for="sol-oficio">Categoría de oficio</label>
             <select id="sol-oficio" class="fw-input" [formField]="formulario.idOficio">
-              <option value="">Selecciona uno de los oficios del proveedor</option>
-              @for (oficio of detalle.oficios; track oficio.idProveedorOficio) {
-                <option [value]="'' + oficio.idOficio">
-                  {{ oficio.nombreOficio }} (S/ {{ oficio.precioMinimo | number: '1.2-2' }} – S/
-                  {{ oficio.precioMaximo | number: '1.2-2' }})
-                </option>
+              <option value="">Selecciona un oficio</option>
+              @for (oficio of oficios(); track oficio.idOficio) {
+                <option [value]="'' + oficio.idOficio">{{ oficio.nombreOficio }}</option>
               }
             </select>
             @if (formulario.idOficio().touched() && formulario.idOficio().invalid()) {
-              <span class="fw-error-texto">{{ formulario.idOficio().errors()[0]?.message }}</span>
-            }
-          </div>
-
-          <div class="fw-campo">
-            <label class="fw-label" for="sol-direccion">Dirección en Trujillo</label>
-            <input
-              id="sol-direccion"
-              type="text"
-              class="fw-input"
-              placeholder="Ej. Av. Larco 450, Urb. La Merced, Trujillo"
-              [formField]="formulario.direccionTrujillo"
-            />
-            @if (
-              formulario.direccionTrujillo().touched() && formulario.direccionTrujillo().invalid()
-            ) {
-              <span class="fw-error-texto">
-                {{ formulario.direccionTrujillo().errors()[0]?.message }}
-              </span>
-            }
-          </div>
-
-          <div class="fw-fila-tres">
-            <div class="fw-campo">
-              <label class="fw-label" for="sol-fecha">Fecha programada</label>
-              <input
-                id="sol-fecha"
-                type="date"
-                class="fw-input"
-                [formField]="formulario.fechaProgramada"
-              />
-              @if (
-                formulario.fechaProgramada().touched() && formulario.fechaProgramada().invalid()
-              ) {
-                <span class="fw-error-texto">
-                  {{ formulario.fechaProgramada().errors()[0]?.message }}
-                </span>
-              }
-            </div>
-
-            <div class="fw-campo">
-              <label class="fw-label" for="sol-hora">Hora programada</label>
-              <input
-                id="sol-hora"
-                type="time"
-                class="fw-input"
-                [formField]="formulario.horaProgramada"
-              />
-              @if (formulario.horaProgramada().touched() && formulario.horaProgramada().invalid()) {
-                <span class="fw-error-texto">
-                  {{ formulario.horaProgramada().errors()[0]?.message }}
-                </span>
-              }
-            </div>
-
-            <div class="fw-campo">
-              <label class="fw-label" for="sol-presupuesto">Presupuesto referencial (S/)</label>
-              <input
-                id="sol-presupuesto"
-                type="number"
-                step="0.5"
-                class="fw-input"
-                placeholder="Opcional"
-                [formField]="formulario.presupuestoReferencial"
-              />
-              @if (
-                formulario.presupuestoReferencial().touched() &&
-                formulario.presupuestoReferencial().invalid()
-              ) {
-                <span class="fw-error-texto">
-                  {{ formulario.presupuestoReferencial().errors()[0]?.message }}
-                </span>
-              }
-            </div>
-          </div>
-
-          <div class="fw-campo">
-            <div class="fw-imagenes-cabecera">
-              <label class="fw-label" for="sol-imagenes">
-                Imágenes del problema (obligatorio, {{ minImagenes }} a {{ maxImagenes }} fotos)
-              </label>
-              <span class="fw-imagenes-contador">
-                {{ imagenes().length }} / {{ maxImagenes }} seleccionadas
-              </span>
-            </div>
-
-            <div class="fw-imagenes-drop">
-              <input
-                id="sol-imagenes"
-                type="file"
-                accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp"
-                multiple
-                class="fw-input-archivo"
-                [disabled]="imagenes().length >= maxImagenes"
-                (change)="alSeleccionarImagenes($event)"
-              />
-              <p class="fw-imagenes-ayuda">
-                Formatos permitidos: JPG, PNG o WEBP. Tamaño máximo: 5 MB por imagen.
-              </p>
-            </div>
-
-            @if (imagenes().length > 0) {
-              <ul class="fw-imagenes-grid" aria-label="Vista previa de imágenes del problema">
-                @for (item of imagenes(); track item.id; let idx = $index) {
-                  <li class="fw-imagen-item">
-                    <img
-                      [src]="item.previewUrl"
-                      [alt]="'Vista previa de ' + item.archivo.name"
-                      class="fw-imagen-thumb"
-                    />
-                    <div class="fw-imagen-info">
-                      <span class="fw-imagen-nombre" [title]="item.archivo.name">
-                        {{ idx + 1 }}. {{ item.archivo.name }}
-                      </span>
-                      <span class="fw-imagen-tamano">
-                        {{ formatearTamanoArchivo(item.archivo.size) }}
-                      </span>
-                    </div>
-                    <div class="fw-imagen-acciones">
-                      <label class="fw-btn-mini" [for]="'reemplazar-' + item.id">
-                        Reemplazar
-                        <input
-                          [id]="'reemplazar-' + item.id"
-                          type="file"
-                          accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp"
-                          class="fw-input-oculto"
-                          (change)="alReemplazarImagen(idx, $event)"
-                        />
-                      </label>
-                      <button
-                        type="button"
-                        class="fw-btn-mini fw-btn-mini-peligro"
-                        (click)="eliminarImagen(idx)"
-                      >
-                        Quitar
-                      </button>
-                    </div>
-                  </li>
+              <ul class="fw-errores-campo">
+                @for (err of formulario.idOficio().errors(); track err.kind) {
+                  <li>{{ err.message }}</li>
                 }
               </ul>
             }
+          </div>
 
-            @if (errorImagenes()) {
-              <span class="fw-error-texto">{{ errorImagenes() }}</span>
+          <div class="fw-campo">
+            <label class="fw-label" for="sol-zona">Distrito en Trujillo</label>
+            <select id="sol-zona" class="fw-input" [formField]="formulario.idZona">
+              <option value="">Selecciona un distrito</option>
+              @for (zona of zonas(); track zona.idZona) {
+                <option [value]="'' + zona.idZona">{{ zona.nombreZona }}</option>
+              }
+            </select>
+            @if (formulario.idZona().touched() && formulario.idZona().invalid()) {
+              <ul class="fw-errores-campo">
+                @for (err of formulario.idZona().errors(); track err.kind) {
+                  <li>{{ err.message }}</li>
+                }
+              </ul>
+            }
+          </div>
+        </div>
+
+        <div class="fw-campo">
+          <label class="fw-label" for="sol-direccion">Dirección exacta y referencia</label>
+          <input
+            id="sol-direccion"
+            type="text"
+            class="fw-input"
+            placeholder="Ej. Av. España 450, Urb. Centro, Trujillo"
+            [formField]="formulario.direccionTrujillo"
+          />
+          @if (formulario.direccionTrujillo().touched() && formulario.direccionTrujillo().invalid()) {
+            <ul class="fw-errores-campo">
+              @for (err of formulario.direccionTrujillo().errors(); track err.kind) {
+                <li>{{ err.message }}</li>
+              }
+            </ul>
+          }
+        </div>
+
+        <div class="fw-grid-campos">
+          <div class="fw-campo">
+            <label class="fw-label" for="sol-fecha">Fecha programada</label>
+            <input
+              id="sol-fecha"
+              type="date"
+              class="fw-input"
+              [formField]="formulario.fechaProgramada"
+            />
+            @if (formulario.fechaProgramada().touched() && formulario.fechaProgramada().invalid()) {
+              <ul class="fw-errores-campo">
+                @for (err of formulario.fechaProgramada().errors(); track err.kind) {
+                  <li>{{ err.message }}</li>
+                }
+              </ul>
             }
           </div>
 
           <div class="fw-campo">
-            <label class="fw-label" for="sol-desc">Descripción del trabajo</label>
-            <textarea
-              id="sol-desc"
-              rows="4"
-              class="fw-textarea"
-              placeholder="Detalla el problema, materiales si cuentas con ellos o referencias de acceso..."
-              [formField]="formulario.descripcionTrabajo"
-            ></textarea>
-            @if (
-              formulario.descripcionTrabajo().touched() && formulario.descripcionTrabajo().invalid()
-            ) {
-              <span class="fw-error-texto">
-                {{ formulario.descripcionTrabajo().errors()[0]?.message }}
-              </span>
+            <label class="fw-label" for="sol-hora">Hora aproximada</label>
+            <input
+              id="sol-hora"
+              type="time"
+              class="fw-input"
+              [formField]="formulario.horaProgramada"
+            />
+            @if (formulario.horaProgramada().touched() && formulario.horaProgramada().invalid()) {
+              <ul class="fw-errores-campo">
+                @for (err of formulario.horaProgramada().errors(); track err.kind) {
+                  <li>{{ err.message }}</li>
+                }
+              </ul>
             }
           </div>
+        </div>
 
-          <div class="fw-form-pie">
-            <a class="fw-btn-secundario" [routerLink]="['/proveedores', detalle.idPerfilProveedor]">
-              Cancelar
-            </a>
-            <button type="submit" class="fw-btn-primario" [disabled]="enviando()">
-              {{ enviando() ? 'Enviando solicitud...' : 'Enviar solicitud' }}
-            </button>
-          </div>
-        </form>
-      }
-    </div>
-  }
+        <div class="fw-campo">
+          <label class="fw-label" for="sol-presupuesto">Presupuesto inicial (S/ obligatorio)</label>
+          <input
+            id="sol-presupuesto"
+            type="number"
+            step="1"
+            class="fw-input"
+            placeholder="Ej. 90"
+            [formField]="formulario.presupuestoReferencial"
+          />
+          @if (
+            formulario.presupuestoReferencial().touched() &&
+            formulario.presupuestoReferencial().invalid()
+          ) {
+            <ul class="fw-errores-campo">
+              @for (err of formulario.presupuestoReferencial().errors(); track err.kind) {
+                <li>{{ err.message }}</li>
+              }
+            </ul>
+          }
+        </div>
+
+        <div class="fw-campo">
+          <label class="fw-label" for="sol-imagenes">
+            Imágenes del problema (1 a 5 fotos, máx. 5 MB c/u)
+          </label>
+          <input
+            id="sol-imagenes"
+            type="file"
+            accept="image/jpeg,image/png,image/webp"
+            multiple
+            class="fw-input"
+            (change)="alSeleccionarImagenes($event)"
+          />
+          @if (imagenesSeleccionadas().length > 0) {
+            <div class="fw-imagenes-grid">
+              @for (item of imagenesSeleccionadas(); track $index) {
+                <div class="fw-img-item">
+                  @if (item.previewUrl) {
+                    <img [src]="item.previewUrl" [alt]="item.archivo.name" class="fw-img-preview" />
+                  }
+                  <div class="fw-img-meta">
+                    <span class="fw-img-nombre">{{ item.archivo.name }}</span>
+                    <span class="fw-img-peso">{{ formatearTamano(item.archivo.size) }}</span>
+                  </div>
+                  <button
+                    type="button"
+                    class="fw-img-quitar"
+                    (click)="quitarImagen($index)"
+                  >
+                    Quitar
+                  </button>
+                </div>
+              }
+            </div>
+          }
+          @if (errorImagenes()) {
+            <ul class="fw-errores-campo">
+              <li>{{ errorImagenes() }}</li>
+            </ul>
+          }
+        </div>
+
+        <div class="fw-campo">
+          <label class="fw-label" for="sol-desc">Descripción del problema o servicio</label>
+          <textarea
+            id="sol-desc"
+            rows="4"
+            class="fw-textarea"
+            placeholder="Describe qué falla o instalación necesitas, materiales disponibles y detalles útiles..."
+            [formField]="formulario.descripcionTrabajo"
+          ></textarea>
+          @if (formulario.descripcionTrabajo().touched() && formulario.descripcionTrabajo().invalid()) {
+            <ul class="fw-errores-campo">
+              @for (err of formulario.descripcionTrabajo().errors(); track err.kind) {
+                <li>{{ err.message }}</li>
+              }
+            </ul>
+          }
+        </div>
+
+        <div class="fw-form-acciones">
+          <a routerLink="/directorio" class="fw-btn-secundario">Cancelar</a>
+          <button type="submit" class="fw-btn-primario" [disabled]="enviando()">
+            {{ enviando() ? 'Publicando...' : 'Publicar solicitud' }}
+          </button>
+        </div>
+      </form>
+    }
+  </div>
 </section>

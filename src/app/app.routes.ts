@@ -57,7 +57,7 @@ export const routes: Routes = [
       import('./solicitud/lista-solicitud/lista-solicitud').then((m) => m.ListaSolicitud),
   },
   {
-    path: 'solicitudes/nueva/:idPerfilProveedor',
+    path: 'solicitudes/nueva',
     canActivate: [sesionGuard, rolGuard('CLIENTE')],
     title: 'Nueva solicitud — Fast Work',
     loadComponent: () =>

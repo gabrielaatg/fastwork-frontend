@@ -161,4 +161,32 @@ describe('Interceptores de autenticación (token y sesión vencida)', () => {
       erroresCampo: { nombreOficio: 'El nombre del oficio es obligatorio' },
     });
   });
+
+  it('no debe cerrar sesión ni redirigir a /login ante 403 Forbidden en rutas protegidas', () => {
+    const navigateSpy = vi.spyOn(router, 'navigate').mockResolvedValue(true);
+    authApi.establecerSesion({
+      token: crearJwtVigente(),
+      tipo: 'Bearer',
+      idUsuario: 2,
+      rol: 'PROVEEDOR',
+      nombres: 'Carlos',
+    });
+
+    let errorForbidden: ErrorHttp | undefined;
+    http.get(`${environment.apiUrl}/solicitudes/55/mensajes`).subscribe({
+      error: (err: ErrorHttp) => {
+        errorForbidden = err;
+      },
+    });
+
+    const req = httpMock.expectOne(`${environment.apiUrl}/solicitudes/55/mensajes`);
+    req.flush(
+      { status: 'error', message: 'Sin permisos sobre esta conversación', code: 403 },
+      { status: 403, statusText: 'Forbidden' },
+    );
+
+    expect(authApi.estaAutenticado()).toBe(true);
+    expect(navigateSpy).not.toHaveBeenCalled();
+    expect(errorForbidden?.statusHttp).toBe(403);
+  });
 });

@@ -21,6 +21,8 @@ import {
 } from '../../dominio/proveedor';
 import { OficioApi } from '../../oficio/oficio-api';
 import { ProveedorApi } from '../proveedor-api';
+import { ZonaApi } from '../../zona/zona-api';
+import { Zona } from '../../dominio/zona';
 
 interface OficioTarifaModelo {
   idOficio: string;
@@ -44,8 +46,12 @@ interface PerfilProveedorModelo {
 export class FormularioProveedor implements OnInit {
   private readonly proveedorApi = inject(ProveedorApi);
   private readonly oficioApi = inject(OficioApi);
+  private readonly zonaApi = inject(ZonaApi);
 
   protected readonly catalogoOficios = signal<Oficio[]>([]);
+  protected readonly catalogoZonas = signal<Zona[]>([]);
+  protected readonly zonasSeleccionadas = signal<number[]>([]);
+  protected readonly fotoPerfilUrl = signal<string | null>(null);
   protected readonly dni = signal('');
   protected readonly estadoDisponibilidad = signal<EstadoDisponibilidad>('DISPONIBLE');
   protected readonly estadoVerificacion = signal<EstadoVerificacion | null>(null);
@@ -81,6 +87,16 @@ export class FormularioProveedor implements OnInit {
 
   ngOnInit(): void {
     this.cargarDatosIniciales();
+  }
+
+  protected estaZonaSeleccionada(idZona: number): boolean {
+    return this.zonasSeleccionadas().includes(idZona);
+  }
+
+  protected alternarZona(idZona: number): void {
+    this.zonasSeleccionadas.update((actual) =>
+      actual.includes(idZona) ? actual.filter((id) => id !== idZona) : [...actual, idZona],
+    );
   }
 
   protected agregarOficio(): void {
@@ -157,13 +173,16 @@ export class FormularioProveedor implements OnInit {
         .actualizarMiPerfil({
           ...(descripcion ? { descripcionPerfil: descripcion } : {}),
           oficios: oficiosPayload,
+          idsZonas: this.zonasSeleccionadas(),
         })
         .subscribe({
           next: (detalle) => {
             this.guardandoPerfil.set(false);
             this.estadoVerificacion.set(detalle.estadoVerificacion);
             this.estadoDisponibilidad.set(detalle.estadoDisponibilidad);
-            this.mensajeExito.set('Perfil comercial y tarifas guardados correctamente.');
+            this.fotoPerfilUrl.set(detalle.fotoPerfilUrl);
+            this.zonasSeleccionadas.set(detalle.zonas.map((z) => z.idZona));
+            this.mensajeExito.set('Perfil comercial, zonas y tarifas guardados correctamente.');
           },
           error: (error: ErrorHttp) => {
             this.guardandoPerfil.set(false);
@@ -181,11 +200,15 @@ export class FormularioProveedor implements OnInit {
 
     forkJoin({
       oficios: this.oficioApi.listarActivos(),
+      zonas: this.zonaApi.listarActivas(),
       detalle: this.proveedorApi.obtenerMiPerfil(),
     }).subscribe({
-      next: ({ oficios, detalle }) => {
+      next: ({ oficios, zonas, detalle }) => {
         this.cargandoInicial.set(false);
         this.catalogoOficios.set(oficios);
+        this.catalogoZonas.set(zonas);
+        this.fotoPerfilUrl.set(detalle.fotoPerfilUrl);
+        this.zonasSeleccionadas.set((detalle.zonas ?? []).map((z) => z.idZona));
         this.dni.set(detalle.dni ?? '');
         this.estadoVerificacion.set(detalle.estadoVerificacion);
         this.estadoDisponibilidad.set(detalle.estadoDisponibilidad);

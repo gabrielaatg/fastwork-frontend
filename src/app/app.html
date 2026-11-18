@@ -1,4 +1,6 @@
-<app-barra-navegacion />
+@if (mostrarBarra()) {
+  <app-barra-navegacion />
+}
 
 <main class="fw-contenedor">
   <router-outlet />

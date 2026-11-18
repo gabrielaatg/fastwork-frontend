@@ -1,10 +1,15 @@
 <section class="fw-perfil-pagina">
   <header class="fw-perfil-cabecera">
-    <div>
-      <h1 class="fw-perfil-titulo">Mi Perfil Comercial</h1>
-      <p class="fw-perfil-subtitulo">
-        Configura tu disponibilidad, descripción comercial y tarifas referenciales en Trujillo.
-      </p>
+    <div class="fw-perfil-identidad">
+      @if (fotoPerfilUrl(); as fotoUrl) {
+        <img [src]="fotoUrl" alt="Mi foto de perfil" class="fw-avatar-mi-perfil" />
+      }
+      <div>
+        <h1 class="fw-perfil-titulo">Mi Perfil Comercial</h1>
+        <p class="fw-perfil-subtitulo">
+          Configura tus distritos de atención en Trujillo, oficios y tarifas referenciales.
+        </p>
+      </div>
     </div>
 
     @if (estadoVerificacion(); as verificacion) {
@@ -83,6 +88,28 @@
           placeholder="Describe tus años de experiencia, herramientas y tipo de trabajos que realizas en Trujillo..."
           [formField]="formulario.descripcionPerfil"
         ></textarea>
+      </div>
+
+      <div class="fw-oficios-cabecera">
+        <div>
+          <h3 class="fw-subtitulo-seccion">Distritos que atiendo (Trujillo)</h3>
+          <p class="fw-bloque-ayuda">
+            Solo recibirás y podrás ofertar en solicitudes publicadas dentro de estas zonas.
+          </p>
+        </div>
+      </div>
+
+      <div class="fw-zonas-grid">
+        @for (zona of catalogoZonas(); track zona.idZona) {
+          <label class="fw-zona-check">
+            <input
+              type="checkbox"
+              [checked]="estaZonaSeleccionada(zona.idZona)"
+              (change)="alternarZona(zona.idZona)"
+            />
+            <span>{{ zona.nombreZona }}</span>
+          </label>
+        }
       </div>
 
       <div class="fw-oficios-cabecera">

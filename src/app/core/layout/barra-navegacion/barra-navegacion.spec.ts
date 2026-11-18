@@ -1,7 +1,8 @@
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
+import { provideRouter, Router } from '@angular/router';
+import { vi } from 'vitest';
 import { AuthResponse } from '../../../dominio/auth';
 import { RolUsuario } from '../../../dominio/rol';
 import { AuthApi } from '../../auth/auth-api';
@@ -40,7 +41,7 @@ describe('BarraNavegacion', () => {
     localStorage.clear();
   });
 
-  it('debe mostrar solo enlaces de cliente y sin botón de cambio de modo para CLIENTE', () => {
+  it('debe mostrar los enlaces actualizados de CLIENTE', () => {
     authApi.establecerSesion(sesionPara('CLIENTE'));
     const fixture = TestBed.createComponent(BarraNavegacion);
     fixture.detectChanges();
@@ -48,13 +49,16 @@ describe('BarraNavegacion', () => {
     const enlaces = Array.from(
       fixture.nativeElement.querySelectorAll('.fw-nav-link') as NodeListOf<HTMLAnchorElement>,
     ).map((a) => a.textContent?.trim());
-    const btnModo = fixture.nativeElement.querySelector('.fw-btn-modo');
 
-    expect(enlaces).toEqual(['Directorio', 'Mis Solicitudes', 'Encuesta Piloto']);
-    expect(btnModo).toBeNull();
+    expect(enlaces).toEqual([
+      'Directorio',
+      'Publicar Trabajo',
+      'Mis Solicitudes',
+      'Encuesta Piloto',
+    ]);
   });
 
-  it('debe mostrar solo enlaces de proveedor y sin botón de cambio de modo para PROVEEDOR', () => {
+  it('debe mostrar los enlaces actualizados de PROVEEDOR', () => {
     authApi.establecerSesion(sesionPara('PROVEEDOR'));
     const fixture = TestBed.createComponent(BarraNavegacion);
     fixture.detectChanges();
@@ -62,13 +66,11 @@ describe('BarraNavegacion', () => {
     const enlaces = Array.from(
       fixture.nativeElement.querySelectorAll('.fw-nav-link') as NodeListOf<HTMLAnchorElement>,
     ).map((a) => a.textContent?.trim());
-    const btnModo = fixture.nativeElement.querySelector('.fw-btn-modo');
 
-    expect(enlaces).toEqual(['Mi Perfil', 'Agenda', 'Encuesta Piloto']);
-    expect(btnModo).toBeNull();
+    expect(enlaces).toEqual(['Mi Perfil', 'Solicitudes y Agenda', 'Encuesta Piloto']);
   });
 
-  it('debe mostrar enlaces administrativos y sin botón de cambio de modo para ADMIN', () => {
+  it('debe mostrar enlaces administrativos para ADMIN', () => {
     authApi.establecerSesion(sesionPara('ADMIN'));
     const fixture = TestBed.createComponent(BarraNavegacion);
     fixture.detectChanges();
@@ -76,9 +78,22 @@ describe('BarraNavegacion', () => {
     const enlaces = Array.from(
       fixture.nativeElement.querySelectorAll('.fw-nav-link') as NodeListOf<HTMLAnchorElement>,
     ).map((a) => a.textContent?.trim());
-    const btnModo = fixture.nativeElement.querySelector('.fw-btn-modo');
 
     expect(enlaces).toEqual(['Directorio', 'Verificaciones', 'Oficios', 'Resumen Piloto']);
-    expect(btnModo).toBeNull();
+  });
+
+  it('debe cerrar sesión y navegar a /login al pulsar Cerrar sesión', () => {
+    const router = TestBed.inject(Router);
+    const spyNavigate = vi.spyOn(router, 'navigate').mockResolvedValue(true);
+    authApi.establecerSesion(sesionPara('CLIENTE'));
+
+    const fixture = TestBed.createComponent(BarraNavegacion);
+    fixture.detectChanges();
+
+    const btnSalir = fixture.nativeElement.querySelector('.fw-btn-salir') as HTMLButtonElement;
+    btnSalir.click();
+
+    expect(authApi.estaAutenticado()).toBe(false);
+    expect(spyNavigate).toHaveBeenCalledWith(['/login']);
   });
 });
