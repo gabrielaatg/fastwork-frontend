@@ -2,10 +2,6 @@
   <div class="fw-registro-tarjeta">
     <div class="fw-registro-cabecera">
       <h1 class="fw-registro-titulo">Crear cuenta en Fast Work</h1>
-      <p class="fw-registro-subtitulo">
-        Regístrate como cliente o proveedor de oficios técnicos en Trujillo. Si ya tienes cuenta en un
-        rol y deseas registrarte en el otro, usa tu mismo DNI (y tu mismo correo o uno distinto).
-      </p>
     </div>
 
     <div class="fw-selector-rol" role="group" aria-label="Tipo de cuenta">
@@ -296,9 +292,7 @@
 
           <div class="fw-campo">
             <span class="fw-label">Oficio(s) que ofreces (mín. 1)</span>
-            <p class="fw-sub-ayuda">
-              Las tarifas referenciales podrás editarlas luego en Mi Perfil Comercial.
-            </p>
+
             <div class="fw-checks-grid">
               @for (oficio of catalogoOficios(); track oficio.idOficio) {
                 <label class="fw-check-chip">
