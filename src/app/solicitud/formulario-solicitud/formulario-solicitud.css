@@ -100,3 +100,118 @@
   color: var(--fw-text);
   font-weight: 600;
 }
+
+.fw-imagenes-cabecera {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.fw-imagenes-contador {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--fw-muted);
+}
+
+.fw-imagenes-drop {
+  padding: 0.85rem;
+  border: 1px dashed var(--fw-border);
+  border-radius: var(--fw-radius);
+  background-color: var(--fw-surface-alt);
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.fw-input-archivo {
+  font-size: 0.875rem;
+}
+
+.fw-imagenes-ayuda {
+  margin: 0;
+  font-size: 0.78rem;
+  color: var(--fw-muted);
+}
+
+.fw-imagenes-grid {
+  list-style: none;
+  margin: 0.25rem 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 0.75rem;
+}
+
+.fw-imagen-item {
+  border: 1px solid var(--fw-border);
+  border-radius: var(--fw-radius);
+  background-color: var(--fw-surface);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.fw-imagen-thumb {
+  width: 100%;
+  height: 110px;
+  object-fit: cover;
+  display: block;
+  background-color: var(--fw-surface-alt);
+}
+
+.fw-imagen-info {
+  padding: 0.45rem 0.55rem 0.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.fw-imagen-nombre {
+  font-size: 0.78rem;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.fw-imagen-tamano {
+  font-size: 0.72rem;
+  color: var(--fw-muted);
+}
+
+.fw-imagen-acciones {
+  padding: 0.35rem 0.55rem 0.55rem;
+  display: flex;
+  gap: 0.4rem;
+}
+
+.fw-btn-mini {
+  flex: 1;
+  text-align: center;
+  padding: 0.28rem 0.45rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border: 1px solid var(--fw-border);
+  border-radius: 0.35rem;
+  background-color: var(--fw-surface);
+  color: var(--fw-text);
+  cursor: pointer;
+}
+
+.fw-btn-mini:hover {
+  background-color: var(--fw-surface-alt);
+}
+
+.fw-btn-mini-peligro {
+  border-color: var(--fw-danger);
+  color: var(--fw-danger);
+}
+
+.fw-btn-mini-peligro:hover {
+  background-color: var(--fw-danger-soft);
+}
+
+.fw-input-oculto {
+  display: none;
+}

@@ -115,6 +115,77 @@
           </div>
 
           <div class="fw-campo">
+            <div class="fw-imagenes-cabecera">
+              <label class="fw-label" for="sol-imagenes">
+                Imágenes del problema (obligatorio, {{ minImagenes }} a {{ maxImagenes }} fotos)
+              </label>
+              <span class="fw-imagenes-contador">
+                {{ imagenes().length }} / {{ maxImagenes }} seleccionadas
+              </span>
+            </div>
+
+            <div class="fw-imagenes-drop">
+              <input
+                id="sol-imagenes"
+                type="file"
+                accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp"
+                multiple
+                class="fw-input-archivo"
+                [disabled]="imagenes().length >= maxImagenes"
+                (change)="alSeleccionarImagenes($event)"
+              />
+              <p class="fw-imagenes-ayuda">
+                Formatos permitidos: JPG, PNG o WEBP. Tamaño máximo: 5 MB por imagen.
+              </p>
+            </div>
+
+            @if (imagenes().length > 0) {
+              <ul class="fw-imagenes-grid" aria-label="Vista previa de imágenes del problema">
+                @for (item of imagenes(); track item.id; let idx = $index) {
+                  <li class="fw-imagen-item">
+                    <img
+                      [src]="item.previewUrl"
+                      [alt]="'Vista previa de ' + item.archivo.name"
+                      class="fw-imagen-thumb"
+                    />
+                    <div class="fw-imagen-info">
+                      <span class="fw-imagen-nombre" [title]="item.archivo.name">
+                        {{ idx + 1 }}. {{ item.archivo.name }}
+                      </span>
+                      <span class="fw-imagen-tamano">
+                        {{ formatearTamanoArchivo(item.archivo.size) }}
+                      </span>
+                    </div>
+                    <div class="fw-imagen-acciones">
+                      <label class="fw-btn-mini" [for]="'reemplazar-' + item.id">
+                        Reemplazar
+                        <input
+                          [id]="'reemplazar-' + item.id"
+                          type="file"
+                          accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp"
+                          class="fw-input-oculto"
+                          (change)="alReemplazarImagen(idx, $event)"
+                        />
+                      </label>
+                      <button
+                        type="button"
+                        class="fw-btn-mini fw-btn-mini-peligro"
+                        (click)="eliminarImagen(idx)"
+                      >
+                        Quitar
+                      </button>
+                    </div>
+                  </li>
+                }
+              </ul>
+            }
+
+            @if (errorImagenes()) {
+              <span class="fw-error-texto">{{ errorImagenes() }}</span>
+            }
+          </div>
+
+          <div class="fw-campo">
             <label class="fw-label" for="sol-desc">Descripción del trabajo</label>
             <textarea
               id="sol-desc"

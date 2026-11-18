@@ -37,6 +37,29 @@
 
   <p class="fw-solicitud-desc">{{ solicitud().descripcionTrabajo }}</p>
 
+  @if (imagenes().length > 0) {
+    <div class="fw-solicitud-imagenes">
+      <span class="fw-imagenes-titulo">Fotos del problema ({{ imagenes().length }})</span>
+      <div class="fw-imagenes-galeria">
+        @for (img of imagenes(); track img.idImagen; let idx = $index) {
+          <button
+            type="button"
+            class="fw-miniatura-btn"
+            [attr.aria-label]="'Ampliar imagen ' + (idx + 1) + ': ' + img.nombreOriginal"
+            (click)="abrirLightbox(idx)"
+          >
+            <img
+              [src]="obtenerUrlMiniatura(img.url)"
+              [alt]="img.nombreOriginal"
+              loading="lazy"
+              class="fw-miniatura-img"
+            />
+          </button>
+        }
+      </div>
+    </div>
+  }
+
   <footer class="fw-card-acciones">
     <div class="fw-acciones-estado">
       @for (destino of transiciones(); track destino) {
@@ -60,4 +83,56 @@
       }
     </div>
   </footer>
+
+  @if (imagenLightboxActual(); as lb) {
+    <div
+      class="fw-lightbox-backdrop"
+      role="dialog"
+      aria-modal="true"
+      [attr.aria-label]="'Imagen ' + (lb.indice + 1) + ' de ' + lb.total"
+      (click)="cerrarLightbox()"
+    >
+      <div class="fw-lightbox-contenido" (click)="$event.stopPropagation()">
+        <header class="fw-lightbox-cabecera">
+          <span class="fw-lightbox-titulo">
+            {{ lb.imagen.nombreOriginal }} ({{ lb.indice + 1 }} / {{ lb.total }})
+          </span>
+          <button
+            type="button"
+            class="fw-lightbox-cerrar"
+            aria-label="Cerrar visor de imagen"
+            (click)="cerrarLightbox()"
+          >
+            &times;
+          </button>
+        </header>
+
+        <div class="fw-lightbox-cuerpo">
+          @if (lb.total > 1) {
+            <button
+              type="button"
+              class="fw-lightbox-nav"
+              aria-label="Imagen anterior"
+              (click)="navegarLightbox(-1)"
+            >
+              &#8249;
+            </button>
+          }
+
+          <img [src]="lb.imagen.url" [alt]="lb.imagen.nombreOriginal" class="fw-lightbox-img" />
+
+          @if (lb.total > 1) {
+            <button
+              type="button"
+              class="fw-lightbox-nav"
+              aria-label="Siguiente imagen"
+              (click)="navegarLightbox(1)"
+            >
+              &#8250;
+            </button>
+          }
+        </div>
+      </div>
+    </div>
+  }
 </article>

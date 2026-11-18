@@ -15,9 +15,21 @@ export class SolicitudApi {
   private readonly http = inject(HttpClient);
   private readonly baseUrl = `${environment.apiUrl}/solicitudes`;
 
-  crear(request: CrearSolicitudRequest): Observable<SolicitudServicio> {
+  crear(request: CrearSolicitudRequest, imagenes: readonly File[] = []): Observable<SolicitudServicio> {
+    if (imagenes.length === 0) {
+      return this.http
+        .post<JsendResponse<SolicitudServicio>>(this.baseUrl, request)
+        .pipe(map(extraerData));
+    }
+
+    const formData = new FormData();
+    formData.append('datos', new Blob([JSON.stringify(request)], { type: 'application/json' }));
+    for (const imagen of imagenes) {
+      formData.append('imagenes', imagen, imagen.name);
+    }
+
     return this.http
-      .post<JsendResponse<SolicitudServicio>>(this.baseUrl, request)
+      .post<JsendResponse<SolicitudServicio>>(this.baseUrl, formData)
       .pipe(map(extraerData));
   }
 

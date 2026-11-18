@@ -21,9 +21,7 @@
           placeholder="usuario@correo.com o 70112233"
           [formField]="formulario.identificador"
         />
-        <span class="fw-hint">
-          Clientes y proveedores pueden ingresar con correo o DNI (8 dígitos). Administradores solo con correo.
-        </span>
+
         @if (formulario.identificador().touched() && formulario.identificador().invalid()) {
           <ul class="fw-errores-campo">
             @for (error of formulario.identificador().errors(); track error.kind) {

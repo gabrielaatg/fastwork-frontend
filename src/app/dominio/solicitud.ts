@@ -5,6 +5,15 @@ export type EstadoSolicitud =
 
 export type EstadoDestinoSolicitud = Exclude<EstadoSolicitud, 'PENDIENTE'>;
 
+export interface SolicitudImagen {
+  idImagen: number;
+  nombreOriginal: string;
+  contentType: string;
+  tamanoBytes: number;
+  orden: number;
+  url: string;
+}
+
 export interface SolicitudServicio {
   idSolicitud: number;
   idCliente: number;
@@ -22,6 +31,7 @@ export interface SolicitudServicio {
   presupuestoReferencial: number | null;
   estado: EstadoSolicitud;
   fechaCreacion: string; // ISO LocalDateTime
+  imagenes?: SolicitudImagen[];
 }
 
 export interface CrearSolicitudRequest {
