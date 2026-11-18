@@ -14,8 +14,8 @@
 }
 
 .fw-card-proveedor:hover {
-  border-color: rgb(75 227 160 / 0.35);
-  box-shadow: var(--fw-shadow-lg), 0 0 0 1px rgb(75 227 160 / 0.15);
+  border-color: rgb(var(--fw-primary-rgb) / 0.35);
+  box-shadow: var(--fw-shadow-lg), 0 0 0 1px rgb(var(--fw-primary-rgb) / 0.15);
   transform: translateY(-3px);
 }
 
@@ -184,7 +184,7 @@
 
 .fw-btn-detalle:hover {
   background-color: var(--fw-primary-hover);
-  box-shadow: var(--fw-glow-verde);
+  box-shadow: var(--fw-glow);
   text-decoration: none;
 }
 

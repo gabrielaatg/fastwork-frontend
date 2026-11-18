@@ -4,7 +4,7 @@
   min-height: 100vh;
 }
 
-/* ---------- Aurora de fondo: luz verde y celeste a la deriva ---------- */
+/* ---------- Aurora de fondo: luz celeste y gris a la deriva ---------- */
 .fw-aurora {
   position: fixed;
   inset: 0;
@@ -12,7 +12,7 @@
   overflow: hidden;
   pointer-events: none;
   background:
-    radial-gradient(ellipse 80% 60% at 50% -10%, rgb(75 227 160 / 0.08), transparent 60%),
+    radial-gradient(ellipse 80% 60% at 50% -10%, rgb(var(--fw-primary-rgb) / 0.08), transparent 60%),
     var(--fw-bg);
 }
 
@@ -29,7 +29,7 @@
   height: 46vw;
   left: -12vw;
   top: -14vw;
-  background: #2fbf86;
+  background: #2f86b0;
   animation: fw-deriva-a 26s ease-in-out infinite alternate;
 }
 
@@ -47,7 +47,7 @@
   height: 34vw;
   left: 30vw;
   bottom: -20vw;
-  background: #2b6f78;
+  background: #3b4752;
   animation: fw-deriva-c 38s ease-in-out infinite alternate;
 }
 

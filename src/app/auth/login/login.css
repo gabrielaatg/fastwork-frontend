@@ -39,7 +39,7 @@
 .fw-linea > span {
   display: inline-block;
   font-stretch: 125%;
-  background: linear-gradient(180deg, #ffffff 30%, #a9c2bf 120%);
+  background: linear-gradient(180deg, #ffffff 30%, #9fb0ba 120%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -171,11 +171,11 @@
   stroke: var(--fw-accent);
 }
 
-.fw-icono-verde {
+.fw-icono-solido {
   background: var(--fw-primary);
 }
 
-.fw-icono-verde svg {
+.fw-icono-solido svg {
   stroke: var(--fw-on-primary);
 }
 
@@ -185,7 +185,7 @@
   letter-spacing: 0.06em;
 }
 
-/* Marco con borde de luz giratorio (verde → celeste) */
+/* Marco con borde de luz giratorio (celeste) */
 @property --fw-angulo {
   syntax: '<angle>';
   initial-value: 0deg;
@@ -215,7 +215,7 @@
   inset: -30px;
   z-index: -1;
   border-radius: inherit;
-  background: radial-gradient(closest-side, rgb(75 227 160 / 0.18), transparent);
+  background: radial-gradient(closest-side, rgb(var(--fw-primary-rgb) / 0.18), transparent);
   filter: blur(20px);
 }
 
@@ -236,7 +236,7 @@
 .fw-auth-tarjeta {
   width: 100%;
   border-radius: var(--fw-radius-xl);
-  background-color: rgb(11 22 24 / 0.82);
+  background-color: rgb(12 17 21 / 0.82);
   padding: 2.25rem;
   display: flex;
   flex-direction: column;

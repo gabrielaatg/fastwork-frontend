@@ -1,14 +1,14 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
-/** Marca de Fast Work: greca escalonada con degradado verde → celeste sobre vidrio. */
+/** Marca de Fast Work: greca escalonada con degradado celeste sobre vidrio. */
 @Component({
   selector: 'app-logo',
   template: `
     <svg viewBox="0 0 36 36" aria-hidden="true">
       <defs>
         <linearGradient id="fw-logo-grad" x1="0" y1="1" x2="1" y2="0">
-          <stop offset="0" stop-color="#4be3a0" />
-          <stop offset="1" stop-color="#7dd3fc" />
+          <stop offset="0" stop-color="#7dd3fc" />
+          <stop offset="1" stop-color="#d2effd" />
         </linearGradient>
       </defs>
       <rect

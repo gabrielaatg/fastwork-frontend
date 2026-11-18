@@ -17,7 +17,7 @@
   border: 1px solid var(--fw-border);
   background:
     radial-gradient(ellipse 60% 120% at 100% 0%, rgb(125 211 252 / 0.14), transparent 60%),
-    radial-gradient(ellipse 50% 100% at 0% 100%, rgb(75 227 160 / 0.12), transparent 60%),
+    radial-gradient(ellipse 50% 100% at 0% 100%, rgb(var(--fw-primary-rgb) / 0.12), transparent 60%),
     rgb(255 255 255 / 0.035);
   -webkit-backdrop-filter: var(--fw-vidrio-blur);
   backdrop-filter: var(--fw-vidrio-blur);
@@ -225,7 +225,7 @@
 
 .fw-btn-publicar:hover {
   background-color: var(--fw-primary-hover);
-  box-shadow: var(--fw-glow-verde);
+  box-shadow: var(--fw-glow);
   transform: translateY(-1px);
   text-decoration: none;
 }

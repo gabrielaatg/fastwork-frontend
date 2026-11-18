@@ -37,7 +37,7 @@
 .fw-linea > span {
   display: inline-block;
   font-stretch: 125%;
-  background: linear-gradient(180deg, #ffffff 30%, #a9c2bf 120%);
+  background: linear-gradient(180deg, #ffffff 30%, #9fb0ba 120%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -76,7 +76,7 @@
   bottom: 0.6rem;
   width: 2px;
   background: linear-gradient(180deg, var(--fw-accent), var(--fw-primary));
-  box-shadow: 0 0 14px rgb(75 227 160 / 0.5);
+  box-shadow: 0 0 14px rgb(var(--fw-primary-rgb) / 0.5);
   transform-origin: top;
   animation: fw-linea-vertical 1.4s var(--fw-ease-salida) 0.8s both;
 }
@@ -109,7 +109,7 @@
   border-radius: 50%;
   background: var(--fw-bg);
   border: 2px solid var(--fw-primary);
-  box-shadow: 0 0 0 4px var(--fw-bg), 0 0 14px rgb(75 227 160 / 0.6);
+  box-shadow: 0 0 0 4px var(--fw-bg), 0 0 14px rgb(var(--fw-primary-rgb) / 0.6);
 }
 
 .fw-registro-lateral-nota {
@@ -172,7 +172,7 @@
 .fw-registro-tarjeta {
   width: 100%;
   border-radius: var(--fw-radius-xl);
-  background-color: rgb(11 22 24 / 0.84);
+  background-color: rgb(12 17 21 / 0.84);
   padding: 2.5rem;
   gap: 1.35rem;
 }
@@ -297,7 +297,7 @@
   background: var(--fw-primary-soft);
   color: var(--fw-primary);
   transform: translateY(-2px);
-  box-shadow: 0 0 0 1px var(--fw-primary), 0 10px 30px -12px rgb(75 227 160 / 0.5);
+  box-shadow: 0 0 0 1px var(--fw-primary), 0 10px 30px -12px rgb(var(--fw-primary-rgb) / 0.5);
 }
 
 .fw-registro-form,

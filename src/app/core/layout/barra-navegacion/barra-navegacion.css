@@ -26,7 +26,7 @@
   gap: 0.5rem 1.5rem;
   border-radius: var(--fw-radius-lg);
   border: 1px solid rgb(255 255 255 / 0.1);
-  background-color: rgb(10 20 22 / 0.62);
+  background-color: rgb(12 17 21 / 0.62);
   background-image: var(--fw-vidrio-brillo);
   -webkit-backdrop-filter: blur(20px) saturate(170%);
   backdrop-filter: blur(20px) saturate(170%);
@@ -89,7 +89,7 @@
   text-decoration: none;
 }
 
-/* Activo: píldora de vidrio con punto verde que aparece */
+/* Activo: píldora de vidrio con punto celeste que aparece */
 .fw-nav-link-activo {
   color: var(--fw-text);
   background-color: rgb(255 255 255 / 0.09);
@@ -183,7 +183,7 @@
 }
 
 .fw-btn-registro:hover {
-  box-shadow: var(--fw-glow-verde);
+  box-shadow: var(--fw-glow);
   text-decoration: none;
 }
 
