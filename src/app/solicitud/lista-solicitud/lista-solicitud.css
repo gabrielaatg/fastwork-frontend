@@ -33,7 +33,7 @@
 .fw-tab-activo {
   border-color: var(--fw-primary);
   background-color: var(--fw-primary);
-  color: #ffffff;
+  color: var(--fw-on-primary);
 }
 
 .fw-agenda-layout {
@@ -80,7 +80,7 @@
   padding: 0.55rem 1rem;
   border-radius: var(--fw-radius);
   background-color: var(--fw-primary);
-  color: #ffffff;
+  color: var(--fw-on-primary);
   font-size: 0.88rem;
   font-weight: 600;
   text-decoration: none;
@@ -187,7 +187,7 @@
 .fw-btn-aceptar {
   border: none;
   background-color: var(--fw-primary);
-  color: #ffffff;
+  color: var(--fw-on-primary);
 }
 
 .fw-btn-rechazar {

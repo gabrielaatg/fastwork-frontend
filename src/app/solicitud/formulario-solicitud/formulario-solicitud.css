@@ -82,7 +82,7 @@
   border: none;
   border-radius: var(--fw-radius);
   background-color: var(--fw-primary);
-  color: #ffffff;
+  color: var(--fw-on-primary);
   font-weight: 600;
   cursor: pointer;
 }

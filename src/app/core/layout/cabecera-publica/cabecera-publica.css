@@ -1,0 +1,122 @@
+:host {
+  position: fixed;
+  top: 1rem;
+  left: 50%;
+  z-index: 40;
+  width: min(1120px, calc(100% - 2rem));
+  transform: translateX(-50%);
+  animation: fw-cp-entrada 0.9s var(--fw-ease-salida) both;
+}
+
+@keyframes fw-cp-entrada {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -24px);
+  }
+}
+
+.fw-cp {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.55rem 0.6rem 0.55rem 1rem;
+  border-radius: var(--fw-radius-pill);
+  border: 1px solid rgb(255 255 255 / 0.1);
+  background: rgb(14 27 30 / 0.35);
+  background-image: var(--fw-vidrio-brillo);
+  -webkit-backdrop-filter: blur(18px) saturate(170%);
+  backdrop-filter: blur(18px) saturate(170%);
+  box-shadow: var(--fw-shadow-sm);
+  transition:
+    background-color 0.4s ease,
+    box-shadow 0.4s ease,
+    border-color 0.4s ease;
+}
+
+:host(.fw-desplazada) .fw-cp {
+  background-color: rgb(10 20 22 / 0.72);
+  border-color: rgb(255 255 255 / 0.14);
+  box-shadow: var(--fw-shadow-lg);
+}
+
+.fw-cp-marca {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: var(--fw-text);
+  font-size: 1.12rem;
+  font-weight: 800;
+  font-stretch: 125%;
+  letter-spacing: -0.02em;
+}
+
+.fw-cp-marca:hover {
+  text-decoration: none;
+}
+
+.fw-cp-nav {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.fw-cp-nav a,
+.fw-cp-ingresar {
+  padding: 0.5rem 0.9rem;
+  border-radius: var(--fw-radius-pill);
+  color: var(--fw-muted);
+  font-size: 0.93rem;
+  font-weight: 550;
+  transition:
+    color 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.fw-cp-nav a:hover,
+.fw-cp-ingresar:hover,
+.fw-cp-activo {
+  color: var(--fw-text);
+  background: rgb(255 255 255 / 0.07);
+  text-decoration: none;
+}
+
+.fw-cp-acciones {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.fw-cp-registro {
+  padding: 0.55rem 1.1rem;
+  border-radius: var(--fw-radius-pill);
+  background: var(--fw-primary);
+  color: var(--fw-on-primary);
+  font-size: 0.93rem;
+  font-weight: 700;
+  transition:
+    box-shadow 0.25s ease,
+    transform 0.2s var(--fw-ease-resorte);
+}
+
+.fw-cp-registro:hover {
+  text-decoration: none;
+  box-shadow: var(--fw-glow-verde);
+  transform: translateY(-1px);
+}
+
+@media (max-width: 860px) {
+  .fw-cp-nav {
+    display: none;
+  }
+}
+
+@media (max-width: 420px) {
+  :host {
+    top: 0.6rem;
+    width: calc(100% - 1.2rem);
+  }
+
+  .fw-cp-marca span {
+    display: none;
+  }
+}

@@ -82,7 +82,7 @@
 .fw-btn-primario {
   border: none;
   background-color: var(--fw-primary);
-  color: #ffffff;
+  color: var(--fw-on-primary);
 }
 
 .fw-btn-peligro {
@@ -261,7 +261,7 @@
 }
 
 .fw-confirmado-ok {
-  color: #166534;
+  color: var(--fw-success);
   font-weight: 600;
 }
 

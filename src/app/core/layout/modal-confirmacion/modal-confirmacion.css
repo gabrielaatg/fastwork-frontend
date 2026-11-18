@@ -2,7 +2,7 @@
   position: fixed;
   inset: 0;
   z-index: 50;
-  background-color: rgb(15 23 42 / 0.45);
+  background-color: var(--fw-backdrop);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -16,7 +16,7 @@
   border: 1px solid var(--fw-border);
   border-radius: var(--fw-radius);
   padding: 1.5rem;
-  box-shadow: 0 20px 25px -5px rgb(15 23 42 / 0.15);
+  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.5);
 }
 
 .fw-modal-titulo {
@@ -60,7 +60,7 @@
 .fw-btn-confirmar {
   background-color: var(--fw-primary);
   border: 1px solid var(--fw-primary);
-  color: #ffffff;
+  color: var(--fw-on-primary);
 }
 
 .fw-btn-confirmar:hover:not(:disabled) {
@@ -73,7 +73,7 @@
 }
 
 .fw-btn-peligro:hover:not(:disabled) {
-  background-color: #991b1b;
+  background-color: var(--fw-danger-hover);
 }
 
 .fw-btn-secundario:disabled,

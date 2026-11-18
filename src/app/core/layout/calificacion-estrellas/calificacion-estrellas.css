@@ -30,7 +30,7 @@
 }
 
 .fw-estrella-activa {
-  color: #f59e0b;
+  color: var(--fw-star);
 }
 
 .fw-estrellas-texto {

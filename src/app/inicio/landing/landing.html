@@ -1,0 +1,264 @@
+<app-cabecera-publica />
+
+<!-- ===================== HERO ===================== -->
+<section class="fw-hero" aria-labelledby="hero-titulo">
+  <div class="fw-hero-rejilla" aria-hidden="true"></div>
+
+  <div class="fw-hero-inner">
+    <div class="fw-hero-texto">
+      <p class="fw-estado-piloto">
+        <span class="fw-punto-vivo" aria-hidden="true"></span>
+        Piloto activo en Trujillo
+      </p>
+
+      <h1 id="hero-titulo" class="fw-hero-titulo">
+        <span class="fw-linea"><span style="--i: 0">Tu técnico</span></span>
+        <span class="fw-linea"><span style="--i: 1">de confianza,</span></span>
+        <span class="fw-linea"><span style="--i: 2">a minutos</span></span>
+        <span class="fw-linea"><span style="--i: 3">de tu casa.</span></span>
+      </h1>
+
+      <p class="fw-hero-bajada">
+        Gasfiteros, electricistas, carpinteros y más oficios de tu distrito, con su Certificado
+        Único Laboral verificado y calificados por vecinos que ya los contrataron.
+      </p>
+
+      <div class="fw-hero-ctas">
+        <a class="fw-cta fw-cta-primario" routerLink="/registro">Buscar un técnico</a>
+        <a class="fw-cta fw-cta-vidrio" routerLink="/registro">Ofrecer mis servicios</a>
+      </div>
+
+      <p class="fw-hero-login">¿Ya tienes cuenta? <a routerLink="/login">Ingresa aquí</a></p>
+    </div>
+
+    <!-- Escena animada: una solicitud encuentra a su técnico -->
+    <div
+      class="fw-escena"
+      fwBrillo
+      [fwInclinar]="true"
+      role="img"
+      aria-label="Animación: un vecino de Víctor Larco publica una fuga de agua, una gasfitera verificada envía su oferta y el vecino la acepta."
+    >
+      <div class="fw-escena-barra" aria-hidden="true">
+        <span></span><span></span><span></span>
+        <p>fastwork / solicitud en vivo</p>
+      </div>
+
+      <svg class="fw-escena-ruta" viewBox="0 0 480 440" aria-hidden="true">
+        <defs>
+          <linearGradient id="fw-ruta-grad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#7dd3fc" />
+            <stop offset="1" stop-color="#4be3a0" />
+          </linearGradient>
+          <filter id="fw-ruta-glow" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="4" result="b" />
+            <feMerge>
+              <feMergeNode in="b" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+        </defs>
+        <path class="fw-ruta-base" d="M130 118 V190 H180 V230 H240 V270 H300 V310 H340" />
+        <path
+          class="fw-ruta-trazo"
+          pathLength="100"
+          filter="url(#fw-ruta-glow)"
+          d="M130 118 V190 H180 V230 H240 V270 H300 V310 H340"
+        />
+        <circle class="fw-ruta-punto" r="5" fill="#e9fff6" filter="url(#fw-ruta-glow)">
+          <animateMotion
+            dur="12s"
+            repeatCount="indefinite"
+            calcMode="linear"
+            keyTimes="0;0.12;0.36;1"
+            keyPoints="0;0;1;1"
+            path="M130 118 V190 H180 V230 H240 V270 H300 V310 H340"
+          />
+        </circle>
+        <circle class="fw-ping fw-ping-a" cx="130" cy="150" r="6" />
+        <circle class="fw-ping fw-ping-b" cx="340" cy="310" r="6" />
+      </svg>
+
+      <article class="fw-ficha fw-ficha-solicitud" aria-hidden="true">
+        <div class="fw-ficha-icono fw-ficha-icono-agua">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 3s6 6.4 6 11a6 6 0 0 1-12 0c0-4.6 6-11 6-11z" />
+          </svg>
+        </div>
+        <div>
+          <p class="fw-ficha-meta">Víctor Larco, hace 1 min</p>
+          <p class="fw-ficha-titulo">Fuga de agua en la cocina</p>
+          <p class="fw-ficha-dato">Gasfitería <b>S/ 80 – 150</b></p>
+        </div>
+      </article>
+
+      <article class="fw-ficha fw-ficha-tecnico" aria-hidden="true">
+        <div class="fw-avatar">RV</div>
+        <div class="fw-ficha-cuerpo">
+          <p class="fw-ficha-titulo">Rosa Vásquez</p>
+          <p class="fw-ficha-meta">Gasfitera, a 1,2 km</p>
+          <div class="fw-estrellas-anim">
+            <span class="fw-estrellas-vacias">★★★★★</span>
+            <span class="fw-estrellas-llenas">★★★★★</span>
+            <b>4,8</b>
+          </div>
+        </div>
+        <span class="fw-sello">CUL verificado</span>
+      </article>
+
+      <div class="fw-toast" aria-hidden="true">
+        <span class="fw-toast-check">
+          <svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg>
+        </span>
+        <span>Oferta aceptada <b>S/ 120</b></span>
+      </div>
+    </div>
+  </div>
+
+  <a class="fw-scroll" href="#oficios" aria-label="Ver más">
+    <span></span>
+  </a>
+</section>
+
+<!-- ===================== CINTA DE OFICIOS ===================== -->
+<section class="fw-cinta" id="oficios" aria-label="Oficios que encuentras en Fast Work">
+  <div class="fw-cinta-fila">
+    <ul class="fw-cinta-pista">
+      @for (oficio of filaA; track $index) {
+        <li [attr.aria-hidden]="$index >= filaA.length / 2">{{ oficio }}</li>
+      }
+    </ul>
+  </div>
+  <div class="fw-cinta-fila fw-cinta-inversa" aria-hidden="true">
+    <ul class="fw-cinta-pista">
+      @for (oficio of filaB; track $index) {
+        <li>{{ oficio }}</li>
+      }
+    </ul>
+  </div>
+</section>
+
+<!-- ===================== CÓMO FUNCIONA ===================== -->
+<section class="fw-seccion" id="como-funciona" aria-labelledby="pasos-titulo">
+  <div class="fw-seccion-inner">
+    <header class="fw-seccion-cabecera" fwRevelar>
+      <h2 id="pasos-titulo" class="fw-seccion-titulo">Cómo funciona</h2>
+      <p class="fw-seccion-bajada">Tres pasos entre el problema y el trabajo terminado.</p>
+    </header>
+
+    <ol class="fw-pasos" fwRevelar>
+      <span class="fw-pasos-linea" aria-hidden="true"></span>
+      @for (paso of pasos; track paso.titulo; let i = $index) {
+        <li class="fw-paso fw-vidrio" fwBrillo fwRevelar [fwRetraso]="180 + i * 160">
+          <span class="fw-paso-numero">{{ i + 1 }}</span>
+          <div class="fw-paso-icono" aria-hidden="true">
+            @switch (paso.icono) {
+              @case ('publicar') {
+                <svg viewBox="0 0 48 48">
+                  <rect x="9" y="7" width="30" height="34" rx="5" />
+                  <path d="M16 17h16M16 24h16M16 31h9" />
+                </svg>
+              }
+              @case ('comparar') {
+                <svg viewBox="0 0 48 48">
+                  <rect x="5" y="11" width="17" height="26" rx="4" />
+                  <rect x="26" y="11" width="17" height="26" rx="4" />
+                  <path d="M10 30l3 3 5-6M31 22h7M31 28h5" />
+                </svg>
+              }
+              @case ('calificar') {
+                <svg viewBox="0 0 48 48">
+                  <path
+                    d="M24 7l5.2 10.6 11.6 1.7-8.4 8.2 2 11.6L24 33.6l-10.4 5.5 2-11.6-8.4-8.2 11.6-1.7z"
+                  />
+                </svg>
+              }
+            }
+          </div>
+          <h3>{{ paso.titulo }}</h3>
+          <p>{{ paso.texto }}</p>
+        </li>
+      }
+    </ol>
+  </div>
+</section>
+
+<!-- ===================== CONFIANZA ===================== -->
+<section class="fw-seccion" id="confianza" aria-labelledby="confianza-titulo">
+  <div class="fw-seccion-inner fw-confianza">
+    <div class="fw-confianza-texto" fwRevelar>
+      <h2 id="confianza-titulo" class="fw-seccion-titulo">
+        Antes de entrar a tu casa, pasa por tres controles.
+      </h2>
+      <p class="fw-seccion-bajada">
+        Cada perfil del directorio muestra su estado de verificación. Si un técnico no tiene su CUL
+        validado, lo verás marcado como pendiente.
+      </p>
+    </div>
+
+    <ul class="fw-checklist fw-vidrio" fwRevelar fwBrillo>
+      @for (item of verificaciones; track item.titulo; let i = $index) {
+        <li class="fw-check" [style.--n]="i">
+          <span class="fw-check-caja" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg>
+          </span>
+          <div>
+            <p class="fw-check-titulo">{{ item.titulo }}</p>
+            <p class="fw-check-texto">{{ item.texto }}</p>
+          </div>
+        </li>
+      }
+    </ul>
+  </div>
+</section>
+
+<!-- ===================== PARA TI ===================== -->
+<section class="fw-seccion" id="para-ti" aria-label="Para clientes y para técnicos">
+  <div class="fw-seccion-inner fw-perfiles">
+    <article class="fw-perfil fw-vidrio" fwBrillo [fwInclinar]="true" fwRevelar>
+      <p class="fw-perfil-quien">Clientes</p>
+      <h2>¿Tienes algo que arreglar en casa?</h2>
+      <p>
+        Filtra por oficio, distrito y calificación. Ves el rango de tarifas de cada técnico antes de
+        escribirle, y conversas con él dentro de tu solicitud.
+      </p>
+      <a class="fw-cta fw-cta-primario" routerLink="/registro">Crear cuenta de cliente</a>
+    </article>
+
+    <article
+      class="fw-perfil fw-perfil-tecnico fw-vidrio"
+      fwBrillo
+      [fwInclinar]="true"
+      fwRevelar
+      [fwRetraso]="140"
+    >
+      <p class="fw-perfil-quien">Técnicos</p>
+      <h2>¿Ofreces un oficio?</h2>
+      <p>
+        Publica tus oficios, tarifas y distritos de atención. Con tu CUL validado apareces como
+        verificado y recibes solicitudes de vecinos cercanos.
+      </p>
+      <a class="fw-cta fw-cta-celeste" routerLink="/registro">Registrarme como técnico</a>
+      <span class="fw-greca fw-perfil-greca" aria-hidden="true"></span>
+    </article>
+  </div>
+</section>
+
+<!-- ===================== CIERRE ===================== -->
+<section class="fw-cierre" aria-labelledby="cierre-titulo">
+  <div class="fw-seccion-inner" fwRevelar>
+    <h2 id="cierre-titulo" class="fw-cierre-titulo">
+      Trujillo tiene buenos técnicos. Ahora es fácil encontrarlos.
+    </h2>
+    <a class="fw-cta fw-cta-primario fw-cta-grande" routerLink="/registro">Crear mi cuenta</a>
+  </div>
+  <span class="fw-greca fw-cierre-greca" aria-hidden="true"></span>
+</section>
+
+<footer class="fw-pie">
+  <div class="fw-seccion-inner fw-pie-inner">
+    <span class="fw-pie-marca"><app-logo /> Fast Work</span>
+    <span>Directorio de oficios de Trujillo, La Libertad.</span>
+    <span>Tus datos se tratan conforme a la Ley N.° 29733.</span>
+  </div>
+</footer>

@@ -54,7 +54,7 @@ export const inicioRedirectGuard: CanActivateFn = () => {
 
   if (!authApi.esSesionVigente()) {
     authApi.cerrarSesion();
-    return router.parseUrl('/login');
+    return router.parseUrl('/inicio');
   }
 
   switch (authApi.rol()) {

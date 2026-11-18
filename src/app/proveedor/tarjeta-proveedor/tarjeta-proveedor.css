@@ -5,16 +5,18 @@
   border-radius: var(--fw-radius-lg);
   padding: 1.4rem;
   transition:
-    border-color 0.15s ease,
-    box-shadow 0.15s ease;
+    border-color 0.3s ease,
+    box-shadow 0.4s ease,
+    transform 0.4s var(--fw-ease-salida);
   display: flex;
   flex-direction: column;
   gap: 0.9rem;
 }
 
 .fw-card-proveedor:hover {
-  border-color: var(--fw-border-strong);
-  box-shadow: var(--fw-shadow-md);
+  border-color: rgb(75 227 160 / 0.35);
+  box-shadow: var(--fw-shadow-lg), 0 0 0 1px rgb(75 227 160 / 0.15);
+  transform: translateY(-3px);
 }
 
 .fw-card-cabecera {
@@ -40,15 +42,15 @@
 
 .fw-avatar-card {
   object-fit: cover;
-  border: 2px solid var(--fw-border);
+  border: 2px solid var(--fw-primary);
 }
 
 .fw-avatar-fallback {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--fw-primary);
-  color: var(--fw-accent);
+  background: linear-gradient(135deg, var(--fw-primary), var(--fw-accent));
+  color: var(--fw-on-primary);
   font-weight: 800;
   font-stretch: 120%;
   font-size: 1.05rem;
@@ -79,7 +81,7 @@
 .fw-zona-chip {
   padding: 0.15rem 0.55rem;
   border-radius: 999px;
-  border: none;
+  border: 1px solid var(--fw-accent-line);
   background: var(--fw-accent-soft);
   font-size: 0.75rem;
   color: var(--fw-text);
@@ -169,16 +171,20 @@
 }
 
 .fw-btn-detalle {
-  padding: 0.55rem 1rem;
+  padding: 0.55rem 1.1rem;
+  border-radius: var(--fw-radius-pill) !important;
+  font-weight: 700 !important;
+  transition: box-shadow 0.3s ease;
   border-radius: var(--fw-radius);
   background-color: var(--fw-primary);
-  color: #ffffff;
+  color: var(--fw-on-primary);
   font-size: 0.875rem;
   font-weight: 600;
 }
 
 .fw-btn-detalle:hover {
   background-color: var(--fw-primary-hover);
+  box-shadow: var(--fw-glow-verde);
   text-decoration: none;
 }
 

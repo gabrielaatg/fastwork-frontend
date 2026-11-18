@@ -11,19 +11,19 @@
 
 .fw-alerta-error {
   background-color: var(--fw-danger-soft);
-  border-color: #fecaca;
+  border-color: var(--fw-danger-line);
   color: var(--fw-danger);
 }
 
 .fw-alerta-exito {
   background-color: var(--fw-success-soft);
-  border-color: #bbf7d0;
+  border-color: var(--fw-success-line);
   color: var(--fw-success);
 }
 
 .fw-alerta-info {
   background-color: var(--fw-primary-soft);
-  border-color: #bfdbfe;
+  border-color: var(--fw-accent-line);
   color: var(--fw-primary);
 }
 

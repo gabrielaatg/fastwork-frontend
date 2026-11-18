@@ -4,7 +4,7 @@ import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { filter, map } from 'rxjs';
 import { BarraNavegacion } from './core/layout/barra-navegacion/barra-navegacion';
 
-const RUTAS_SIN_BARRA = ['/login', '/registro'] as const;
+const RUTAS_SIN_BARRA = ['/inicio', '/login', '/registro'] as const;
 
 @Component({
   selector: 'app-root',

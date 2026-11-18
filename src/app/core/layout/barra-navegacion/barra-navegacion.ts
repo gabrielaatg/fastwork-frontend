@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/c
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { RolUsuario } from '../../../dominio/rol';
 import { AuthApi } from '../../auth/auth-api';
+import { Logo } from '../logo/logo';
 
 interface EnlaceNavegacion {
   ruta: string;
@@ -40,7 +41,7 @@ const ETIQUETA_ROL: Record<RolUsuario, string> = {
  */
 @Component({
   selector: 'app-barra-navegacion',
-  imports: [RouterLink, RouterLinkActive],
+  imports: [RouterLink, RouterLinkActive, Logo],
   templateUrl: './barra-navegacion.html',
   styleUrl: './barra-navegacion.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

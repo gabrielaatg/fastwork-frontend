@@ -5,11 +5,7 @@
       [routerLink]="estaAutenticado() ? '/' : '/login'"
       aria-label="Fast Work, inicio"
     >
-      <svg class="fw-marca-icono" viewBox="0 0 32 32" aria-hidden="true">
-        <rect width="32" height="32" rx="7" fill="currentColor" />
-        <path fill="#e9b425" d="M5 25v-4h4v-4h4v-4h6v4h4v4h4v4z" />
-        <path fill="#e9b425" d="M14 7h4v4h-4z" />
-      </svg>
+      <app-logo />
       <span class="fw-marca-titulo">Fast Work</span>
       <span class="fw-marca-ciudad">Trujillo</span>
     </a>
@@ -47,5 +43,4 @@
       </div>
     }
   </div>
-  <span class="fw-greca fw-navbar-greca" aria-hidden="true"></span>
 </header>

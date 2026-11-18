@@ -93,7 +93,7 @@ describe('Guards de sesión y rol (sesion-guard)', () => {
     const sinSesion = runInInjectionContext(injector, () =>
       inicioRedirectGuard(rutaFalsa, estadoFalso),
     );
-    expect((sinSesion as UrlTree).toString()).toBe('/login');
+    expect((sinSesion as UrlTree).toString()).toBe('/inicio');
 
     authApi.establecerSesion(sesionPrueba('CLIENTE'));
     const cliente = runInInjectionContext(injector, () =>

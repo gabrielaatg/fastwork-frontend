@@ -15,6 +15,12 @@ export const routes: Routes = [
       import('./proveedor/lista-proveedores/lista-proveedores').then((m) => m.ListaProveedores),
   },
   {
+    path: 'inicio',
+    canActivate: [invitadoGuard],
+    title: 'Fast Work — Técnicos de confianza en Trujillo',
+    loadComponent: () => import('./inicio/landing/landing').then((m) => m.Landing),
+  },
+  {
     path: 'login',
     canActivate: [invitadoGuard],
     title: 'Iniciar sesión — Fast Work',

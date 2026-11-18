@@ -1,39 +1,37 @@
-<section class="fw-auth-pagina fw-landing">
-  <header class="fw-landing-top">
-    <a class="fw-landing-marca" routerLink="/login" aria-label="Fast Work, inicio">
-      <svg class="fw-landing-icono" viewBox="0 0 32 32" aria-hidden="true">
-        <rect width="32" height="32" rx="7" fill="#1d3b8f" />
-        <path fill="#e9b425" d="M5 25v-4h4v-4h4v-4h6v4h4v4h4v4z" />
-        <path fill="#e9b425" d="M14 7h4v4h-4z" />
-      </svg>
-      <span>Fast Work</span>
-    </a>
-    <nav class="fw-landing-nav" aria-label="Secciones">
-      <a href="#como-funciona">Cómo funciona</a>
-      <a href="#para-ti">Clientes y técnicos</a>
-      <a class="fw-landing-nav-cta" routerLink="/registro">Crear cuenta</a>
-    </nav>
-  </header>
+<app-cabecera-publica />
 
-  <div class="fw-hero">
-    <div class="fw-hero-inner">
-      <div class="fw-hero-texto">
-        <p class="fw-hero-lugar">Trujillo, La Libertad</p>
-        <h1 class="fw-hero-titulo">Encuentra al técnico de confianza en tu distrito.</h1>
-        <p class="fw-hero-bajada">
-          Gasfiteros, electricistas, carpinteros y más oficios, con su Certificado Único Laboral
-          verificado y calificados por los vecinos que ya los contrataron.
-        </p>
-        <ul class="fw-hero-oficios" aria-label="Algunos oficios disponibles">
-          <li>Gasfitería</li>
-          <li>Electricidad</li>
-          <li>Carpintería</li>
-          <li>Pintura</li>
-          <li>Albañilería</li>
-          <li>Cerrajería</li>
-        </ul>
+<section class="fw-auth-pagina">
+  <div class="fw-auth-inner">
+    <div class="fw-auth-lado">
+      <h1 class="fw-auth-saludo">
+        <span class="fw-linea"><span style="--i: 0">Hola</span></span>
+        <span class="fw-linea"><span style="--i: 1">de nuevo.</span></span>
+      </h1>
+      <p class="fw-auth-lado-texto">
+        Tus solicitudes, ofertas y conversaciones te esperan donde las dejaste.
+      </p>
+
+      <div class="fw-flotantes" aria-hidden="true">
+        <div class="fw-flotante fw-flotante-a">
+          <span class="fw-flotante-icono fw-icono-celeste">
+            <svg viewBox="0 0 24 24"><path d="M4 12h12M12 6l6 6-6 6" /></svg>
+          </span>
+          <span><b>Nueva oferta</b> Gasfitería, S/ 120</span>
+        </div>
+        <div class="fw-flotante fw-flotante-b">
+          <span class="fw-flotante-icono fw-icono-verde">
+            <svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg>
+          </span>
+          <span><b>Trabajo completado</b> Víctor Larco</span>
+        </div>
+        <div class="fw-flotante fw-flotante-c">
+          <span class="fw-flotante-estrellas">★★★★★</span>
+          <span><b>4,8</b> de 32 reseñas</span>
+        </div>
       </div>
+    </div>
 
+    <div class="fw-auth-marco">
       <div class="fw-auth-tarjeta">
         <div class="fw-auth-cabecera">
           <h2 class="fw-auth-titulo">Ingresa a tu cuenta</h2>
@@ -140,103 +138,49 @@
         </p>
       </div>
     </div>
-    <span class="fw-greca fw-hero-greca" aria-hidden="true"></span>
   </div>
+</section>
 
-  <section class="fw-pasos" id="como-funciona" aria-labelledby="pasos-titulo">
-    <div class="fw-seccion-inner">
-      <h2 id="pasos-titulo" class="fw-seccion-titulo">Cómo funciona</h2>
-      <ol class="fw-pasos-lista">
-        <li class="fw-paso">
-          <span class="fw-paso-numero" aria-hidden="true">1</span>
-          <h3>Publica lo que necesitas</h3>
-          <p>Describe el trabajo, sube fotos del problema y elige tu distrito y presupuesto.</p>
-        </li>
-        <li class="fw-paso">
-          <span class="fw-paso-numero" aria-hidden="true">2</span>
-          <h3>Compara y contrata</h3>
-          <p>
-            Recibe ofertas de técnicos verificados, revisa sus tarifas y conversa antes de decidir.
-          </p>
-        </li>
-        <li class="fw-paso">
-          <span class="fw-paso-numero" aria-hidden="true">3</span>
-          <h3>Califica el trabajo</h3>
-          <p>Cuando termine el servicio, ambos se califican. Así la reputación es real.</p>
-        </li>
-      </ol>
-    </div>
-  </section>
+@if (rolesDisponibles(); as roles) {
+  <div
+    class="fw-modal-backdrop"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="fw-selector-rol-titulo"
+    (click)="cerrarSelectorRol()"
+  >
+    <div class="fw-modal" (click)="$event.stopPropagation()">
+      <h2 id="fw-selector-rol-titulo" class="fw-modal-titulo">¿Cómo deseas ingresar?</h2>
+      <p class="fw-modal-mensaje">
+        Tu correo tiene más de una cuenta asociada. Elige con qué perfil deseas iniciar sesión:
+      </p>
 
-  <section class="fw-perfiles" id="para-ti" aria-label="Para clientes y técnicos">
-    <div class="fw-seccion-inner fw-perfiles-grid">
-      <article class="fw-perfil fw-perfil-cliente">
-        <h2>¿Tienes algo que arreglar en casa?</h2>
-        <p>
-          Busca por oficio, distrito y calificación. Ves las tarifas mínimas y máximas de cada
-          técnico antes de escribirle.
-        </p>
-        <a class="fw-perfil-cta" routerLink="/registro">Crear cuenta de cliente</a>
-      </article>
-      <article class="fw-perfil fw-perfil-tecnico">
-        <h2>¿Ofreces un oficio?</h2>
-        <p>
-          Registra tus oficios, tarifas y distritos de atención. Con tu CUL validado, tu perfil
-          aparece como verificado en el directorio.
-        </p>
-        <a class="fw-perfil-cta" routerLink="/registro">Registrarme como técnico</a>
-      </article>
-    </div>
-  </section>
-
-  <footer class="fw-landing-pie">
-    <div class="fw-seccion-inner">
-      <span>Fast Work, el directorio de oficios de Trujillo</span>
-      <span>Tus datos se tratan conforme a la Ley N.° 29733.</span>
-    </div>
-  </footer>
-
-  @if (rolesDisponibles(); as roles) {
-    <div
-      class="fw-modal-backdrop"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="fw-selector-rol-titulo"
-      (click)="cerrarSelectorRol()"
-    >
-      <div class="fw-modal" (click)="$event.stopPropagation()">
-        <h2 id="fw-selector-rol-titulo" class="fw-modal-titulo">¿Cómo deseas ingresar?</h2>
-        <p class="fw-modal-mensaje">
-          Tu correo tiene más de una cuenta asociada. Elige con qué perfil deseas iniciar sesión:
-        </p>
-
-        <div class="fw-modal-roles">
-          @for (rol of roles; track rol) {
-            <button
-              type="button"
-              class="fw-modal-rol-btn"
-              [disabled]="rolCargando() !== null"
-              (click)="ingresarConRol(rol)"
-            >
-              <strong>
-                {{ rolCargando() === rol ? 'Ingresando...' : tituloRol(rol) }}
-              </strong>
-              <span>{{ descripcionRol(rol) }}</span>
-            </button>
-          }
-        </div>
-
-        <div class="fw-modal-acciones">
+      <div class="fw-modal-roles">
+        @for (rol of roles; track rol) {
           <button
             type="button"
-            class="fw-btn-secundario"
+            class="fw-modal-rol-btn"
             [disabled]="rolCargando() !== null"
-            (click)="cerrarSelectorRol()"
+            (click)="ingresarConRol(rol)"
           >
-            Cancelar
+            <strong>
+              {{ rolCargando() === rol ? 'Ingresando...' : tituloRol(rol) }}
+            </strong>
+            <span>{{ descripcionRol(rol) }}</span>
           </button>
-        </div>
+        }
+      </div>
+
+      <div class="fw-modal-acciones">
+        <button
+          type="button"
+          class="fw-btn-secundario"
+          [disabled]="rolCargando() !== null"
+          (click)="cerrarSelectorRol()"
+        >
+          Cancelar
+        </button>
       </div>
     </div>
-  }
-</section>
+  </div>
+}

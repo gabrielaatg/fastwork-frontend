@@ -4,6 +4,7 @@ import { Router, RouterLink } from '@angular/router';
 import { ErrorHttp } from '../../core/api/errores';
 import { AuthApi } from '../../core/auth/auth-api';
 import { AlertaMensaje } from '../../core/layout/alerta-mensaje/alerta-mensaje';
+import { CabeceraPublica } from '../../core/layout/cabecera-publica/cabecera-publica';
 import { RolUsuario } from '../../dominio/rol';
 
 const PATRON_DNI = /^\d{8}$/;
@@ -31,7 +32,7 @@ const ETIQUETAS_ROL: Record<RolUsuario, { titulo: string; descripcion: string }>
 
 @Component({
   selector: 'app-login',
-  imports: [FormField, RouterLink, AlertaMensaje],
+  imports: [FormField, RouterLink, AlertaMensaje, CabeceraPublica],
   templateUrl: './login.html',
   styleUrl: './login.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

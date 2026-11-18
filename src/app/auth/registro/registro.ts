@@ -22,6 +22,7 @@ import { forkJoin } from 'rxjs';
 import { ErrorHttp } from '../../core/api/errores';
 import { AuthApi } from '../../core/auth/auth-api';
 import { AlertaMensaje } from '../../core/layout/alerta-mensaje/alerta-mensaje';
+import { CabeceraPublica } from '../../core/layout/cabecera-publica/cabecera-publica';
 import { Oficio } from '../../dominio/oficio';
 import { RolRegistro } from '../../dominio/rol';
 import { Zona } from '../../dominio/zona';
@@ -53,7 +54,7 @@ interface RegistroExitosoInfo {
 
 @Component({
   selector: 'app-registro',
-  imports: [FormField, RouterLink, AlertaMensaje],
+  imports: [FormField, RouterLink, AlertaMensaje, CabeceraPublica],
   templateUrl: './registro.html',
   styleUrl: './registro.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
