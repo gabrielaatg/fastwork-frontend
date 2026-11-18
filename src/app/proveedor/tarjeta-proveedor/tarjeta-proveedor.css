@@ -1,12 +1,20 @@
 .fw-card-proveedor {
+  height: 100%;
   background-color: var(--fw-surface);
   border: 1px solid var(--fw-border);
-  border-radius: var(--fw-radius);
-  box-shadow: var(--fw-shadow-sm);
-  padding: 1.25rem;
+  border-radius: var(--fw-radius-lg);
+  padding: 1.4rem;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
   display: flex;
   flex-direction: column;
   gap: 0.9rem;
+}
+
+.fw-card-proveedor:hover {
+  border-color: var(--fw-border-strong);
+  box-shadow: var(--fw-shadow-md);
 }
 
 .fw-card-cabecera {
@@ -24,8 +32,8 @@
 
 .fw-avatar-card,
 .fw-avatar-fallback {
-  width: 48px;
-  height: 48px;
+  width: 56px;
+  height: 56px;
   border-radius: 50%;
   flex-shrink: 0;
 }
@@ -39,10 +47,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--fw-primary-soft);
-  color: var(--fw-primary);
-  font-weight: 700;
-  font-size: 0.95rem;
+  background: var(--fw-primary);
+  color: var(--fw-accent);
+  font-weight: 800;
+  font-stretch: 120%;
+  font-size: 1.05rem;
 }
 
 .fw-card-zonas {
@@ -68,18 +77,20 @@
 }
 
 .fw-zona-chip {
-  padding: 0.15rem 0.5rem;
+  padding: 0.15rem 0.55rem;
   border-radius: 999px;
-  border: 1px solid var(--fw-border);
-  background: var(--fw-surface-alt);
+  border: none;
+  background: var(--fw-accent-soft);
   font-size: 0.75rem;
   color: var(--fw-text);
 }
 
 .fw-card-nombre {
-  margin: 0 0 0.35rem;
-  font-size: 1.1rem;
-  font-weight: 700;
+  margin: 0 0 0.3rem;
+  font-size: 1.2rem;
+  font-weight: 800;
+  font-stretch: 112%;
+  letter-spacing: -0.01em;
 }
 
 .fw-card-rating {
@@ -116,12 +127,15 @@
 .fw-oficio-chip {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: baseline;
   gap: 0.75rem;
-  padding: 0.45rem 0.7rem;
-  border-radius: var(--fw-radius);
-  background-color: var(--fw-surface-alt);
-  font-size: 0.85rem;
+  padding: 0.55rem 0;
+  border-bottom: 1px dashed var(--fw-border);
+  font-size: 0.92rem;
+}
+
+.fw-oficio-chip:last-child {
+  border-bottom: none;
 }
 
 .fw-oficio-nombre {
@@ -130,7 +144,9 @@
 
 .fw-oficio-tarifa {
   color: var(--fw-primary);
-  font-weight: 600;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
 }
 
 .fw-sin-oficios {
@@ -153,7 +169,7 @@
 }
 
 .fw-btn-detalle {
-  padding: 0.45rem 0.9rem;
+  padding: 0.55rem 1rem;
   border-radius: var(--fw-radius);
   background-color: var(--fw-primary);
   color: #ffffff;
@@ -164,4 +180,24 @@
 .fw-btn-detalle:hover {
   background-color: var(--fw-primary-hover);
   text-decoration: none;
+}
+
+@media (max-width: 560px) {
+  .fw-card-cabecera {
+    flex-direction: column;
+  }
+
+  .fw-card-badges {
+    justify-content: flex-start;
+  }
+
+  .fw-card-pie {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+
+  .fw-btn-detalle {
+    text-align: center;
+  }
 }

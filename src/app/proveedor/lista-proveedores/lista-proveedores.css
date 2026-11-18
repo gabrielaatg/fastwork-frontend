@@ -4,28 +4,48 @@
   gap: 1.25rem;
 }
 
+/* Cabecera tipo banda: muro amarillo con friso azul */
 .fw-directorio-cabecera {
+  position: relative;
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: flex-end;
-  gap: 1rem;
+  gap: 1.25rem 2rem;
+  padding: 2.25rem 2.25rem 3.25rem;
+  border-radius: var(--fw-radius-lg);
+  background: var(--fw-accent);
+  overflow: hidden;
+}
+
+.fw-directorio-greca {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  color: var(--fw-primary);
 }
 
 .fw-directorio-titulo {
   margin: 0;
-  font-size: 1.5rem;
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 850;
+  font-stretch: 125%;
+  line-height: 1;
+  letter-spacing: -0.03em;
 }
 
 .fw-directorio-subtitulo {
-  margin: 0.25rem 0 0;
-  color: var(--fw-muted);
-  font-size: 0.925rem;
+  margin: 0.75rem 0 0;
+  max-width: 46ch;
+  color: #2a3553;
+  font-size: 1.05rem;
 }
 
 .fw-contador-resultados {
-  font-size: 0.875rem;
+  font-size: 0.9rem;
   font-weight: 600;
-  color: var(--fw-muted);
+  color: var(--fw-text);
 }
 
 .fw-directorio-layout {
@@ -37,11 +57,11 @@
 
 .fw-filtros-panel {
   position: sticky;
-  top: 1rem;
+  top: 6rem;
   background-color: var(--fw-surface);
   border: 1px solid var(--fw-border);
-  border-radius: var(--fw-radius);
-  padding: 1.15rem;
+  border-radius: var(--fw-radius-lg);
+  padding: 1.35rem;
   display: flex;
   flex-direction: column;
   gap: 1.15rem;
@@ -55,7 +75,9 @@
 
 .fw-filtros-top h2 {
   margin: 0;
-  font-size: 1.05rem;
+  font-size: 1.1rem;
+  font-weight: 800;
+  font-stretch: 115%;
 }
 
 .fw-btn-limpiar {
@@ -137,7 +159,8 @@
 .fw-btn-publicar {
   display: inline-flex;
   align-items: center;
-  padding: 0.55rem 1rem;
+  padding: 0.7rem 1.2rem;
+  white-space: nowrap;
   border-radius: var(--fw-radius);
   background-color: var(--fw-primary);
   color: #ffffff;
@@ -148,4 +171,36 @@
 
 .fw-btn-publicar:hover {
   background-color: var(--fw-primary-hover);
+}
+
+.fw-estado-caja {
+  border-style: dashed !important;
+  border-radius: var(--fw-radius-lg) !important;
+}
+
+@media (max-width: 900px) {
+  .fw-directorio-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .fw-filtros-panel {
+    position: static;
+  }
+
+  .fw-checkboxes {
+    flex-direction: row;
+    flex-wrap: wrap;
+    max-height: none;
+    gap: 0.4rem 1rem;
+  }
+
+  .fw-directorio-cabecera {
+    padding: 1.5rem 1.25rem 2.75rem;
+  }
+}
+
+@media (max-width: 1100px) {
+  .fw-grid-proveedores {
+    grid-template-columns: 1fr;
+  }
 }

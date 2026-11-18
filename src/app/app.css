@@ -6,5 +6,21 @@
 .fw-contenedor {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 1.5rem;
+  padding: 2rem 1.5rem 4rem;
+}
+
+/* Login y registro ocupan todo el ancho para el diseño tipo landing */
+.fw-contenedor-completo {
+  max-width: none;
+  padding: 0;
+}
+
+@media (max-width: 640px) {
+  .fw-contenedor {
+    padding: 1.25rem 1rem 3rem;
+  }
+
+  .fw-contenedor-completo {
+    padding: 0;
+  }
 }

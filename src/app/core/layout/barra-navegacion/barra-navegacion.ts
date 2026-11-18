@@ -29,6 +29,12 @@ const ENLACES_POR_ROL: Record<RolUsuario, readonly EnlaceNavegacion[]> = {
   ],
 };
 
+const ETIQUETA_ROL: Record<RolUsuario, string> = {
+  CLIENTE: 'Cliente',
+  PROVEEDOR: 'Proveedor',
+  ADMIN: 'Administrador',
+};
+
 /**
  * Barra superior de navegación adaptada al rol de la sesión activa.
  */
@@ -53,6 +59,11 @@ export class BarraNavegacion {
     }
     return ENLACES_POR_ROL[rol];
   });
+
+  /** Nombre legible del rol para mostrar junto al usuario. */
+  protected etiquetaRol(rol: RolUsuario): string {
+    return ETIQUETA_ROL[rol];
+  }
 
   /** Limpia la sesión actual y redirige a la pantalla de inicio de sesión. */
   protected cerrarSesion(): void {

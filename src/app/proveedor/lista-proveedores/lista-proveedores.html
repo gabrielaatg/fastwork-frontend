@@ -1,7 +1,7 @@
 <section class="fw-directorio-pagina">
   <header class="fw-directorio-cabecera">
     <div>
-      <h1 class="fw-directorio-titulo">Directorio de Proveedores en Trujillo</h1>
+      <h1 class="fw-directorio-titulo">Técnicos en Trujillo</h1>
       <p class="fw-directorio-subtitulo">
         Compara especialistas por oficio, distrito de cobertura y reputación verificada.
       </p>
@@ -15,6 +15,7 @@
         {{ proveedores().length === 1 ? 'proveedor encontrado' : 'proveedores encontrados' }}
       </span>
     </div>
+    <span class="fw-greca fw-directorio-greca" aria-hidden="true"></span>
   </header>
 
   <app-alerta-mensaje [error]="errorHttp()" [cerrable]="true" (cerrado)="errorHttp.set(null)" />

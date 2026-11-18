@@ -2,6 +2,6 @@
   <app-barra-navegacion />
 }
 
-<main class="fw-contenedor">
+<main class="fw-contenedor" [class.fw-contenedor-completo]="!mostrarBarra()">
   <router-outlet />
 </main>
