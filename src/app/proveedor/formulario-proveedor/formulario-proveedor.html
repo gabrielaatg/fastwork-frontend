@@ -1,5 +1,13 @@
 <section class="fw-perfil-pagina">
-  <header class="fw-perfil-cabecera">
+  <header class="fw-perfil-cabecera" [class.fw-cab-con-portada]="idPerfil() !== null">
+    @if (idPerfil(); as id) {
+      <app-portada-perfil
+        class="fw-cab-fondo"
+        [idPerfil]="id"
+        [portadaServidor]="portadaServidor()"
+        [editable]="true"
+      />
+    }
     <div class="fw-perfil-identidad">
       @if (fotoPerfilUrl(); as fotoUrl) {
         <img [src]="fotoUrl" alt="Mi foto de perfil" class="fw-avatar-mi-perfil" />
@@ -19,24 +27,6 @@
       </div>
     }
   </header>
-
-  @if (idPerfil(); as id) {
-    <section class="fw-mi-portada" aria-label="Portada de tu perfil">
-      <app-portada-perfil
-        class="fw-mi-portada-banner"
-        [idPerfil]="id"
-        [portadaServidor]="portadaServidor()"
-        [editable]="true"
-      />
-      <div class="fw-mi-portada-texto">
-        <strong>Portada de tu perfil</strong>
-        <span>
-          Es lo primero que ven los clientes al abrir tu perfil. Pulsa “Cambiar portada” para elegir
-          otra.
-        </span>
-      </div>
-    </section>
-  }
 
   <app-alerta-mensaje [error]="errorHttp()" [cerrable]="true" (cerrado)="errorHttp.set(null)" />
   @if (mensajeExito()) {

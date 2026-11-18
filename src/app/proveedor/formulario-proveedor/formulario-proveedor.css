@@ -226,36 +226,36 @@
   cursor: pointer;
 }
 
-/* Portada editable del perfil */
-.fw-mi-portada {
-  overflow: hidden;
-  border-radius: var(--fw-radius-xl);
-  background: var(--fw-surface);
-  box-shadow: var(--fw-shadow-md);
-  animation: fw-mi-portada-in 0.8s var(--fw-ease-salida) 0.1s both;
+/* La portada del proveedor es el fondo de la cabecera */
+.fw-cab-fondo {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
 }
 
-@keyframes fw-mi-portada-in {
-  from {
-    opacity: 0;
-    transform: translateY(16px);
+/* El contenedor no crea capa propia: la imagen queda al fondo y el botón
+   y el panel de portadas quedan por encima del texto de la cabecera */
+.fw-cab-fondo {
+  z-index: auto;
+  pointer-events: none;
+}
+
+.fw-cab-fondo ::ng-deep .fw-pp-marco {
+  z-index: -2;
+}
+
+.fw-cab-fondo ::ng-deep :is(.fw-pp-editar, .fw-pp-panel) {
+  z-index: 5;
+  pointer-events: auto;
+}
+
+@media (max-width: 760px) {
+  .fw-disponibilidad-fila {
+    flex-direction: column;
+    align-items: stretch;
   }
-}
 
-.fw-mi-portada-banner {
-  height: 180px;
-}
-
-.fw-mi-portada-texto {
-  display: flex;
-  flex-direction: column;
-  gap: 0.2rem;
-  padding: 1rem 1.5rem 1.2rem;
-  font-size: 0.9rem;
-  color: var(--fw-muted);
-}
-
-.fw-mi-portada-texto strong {
-  font-size: 1.02rem;
-  color: var(--fw-text);
+  .fw-disponibilidad-botones {
+    flex-wrap: wrap;
+  }
 }

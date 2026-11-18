@@ -744,3 +744,36 @@ body.fw-modo-app .fw-admin-cabecera {
     opacity: 0.35;
   }
 }
+
+/* Mi Perfil: la cabecera usa la portada del proveedor (sin foto de trabajador) */
+body.fw-modo-app .fw-perfil-cabecera.fw-cab-con-portada::before {
+  left: 0;
+  width: 100%;
+  background: linear-gradient(
+    90deg,
+    rgb(13 26 36 / 0.86) 0%,
+    rgb(13 26 36 / 0.55) 55%,
+    rgb(13 26 36 / 0.1) 100%
+  );
+  -webkit-mask-image: none;
+  mask-image: none;
+  opacity: 1;
+  pointer-events: none;
+  animation: none;
+}
+
+body.fw-modo-app .fw-perfil-cabecera.fw-cab-con-portada::after {
+  pointer-events: none;
+}
+
+/* Mientras carga el perfil, la cabecera no muestra ninguna foto */
+body.fw-modo-app .fw-perfil-cabecera:not(.fw-cab-con-portada)::before {
+  background: none;
+}
+
+@media (max-width: 760px) {
+  /* Deja sitio al botón "Cambiar portada" sobre el título */
+  body.fw-modo-app .fw-perfil-cabecera.fw-cab-con-portada {
+    padding-top: 4.25rem !important;
+  }
+}
