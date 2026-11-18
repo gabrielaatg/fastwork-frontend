@@ -694,6 +694,9 @@
 
 /* Indicador de scroll */
 .fw-scroll {
+  padding: 0;
+  background: transparent;
+  cursor: pointer;
   position: absolute;
   left: 50%;
   bottom: 1.5rem;
@@ -1286,4 +1289,10 @@
   .fw-estrellas-llenas {
     width: 4.55em;
   }
+}
+
+/* Las secciones quedan por debajo de la cabecera flotante al llegar por ancla */
+#oficios,
+.fw-seccion {
+  scroll-margin-top: 5.5rem;
 }

@@ -5,9 +5,9 @@
   </a>
 
   <nav class="fw-cp-nav" aria-label="Secciones">
-    <a routerLink="/inicio" fragment="como-funciona">Cómo funciona</a>
-    <a routerLink="/inicio" fragment="confianza">Verificación</a>
-    <a routerLink="/inicio" fragment="para-ti">Para técnicos</a>
+    <a href="/inicio#como-funciona" (click)="irASeccion($event, 'como-funciona')">Cómo funciona</a>
+    <a href="/inicio#confianza" (click)="irASeccion($event, 'confianza')">Verificación</a>
+    <a href="/inicio#para-ti" (click)="irASeccion($event, 'para-ti')">Para técnicos</a>
   </nav>
 
   <div class="fw-cp-acciones">

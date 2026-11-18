@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ViewportScroller } from '@angular/common';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CabeceraPublica } from '../../core/layout/cabecera-publica/cabecera-publica';
 import { Logo } from '../../core/layout/logo/logo';
@@ -42,6 +43,11 @@ const OFICIOS_FILA_B = [
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Landing {
+  constructor() {
+    // Al llegar por ancla (/inicio#seccion) deja espacio para la cabecera flotante
+    inject(ViewportScroller).setOffset([0, 88]);
+  }
+
   /** Se duplica cada fila para que la cinta se desplace sin cortes. */
   protected readonly filaA = [...OFICIOS_FILA_A, ...OFICIOS_FILA_A];
   protected readonly filaB = [...OFICIOS_FILA_B, ...OFICIOS_FILA_B];
@@ -64,6 +70,11 @@ export class Landing {
       icono: 'calificar',
     },
   ];
+
+  /** Desplaza suavemente hasta una sección de la página. */
+  protected bajarA(seccion: string): void {
+    document.getElementById(seccion)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
 
   protected readonly verificaciones = [
     { titulo: 'DNI validado', texto: 'Verificamos tu documento al crear la cuenta.' },
