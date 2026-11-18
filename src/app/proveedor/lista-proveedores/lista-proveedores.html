@@ -1,96 +1,189 @@
 <section class="fw-directorio-pagina">
-  <header class="fw-directorio-cabecera">
-    <div>
-      <h1 class="fw-directorio-titulo">Técnicos en Trujillo</h1>
-      <p class="fw-directorio-subtitulo">
-        Compara especialistas por oficio, distrito de cobertura y reputación verificada.
-      </p>
-    </div>
-    <div class="fw-directorio-acciones">
-      @if (esCliente()) {
-        <a routerLink="/solicitudes/nueva" class="fw-btn-publicar">Publicar trabajo</a>
+  <!-- ============ HERO: pedido + radar ============ -->
+  <header class="fw-dir-hero">
+    <div class="fw-dir-hero-texto">
+      @if (nombreUsuario()) {
+        <p class="fw-dir-saludo">Hola, {{ nombreUsuario() }}</p>
       }
-      <span class="fw-contador-resultados">
-        {{ proveedores().length }}
-        {{ proveedores().length === 1 ? 'proveedor encontrado' : 'proveedores encontrados' }}
-      </span>
+      <h1 class="fw-directorio-titulo">¿Qué necesitas arreglar hoy?</h1>
+      <p class="fw-directorio-subtitulo">
+        Técnicos de Trujillo con tarifas visibles, distrito de atención y reputación verificada.
+      </p>
+
+      <div class="fw-buscador" role="group" aria-label="Buscar técnicos">
+        <label class="fw-buscador-campo" for="filtro-zona">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 21s-6.5-6.1-6.5-11a6.5 6.5 0 0 1 13 0c0 4.9-6.5 11-6.5 11z" />
+            <circle cx="12" cy="10" r="2.3" />
+          </svg>
+          <span class="fw-buscador-etiqueta">Distrito</span>
+          <select
+            id="filtro-zona"
+            class="fw-select"
+            [value]="zonaSeleccionada() ?? ''"
+            (change)="cambiarZona($any($event.target).value)"
+          >
+            <option value="">Todo Trujillo</option>
+            @for (zona of zonas(); track zona.idZona) {
+              <option [value]="zona.idZona">{{ zona.nombreZona }}</option>
+            }
+          </select>
+        </label>
+
+        <label class="fw-buscador-campo" for="filtro-calificacion">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 4l2.4 4.9 5.4.8-3.9 3.8.9 5.4L12 16.4 7.2 18.9l.9-5.4-3.9-3.8 5.4-.8z" />
+          </svg>
+          <span class="fw-buscador-etiqueta">Calificación</span>
+          <select
+            id="filtro-calificacion"
+            class="fw-select"
+            [value]="calificacionMinima() ?? ''"
+            (change)="cambiarCalificacion($any($event.target).value)"
+          >
+            <option value="">Cualquiera</option>
+            <option value="3">3.0 o más</option>
+            <option value="4">4.0 o más</option>
+            <option value="4.5">4.5 o más</option>
+          </select>
+        </label>
+
+        @if (esCliente()) {
+          <a routerLink="/solicitudes/nueva" class="fw-btn-publicar">Publicar trabajo</a>
+        }
+      </div>
     </div>
-    <span class="fw-greca fw-directorio-greca" aria-hidden="true"></span>
+
+    <div class="fw-dir-hero-visual" aria-hidden="true">
+      <div class="fw-radar"><span></span><span></span><span></span></div>
+      <div class="fw-dir-foto">
+        <img src="img/personas/clienta.webp" alt="" />
+      </div>
+
+      <div class="fw-contador-burbuja">
+        <strong [fwContador]="proveedores().length"></strong>
+        <span>técnicos disponibles</span>
+      </div>
+
+      <ul class="fw-avisos">
+        @for (tecnico of destacados(); track tecnico.nombre; let i = $index) {
+          <li class="fw-aviso" [style.--n]="i">
+            @if (tecnico.foto; as foto) {
+              <img [src]="foto" alt="" class="fw-aviso-avatar" />
+            } @else {
+              <span class="fw-aviso-avatar">{{ tecnico.iniciales }}</span>
+            }
+            <span class="fw-aviso-texto">
+              <strong>{{ tecnico.nombre }}</strong>
+              {{ tecnico.oficio }}, disponible
+            </span>
+          </li>
+        }
+      </ul>
+    </div>
   </header>
 
   <app-alerta-mensaje [error]="errorHttp()" [cerrable]="true" (cerrado)="errorHttp.set(null)" />
 
-  <div class="fw-directorio-layout">
-    <aside class="fw-filtros-panel" aria-label="Filtros del directorio">
-      <div class="fw-filtros-top">
-        <h2>Filtros</h2>
-        <button type="button" class="fw-btn-limpiar" (click)="limpiarFiltros()">Limpiar</button>
-      </div>
-
-      <div class="fw-filtro-grupo">
-        <h3>Oficios técnicos</h3>
-        <div class="fw-checkboxes">
-          @for (oficio of oficios(); track oficio.idOficio) {
-            <label class="fw-check-item">
-              <input
-                type="checkbox"
-                [checked]="estaOficioSeleccionado(oficio.idOficio)"
-                (change)="alternarOficio(oficio.idOficio)"
-              />
-              <span>{{ oficio.nombreOficio }}</span>
-            </label>
-          }
-        </div>
-      </div>
-
-      <div class="fw-filtro-grupo">
-        <label class="fw-filtro-label" for="filtro-zona">Distrito (Trujillo)</label>
-        <select
-          id="filtro-zona"
-          class="fw-select"
-          [value]="zonaSeleccionada() ?? ''"
-          (change)="cambiarZona($any($event.target).value)"
-        >
-          <option value="">Todos los distritos</option>
-          @for (zona of zonas(); track zona.idZona) {
-            <option [value]="zona.idZona">{{ zona.nombreZona }}</option>
-          }
-        </select>
-      </div>
-
-      <div class="fw-filtro-grupo">
-        <label class="fw-filtro-label" for="filtro-calificacion">Calificación mínima</label>
-        <select
-          id="filtro-calificacion"
-          class="fw-select"
-          [value]="calificacionMinima() ?? ''"
-          (change)="cambiarCalificacion($any($event.target).value)"
-        >
-          <option value="">Todas las puntuaciones</option>
-          <option value="3">3.0 estrellas o más</option>
-          <option value="4">4.0 estrellas o más</option>
-          <option value="4.5">4.5 estrellas o más</option>
-        </select>
-      </div>
-    </aside>
-
-    <div class="fw-resultados-area">
-      @if (cargando()) {
-        <div class="fw-estado-caja">Buscando proveedores disponibles en Trujillo...</div>
-      } @else if (proveedores().length === 0) {
-        <div class="fw-estado-caja">
-          <p>No se encontraron proveedores con los filtros seleccionados.</p>
-          <button type="button" class="fw-btn-secundario" (click)="limpiarFiltros()">
-            Restablecer filtros
+  <!-- ============ OFICIOS CON FOTO ============ -->
+  @if (categorias().length > 0) {
+    <section class="fw-categorias" aria-labelledby="categorias-titulo">
+      <h2 id="categorias-titulo" class="fw-seccion-titulo">Los más pedidos</h2>
+      <div class="fw-categorias-fila">
+        @for (cat of categorias(); track cat.oficio.idOficio; let i = $index) {
+          <button
+            type="button"
+            class="fw-categoria"
+            [style.--n]="i"
+            [class.fw-categoria-activa]="estaOficioSeleccionado(cat.oficio.idOficio)"
+            [attr.aria-pressed]="estaOficioSeleccionado(cat.oficio.idOficio)"
+            (click)="alternarOficio(cat.oficio.idOficio)"
+          >
+            <img [src]="cat.foto" alt="" loading="lazy" />
+            <span class="fw-categoria-texto">
+              <strong>{{ cat.oficio.nombreOficio }}</strong>
+              @if (cat.total > 0) {
+                <span>{{ cat.total }} {{ cat.total === 1 ? 'técnico' : 'técnicos' }}</span>
+              }
+            </span>
+            <span class="fw-categoria-check" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg>
+            </span>
           </button>
-        </div>
-      } @else {
-        <div class="fw-grid-proveedores">
-          @for (proveedor of proveedores(); track proveedor.idPerfilProveedor) {
-            <app-tarjeta-proveedor [proveedor]="proveedor" />
-          }
-        </div>
+        }
+      </div>
+    </section>
+  }
+
+  <!-- ============ FILTRO POR OFICIO + RESULTADOS ============ -->
+  <section class="fw-resultados" aria-labelledby="resultados-titulo">
+    <div class="fw-resultados-cabecera">
+      <h2 id="resultados-titulo" class="fw-seccion-titulo">
+        <span class="fw-contador-resultados">
+          {{ proveedores().length }}
+          {{ proveedores().length === 1 ? 'proveedor encontrado' : 'proveedores encontrados' }}
+        </span>
+      </h2>
+      @if (hayFiltros()) {
+        <button type="button" class="fw-btn-limpiar" (click)="limpiarFiltros()">
+          Quitar filtros
+        </button>
       }
     </div>
-  </div>
+
+    <div class="fw-chips-oficios" role="group" aria-label="Filtrar por oficio">
+      @for (oficio of oficios(); track oficio.idOficio) {
+        <label class="fw-chip" [class.fw-chip-activo]="estaOficioSeleccionado(oficio.idOficio)">
+          <input
+            type="checkbox"
+            [checked]="estaOficioSeleccionado(oficio.idOficio)"
+            (change)="alternarOficio(oficio.idOficio)"
+          />
+          <span>{{ oficio.nombreOficio }}</span>
+        </label>
+      }
+    </div>
+
+    @if (cargando()) {
+      <div class="fw-grid-proveedores" aria-busy="true" aria-label="Buscando técnicos">
+        @for (n of esqueletos; track n) {
+          <div class="fw-tarjeta-esqueleto">
+            <div class="fw-esq-fila">
+              <span class="fw-esqueleto fw-esq-avatar"></span>
+              <span class="fw-esq-col">
+                <span class="fw-esqueleto fw-esq-linea"></span>
+                <span class="fw-esqueleto fw-esq-linea fw-esq-corta"></span>
+              </span>
+            </div>
+            <span class="fw-esqueleto fw-esq-bloque"></span>
+            <span class="fw-esqueleto fw-esq-linea"></span>
+          </div>
+        }
+      </div>
+    } @else if (proveedores().length === 0) {
+      <div class="fw-vacio-dir">
+        <img src="img/personas/obrero.webp" alt="" />
+        <div>
+          <p class="fw-vacio-titulo">No hay técnicos disponibles con estos filtros.</p>
+          <p class="fw-vacio-texto">
+            Prueba con otro distrito u oficio, o publica tu trabajo y deja que te encuentren.
+          </p>
+          <div class="fw-vacio-acciones">
+            <button type="button" class="fw-btn-secundario" (click)="limpiarFiltros()">
+              Restablecer filtros
+            </button>
+            @if (esCliente()) {
+              <a routerLink="/solicitudes/nueva" class="fw-btn-publicar">Publicar trabajo</a>
+            }
+          </div>
+        </div>
+      </div>
+    } @else {
+      <div class="fw-grid-proveedores">
+        @for (proveedor of proveedores(); track proveedor.idPerfilProveedor) {
+          <app-tarjeta-proveedor [proveedor]="proveedor" />
+        }
+      </div>
+    }
+  </section>
 </section>

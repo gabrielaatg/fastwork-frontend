@@ -1,46 +1,112 @@
-<header class="fw-navbar">
-  <div class="fw-navbar-inner">
-    <a
-      class="fw-marca"
-      [routerLink]="estaAutenticado() ? '/' : '/login'"
-      aria-label="Fast Work, inicio"
+<aside class="fw-lateral">
+  <a
+    class="fw-marca"
+    [routerLink]="estaAutenticado() ? '/' : '/login'"
+    aria-label="Fast Work, inicio"
+  >
+    <app-logo />
+    <span class="fw-marca-titulo">Fast Work</span>
+    <span class="fw-marca-ciudad">Trujillo</span>
+  </a>
+
+  @if (estaAutenticado()) {
+    <nav
+      class="fw-nav-links"
+      aria-label="Navegación principal"
+      [style.--ind-x.px]="indicador().x"
+      [style.--ind-y.px]="indicador().y"
+      [style.--ind-w.px]="indicador().ancho"
+      [style.--ind-h.px]="indicador().alto"
+      [class.fw-ind-visible]="indicador().visible"
     >
-      <app-logo />
-      <span class="fw-marca-titulo">Fast Work</span>
-      <span class="fw-marca-ciudad">Trujillo</span>
-    </a>
-
-    @if (estaAutenticado()) {
-      <nav class="fw-nav-links" aria-label="Navegación principal">
-        @for (enlace of enlaces(); track enlace.ruta) {
-          <a
-            class="fw-nav-link"
-            [routerLink]="enlace.ruta"
-            routerLinkActive="fw-nav-link-activo"
-            [routerLinkActiveOptions]="{ exact: enlace.exacta ?? false }"
-          >
-            {{ enlace.etiqueta }}
-          </a>
-        }
-      </nav>
-
-      <div class="fw-nav-usuario">
-        @if (usuario(); as actual) {
-          <span class="fw-usuario-avatar" aria-hidden="true">{{ actual.nombres.charAt(0) }}</span>
-          <span class="fw-usuario-datos">
-            <span class="fw-usuario-nombre">{{ actual.nombres }}</span>
-            <span class="fw-usuario-rol">{{ etiquetaRol(actual.rol) }}</span>
-          </span>
-        }
-        <button type="button" class="fw-btn-salir" (click)="cerrarSesion()">Cerrar sesión</button>
-      </div>
-    } @else {
-      <div class="fw-nav-acciones">
-        <a class="fw-nav-link" routerLink="/login" routerLinkActive="fw-nav-link-activo">
-          Iniciar sesión
+      <span class="fw-nav-indicador" aria-hidden="true"></span>
+      @for (enlace of enlaces(); track enlace.ruta) {
+        <a
+          class="fw-nav-link"
+          [routerLink]="enlace.ruta"
+          routerLinkActive="fw-nav-link-activo"
+          [routerLinkActiveOptions]="{ exact: enlace.exacta ?? false }"
+        >
+          <svg class="fw-nav-icono" viewBox="0 0 24 24" aria-hidden="true">
+            @switch (enlace.icono) {
+              @case ('buscar') {
+                <circle cx="11" cy="11" r="6.5" />
+                <path d="M20 20l-4.2-4.2" />
+              }
+              @case ('publicar') {
+                <circle cx="12" cy="12" r="8.5" />
+                <path d="M12 8.5v7M8.5 12h7" />
+              }
+              @case ('lista') {
+                <rect x="5" y="3.5" width="14" height="17" rx="3" />
+                <path d="M9 9h6M9 13h6M9 17h3" />
+              }
+              @case ('encuesta') {
+                <path d="M4 5.5h16v10.5H10l-6 4.5z" />
+                <path d="M8.5 10.5h7" />
+              }
+              @case ('perfil') {
+                <circle cx="12" cy="8" r="4" />
+                <path d="M4.5 20.5c1.4-3.8 4.3-5.5 7.5-5.5s6.1 1.7 7.5 5.5" />
+              }
+              @case ('verificar') {
+                <path d="M12 3l7.5 3v5.6c0 4.4-3.2 7.9-7.5 9.4-4.3-1.5-7.5-5-7.5-9.4V6z" />
+                <path d="M8.7 12.2l2.3 2.3 4.4-4.6" />
+              }
+              @case ('herramienta') {
+                <path
+                  d="M14.7 6.3a4 4 0 0 0-5.2 5.2L4 17l3 3 5.5-5.5a4 4 0 0 0 5.2-5.2l-2.6 2.6-2.4-.6-.6-2.4z"
+                />
+              }
+              @case ('grafico') {
+                <path d="M5 20v-8M12 20V5M19 20v-5" />
+              }
+            }
+          </svg>
+          <span class="fw-nav-texto">{{ enlace.etiqueta }}</span>
         </a>
-        <a class="fw-btn-registro" routerLink="/registro">Registrarse</a>
-      </div>
+      }
+    </nav>
+
+    @if (rol() === 'CLIENTE') {
+      <a class="fw-promo" routerLink="/solicitudes/nueva">
+        <img src="img/personas/gasfitero.webp" alt="" loading="lazy" />
+        <span class="fw-promo-texto">
+          <strong>¿Algo se malogró en casa?</strong>
+          Publica el trabajo y recibe ofertas de técnicos cercanos.
+        </span>
+      </a>
+    } @else if (rol() === 'PROVEEDOR') {
+      <a class="fw-promo" routerLink="/proveedor/perfil">
+        <img src="img/personas/carpintero.webp" alt="" loading="lazy" />
+        <span class="fw-promo-texto">
+          <strong>Mantén tu perfil al día</strong>
+          Tarifas y disponibilidad actualizadas te traen más solicitudes.
+        </span>
+      </a>
     }
-  </div>
-</header>
+
+    <div class="fw-nav-usuario">
+      @if (usuario(); as actual) {
+        <span class="fw-usuario-avatar" aria-hidden="true">{{ actual.nombres.charAt(0) }}</span>
+        <span class="fw-usuario-datos">
+          <span class="fw-usuario-nombre">{{ actual.nombres }}</span>
+          <span class="fw-usuario-rol">{{ etiquetaRol(actual.rol) }}</span>
+        </span>
+      }
+      <button type="button" class="fw-btn-salir" (click)="cerrarSesion()" title="Cerrar sesión">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3M10 16l-4-4 4-4M6 12h10" />
+        </svg>
+        <span class="fw-salir-texto">Cerrar sesión</span>
+      </button>
+    </div>
+  } @else {
+    <div class="fw-nav-acciones">
+      <a class="fw-nav-link" routerLink="/login" routerLinkActive="fw-nav-link-activo">
+        Iniciar sesión
+      </a>
+      <a class="fw-btn-registro" routerLink="/registro">Registrarse</a>
+    </div>
+  }
+</aside>

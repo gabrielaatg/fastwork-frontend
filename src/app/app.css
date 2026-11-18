@@ -108,3 +108,27 @@
     filter: blur(60px);
   }
 }
+
+/* ---------- Armazón de la app con sesión: barra lateral + contenido ---------- */
+:host(.fw-con-barra) {
+  display: grid;
+  grid-template-columns: 272px minmax(0, 1fr);
+  align-items: start;
+}
+
+:host(.fw-con-barra) .fw-contenedor {
+  width: 100%;
+  max-width: 1320px;
+  margin: 0;
+  padding: 1.75rem 2.25rem 4rem;
+}
+
+@media (max-width: 1023px) {
+  :host(.fw-con-barra) {
+    display: block;
+  }
+
+  :host(.fw-con-barra) .fw-contenedor {
+    padding: 1rem 1rem 6.5rem;
+  }
+}

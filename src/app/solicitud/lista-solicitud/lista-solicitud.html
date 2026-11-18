@@ -1,5 +1,9 @@
 <section class="fw-agenda-pagina">
-  <header class="fw-agenda-cabecera">
+  <header
+    class="fw-agenda-cabecera"
+    [class.fw-cab-foto-obrero]="rolUsuario() === 'PROVEEDOR'"
+    [class.fw-cab-foto-clienta]="rolUsuario() !== 'PROVEEDOR'"
+  >
     <div>
       <h1 class="fw-agenda-titulo">
         {{
@@ -19,7 +23,7 @@
     </div>
 
     @if (rolUsuario() === 'CLIENTE') {
-      <a routerLink="/solicitudes/nueva" class="fw-btn-primario-link">+ Publicar trabajo</a>
+      <a routerLink="/solicitudes/nueva" class="fw-btn-primario-link">Publicar trabajo</a>
     }
   </header>
 

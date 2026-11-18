@@ -1,11 +1,11 @@
-<div class="fw-aurora" [class.fw-aurora-intensa]="!mostrarBarra()" aria-hidden="true">
-  <span class="fw-aurora-a"></span>
-  <span class="fw-aurora-b"></span>
-  <span class="fw-aurora-c"></span>
-  <span class="fw-aurora-grano"></span>
-</div>
-
-@if (mostrarBarra()) {
+@if (!mostrarBarra()) {
+  <div class="fw-aurora fw-aurora-intensa" aria-hidden="true">
+    <span class="fw-aurora-a"></span>
+    <span class="fw-aurora-b"></span>
+    <span class="fw-aurora-c"></span>
+    <span class="fw-aurora-grano"></span>
+  </div>
+} @else {
   <app-barra-navegacion />
 }
 

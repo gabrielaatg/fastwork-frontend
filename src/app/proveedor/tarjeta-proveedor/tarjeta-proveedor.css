@@ -1,59 +1,140 @@
+:host {
+  display: block;
+}
+
 .fw-card-proveedor {
+  position: relative;
   height: 100%;
-  background-color: var(--fw-surface);
-  border: 1px solid var(--fw-border);
-  border-radius: var(--fw-radius-lg);
-  padding: 1.4rem;
-  transition:
-    border-color 0.3s ease,
-    box-shadow 0.4s ease,
-    transform 0.4s var(--fw-ease-salida);
   display: flex;
   flex-direction: column;
-  gap: 0.9rem;
+  gap: 1rem;
+  padding: 1.4rem;
+  border-radius: var(--fw-radius-lg);
+  background-color: var(--fw-surface);
+  box-shadow: var(--fw-shadow-md);
+  transition:
+    transform 0.45s var(--fw-ease-salida),
+    box-shadow 0.45s ease;
 }
 
 .fw-card-proveedor:hover {
-  border-color: rgb(var(--fw-primary-rgb) / 0.35);
-  box-shadow: var(--fw-shadow-lg), 0 0 0 1px rgb(var(--fw-primary-rgb) / 0.15);
-  transform: translateY(-3px);
+  transform: translateY(-4px);
+  box-shadow: var(--fw-shadow-lg);
 }
 
 .fw-card-cabecera {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  gap: 1rem;
+  gap: 0.75rem;
 }
 
 .fw-card-identidad {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.85rem;
+  min-width: 0;
 }
 
 .fw-avatar-card,
 .fw-avatar-fallback {
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
+  width: 3.6rem;
+  height: 3.6rem;
   flex-shrink: 0;
+  border-radius: 50%;
+  transition: transform 0.5s var(--fw-ease-resorte);
+}
+
+.fw-card-proveedor:hover :is(.fw-avatar-card, .fw-avatar-fallback) {
+  transform: scale(1.06) rotate(-3deg);
 }
 
 .fw-avatar-card {
   object-fit: cover;
-  border: 2px solid var(--fw-primary);
+  box-shadow: 0 0 0 3px var(--fw-surface), 0 0 0 5px var(--fw-celeste);
 }
 
 .fw-avatar-fallback {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, var(--fw-primary), var(--fw-accent));
-  color: var(--fw-on-primary);
+  display: grid;
+  place-items: center;
+  background: var(--fw-tinta);
+  color: var(--fw-celeste);
+  font-size: 1.05rem;
   font-weight: 800;
   font-stretch: 120%;
-  font-size: 1.05rem;
+}
+
+.fw-card-nombre {
+  margin: 0 0 0.3rem;
+  font-size: 1.15rem;
+  font-weight: 800;
+  font-stretch: 110%;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+}
+
+.fw-card-rating {
+  display: flex;
+  align-items: center;
+}
+
+.fw-card-badges {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.35rem;
+}
+
+.fw-card-desc {
+  margin: 0;
+  color: var(--fw-muted);
+  font-size: 0.92rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Tarifas: filas tipo recibo dentro de un bloque gris */
+.fw-card-oficios {
+  border-radius: 1rem;
+  background: var(--fw-surface-alt);
+  padding: 0.35rem 0.95rem;
+}
+
+.fw-oficios-lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.fw-oficio-chip {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.75rem;
+  padding: 0.6rem 0;
+  font-size: 0.92rem;
+}
+
+.fw-oficio-chip + .fw-oficio-chip {
+  border-top: 1px dashed var(--fw-border-strong);
+}
+
+.fw-oficio-nombre {
+  font-weight: 650;
+}
+
+.fw-oficio-tarifa {
+  color: var(--fw-primary);
+  font-weight: 750;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.fw-sin-oficios {
+  font-size: 0.85rem;
+  color: var(--fw-muted);
 }
 
 .fw-card-zonas {
@@ -64,8 +145,8 @@
 }
 
 .fw-zonas-titulo {
-  font-size: 0.78rem;
-  font-weight: 600;
+  font-size: 0.8rem;
+  font-weight: 650;
   color: var(--fw-muted);
 }
 
@@ -79,131 +160,87 @@
 }
 
 .fw-zona-chip {
-  padding: 0.15rem 0.55rem;
+  padding: 0.2rem 0.65rem;
   border-radius: 999px;
-  border: 1px solid var(--fw-accent-line);
-  background: var(--fw-accent-soft);
-  font-size: 0.75rem;
-  color: var(--fw-text);
-}
-
-.fw-card-nombre {
-  margin: 0 0 0.3rem;
-  font-size: 1.2rem;
-  font-weight: 800;
-  font-stretch: 112%;
-  letter-spacing: -0.01em;
-}
-
-.fw-card-rating {
-  display: flex;
-  align-items: center;
-}
-
-.fw-card-badges {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-  gap: 0.4rem;
-}
-
-.fw-card-desc {
-  margin: 0;
-  color: var(--fw-muted);
-  font-size: 0.9rem;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.fw-oficios-lista {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.45rem;
-}
-
-.fw-oficio-chip {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 0.75rem;
-  padding: 0.55rem 0;
-  border-bottom: 1px dashed var(--fw-border);
-  font-size: 0.92rem;
-}
-
-.fw-oficio-chip:last-child {
-  border-bottom: none;
-}
-
-.fw-oficio-nombre {
+  background: var(--fw-primary-soft);
+  color: var(--fw-primary-deep);
+  font-size: 0.78rem;
   font-weight: 600;
-}
-
-.fw-oficio-tarifa {
-  color: var(--fw-primary);
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
-}
-
-.fw-sin-oficios {
-  font-size: 0.85rem;
-  color: var(--fw-muted);
 }
 
 .fw-card-pie {
   margin-top: auto;
-  padding-top: 0.75rem;
-  border-top: 1px solid var(--fw-border);
+  padding-top: 0.25rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 0.75rem;
 }
 
 .fw-card-contacto {
-  font-size: 0.85rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.86rem;
+  font-weight: 550;
   color: var(--fw-muted);
 }
 
-.fw-btn-detalle {
-  padding: 0.55rem 1.1rem;
-  border-radius: var(--fw-radius-pill) !important;
-  font-weight: 700 !important;
-  transition: box-shadow 0.3s ease;
-  border-radius: var(--fw-radius);
-  background-color: var(--fw-primary);
-  color: var(--fw-on-primary);
-  font-size: 0.875rem;
-  font-weight: 600;
+.fw-card-contacto svg,
+.fw-btn-detalle svg {
+  width: 1rem;
+  height: 1rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
-.fw-btn-detalle:hover {
-  background-color: var(--fw-primary-hover);
-  box-shadow: var(--fw-glow);
+.fw-btn-detalle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.65rem 1rem 0.65rem 1.15rem;
+  border-radius: var(--fw-radius-pill);
+  background-color: var(--fw-tinta);
+  color: #ffffff;
+  font-size: 0.88rem;
+  font-weight: 700;
+  transition:
+    background-color 0.25s ease,
+    gap 0.3s var(--fw-ease-resorte);
+}
+
+.fw-btn-detalle svg {
+  transition: transform 0.35s var(--fw-ease-resorte);
+}
+
+.fw-btn-detalle:hover,
+.fw-card-proveedor:hover .fw-btn-detalle {
+  background-color: var(--fw-primary);
   text-decoration: none;
 }
 
-@media (max-width: 560px) {
+.fw-card-proveedor:hover .fw-btn-detalle svg {
+  transform: translateX(3px);
+}
+
+@media (max-width: 420px) {
   .fw-card-cabecera {
     flex-direction: column;
   }
 
   .fw-card-badges {
-    justify-content: flex-start;
+    flex-direction: row;
   }
 
   .fw-card-pie {
     flex-direction: column;
     align-items: stretch;
-    gap: 0.75rem;
   }
 
   .fw-btn-detalle {
-    text-align: center;
+    justify-content: center;
   }
 }

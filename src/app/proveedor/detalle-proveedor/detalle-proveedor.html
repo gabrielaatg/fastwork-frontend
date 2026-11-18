@@ -9,10 +9,21 @@
     <div class="fw-estado-caja">Cargando perfil del proveedor...</div>
   } @else if (detalle(); as proveedor) {
     <article class="fw-detalle-cabecera">
+      <div class="fw-portada" aria-hidden="true">
+        <img [src]="fotoPortada()" alt="" />
+      </div>
+
       <div class="fw-detalle-identidad">
-        @if (proveedor.fotoPerfilUrl; as fotoUrl) {
-          <img [src]="fotoUrl" [alt]="'Foto de ' + proveedor.nombres" class="fw-avatar-detalle" />
-        }
+        <div class="fw-detalle-avatar">
+          @if (proveedor.fotoPerfilUrl; as fotoUrl) {
+            <img [src]="fotoUrl" [alt]="'Foto de ' + proveedor.nombres" class="fw-avatar-detalle" />
+          } @else {
+            <span class="fw-avatar-iniciales" aria-hidden="true">
+              {{ proveedor.nombres.charAt(0) }}{{ proveedor.apellidos.charAt(0) }}
+            </span>
+          }
+        </div>
+
         <div class="fw-detalle-info">
           <div class="fw-badges">
             <app-badge-estado [estado]="proveedor.estadoVerificacion" />
@@ -27,30 +38,70 @@
           @if (proveedor.descripcionPerfil) {
             <p class="fw-detalle-desc">{{ proveedor.descripcionPerfil }}</p>
           }
-          <div class="fw-contacto-fila">
-            <span><strong>Teléfono:</strong> {{ proveedor.telefono }}</span>
-            <span><strong>Correo:</strong> {{ proveedor.correo }}</span>
-            <span>
-              <strong>Zonas:</strong>
-              @if (proveedor.zonas.length > 0) {
-                @for (z of proveedor.zonas; track z.idZona; let ultimo = $last) {
-                  {{ z.nombreZona }}@if (!ultimo) {, }
-                }
-              } @else {
-                Por configurar
-              }
-            </span>
-          </div>
         </div>
+
+        @if (esCliente() && proveedor.idUsuario !== idUsuarioActual()) {
+          <div class="fw-detalle-cta">
+            <a class="fw-btn-solicitar" [routerLink]="['/solicitudes/nueva']"> Publicar trabajo </a>
+          </div>
+        }
       </div>
 
-      @if (esCliente() && proveedor.idUsuario !== idUsuarioActual()) {
-        <div class="fw-detalle-cta">
-          <a class="fw-btn-solicitar" [routerLink]="['/solicitudes/nueva']">
-            Publicar trabajo
-          </a>
+      <dl class="fw-detalle-datos">
+        <div class="fw-dato">
+          <dt>Calificación</dt>
+          <dd>{{ proveedor.calificacionPromedio | number: '1.1-1' }}</dd>
         </div>
-      }
+        <div class="fw-dato">
+          <dt>Reseñas</dt>
+          <dd [fwContador]="proveedor.totalResenas"></dd>
+        </div>
+        <div class="fw-dato">
+          <dt>Oficios</dt>
+          <dd [fwContador]="proveedor.oficios.length"></dd>
+        </div>
+        @if (tarifaDesde(); as desde) {
+          <div class="fw-dato">
+            <dt>Desde</dt>
+            <dd>S/ {{ desde | number: '1.0-0' }}</dd>
+          </div>
+        }
+      </dl>
+
+      <div class="fw-contacto-fila">
+        <span class="fw-contacto-item">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path
+              d="M6.6 3.5h2.7l1.4 4-2 1.3a11 11 0 0 0 6.5 6.5l1.3-2 4 1.4v2.7a2 2 0 0 1-2.2 2A16.5 16.5 0 0 1 4.6 5.7a2 2 0 0 1 2-2.2z"
+            />
+          </svg>
+          <strong>Teléfono:</strong> {{ proveedor.telefono }}
+        </span>
+        <span class="fw-contacto-item">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="3.5" y="5.5" width="17" height="13" rx="2.5" />
+            <path d="M4 7l8 6 8-6" />
+          </svg>
+          <strong>Correo:</strong> {{ proveedor.correo }}
+        </span>
+        <span class="fw-contacto-item">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 21s-6.5-6.1-6.5-11a6.5 6.5 0 0 1 13 0c0 4.9-6.5 11-6.5 11z" />
+            <circle cx="12" cy="10" r="2.3" />
+          </svg>
+          <strong>Zonas:</strong>
+          @if (proveedor.zonas.length > 0) {
+            @for (z of proveedor.zonas; track z.idZona; let ultimo = $last) {
+              {{ z.nombreZona }}
+              @if (!ultimo) {
+                ,
+              }
+            }
+          } @else {
+            Por configurar
+          }
+        </span>
+      </div>
     </article>
 
     <section class="fw-bloque">

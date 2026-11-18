@@ -26,9 +26,7 @@ describe('ListaProveedores', () => {
 
     httpMock.expectOne(`${environment.apiUrl}/oficios`).flush({ status: 'success', data: [] });
     httpMock.expectOne(`${environment.apiUrl}/zonas`).flush({ status: 'success', data: [] });
-    const req = httpMock.expectOne(
-      `${environment.apiUrl}/proveedores?disponibilidad=DISPONIBLE`,
-    );
+    const req = httpMock.expectOne(`${environment.apiUrl}/proveedores?disponibilidad=DISPONIBLE`);
     expect(req.request.method).toBe('GET');
     req.flush({ status: 'success', data: [] });
 

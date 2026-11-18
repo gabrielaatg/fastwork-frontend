@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import { ChangeDetectionStrategy, Component, computed, effect, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { filter, map } from 'rxjs';
@@ -12,9 +13,13 @@ const RUTAS_SIN_BARRA = ['/inicio', '/login', '/registro'] as const;
   templateUrl: './app.html',
   styleUrl: './app.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    '[class.fw-con-barra]': 'mostrarBarra()',
+  },
 })
 export class App {
   private readonly router = inject(Router);
+  private readonly documento = inject(DOCUMENT);
 
   private readonly rutaActual = toSignal(
     this.router.events.pipe(
@@ -28,4 +33,11 @@ export class App {
     const ruta = this.rutaActual().split(/[?#]/)[0];
     return !RUTAS_SIN_BARRA.some((prefijo) => ruta === prefijo || ruta.startsWith(`${prefijo}/`));
   });
+
+  constructor() {
+    // Las páginas internas usan el tema claro; las públicas, el oscuro.
+    effect(() => {
+      this.documento.body.classList.toggle('fw-modo-app', this.mostrarBarra());
+    });
+  }
 }

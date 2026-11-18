@@ -14,6 +14,8 @@ import { AuthApi } from '../../core/auth/auth-api';
 import { AlertaMensaje } from '../../core/layout/alerta-mensaje/alerta-mensaje';
 import { BadgeEstado } from '../../core/layout/badge-estado/badge-estado';
 import { CalificacionEstrellas } from '../../core/layout/calificacion-estrellas/calificacion-estrellas';
+import { fotoParaOficio } from '../../core/media/fotos-oficio';
+import { Contador } from '../../core/motion/contador';
 import { ProveedorDetalle } from '../../dominio/proveedor';
 import { ListaResenas } from '../../resena/lista-resenas/lista-resenas';
 import { ProveedorApi } from '../proveedor-api';
@@ -21,6 +23,7 @@ import { ProveedorApi } from '../proveedor-api';
 @Component({
   selector: 'app-detalle-proveedor',
   imports: [
+    Contador,
     DecimalPipe,
     RouterLink,
     AlertaMensaje,
@@ -43,6 +46,24 @@ export class DetalleProveedor {
   protected readonly detalle = signal<ProveedorDetalle | null>(null);
   protected readonly cargando = signal(false);
   protected readonly errorHttp = signal<ErrorHttp | null>(null);
+
+  /** Foto de portada según el primer oficio con foto disponible. */
+  protected readonly fotoPortada = computed(() => {
+    const oficios = this.detalle()?.oficios ?? [];
+    for (const oficio of oficios) {
+      const foto = fotoParaOficio(oficio.nombreOficio);
+      if (foto) {
+        return foto;
+      }
+    }
+    return 'img/personas/obrero.webp';
+  });
+
+  /** Tarifa mínima entre todos los oficios del técnico. */
+  protected readonly tarifaDesde = computed(() => {
+    const oficios = this.detalle()?.oficios ?? [];
+    return oficios.length ? Math.min(...oficios.map((o) => o.precioMinimo)) : null;
+  });
 
   constructor() {
     effect(() => {
