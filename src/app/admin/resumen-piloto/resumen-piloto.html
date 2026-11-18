@@ -12,19 +12,19 @@
       [disabled]="cargando()"
       (click)="cargarResumen()"
     >
-      {{ cargando() ? 'Actualizando...' : 'Actualizar métricas' }}
+      {{ cargando() ? 'Actualizando…' : 'Actualizar métricas' }}
     </button>
   </header>
 
   <app-alerta-mensaje [error]="errorHttp()" [cerrable]="true" (cerrado)="errorHttp.set(null)" />
 
   @if (cargando() && !resumen()) {
-    <div class="fw-estado-caja">Cargando estadísticas del piloto...</div>
+    <div class="fw-estado-caja">Cargando estadísticas del piloto…</div>
   } @else if (resumen(); as datos) {
     <div class="fw-kpi-grid">
       <article class="fw-kpi-card">
         <span class="fw-kpi-label">Promedio de usabilidad</span>
-        <strong class="fw-kpi-valor">{{ datos.promedioUsabilidad | number: '1.2-2' }} / 5</strong>
+        <strong class="fw-kpi-valor fw-num">{{ datos.promedioUsabilidad | number: '1.2-2' }} / 5</strong>
         <app-calificacion-estrellas
           [valor]="datos.promedioUsabilidad"
           [soloLectura]="true"
@@ -34,7 +34,7 @@
 
       <article class="fw-kpi-card">
         <span class="fw-kpi-label">Promedio de satisfacción</span>
-        <strong class="fw-kpi-valor">{{ datos.promedioSatisfaccion | number: '1.2-2' }} / 5</strong>
+        <strong class="fw-kpi-valor fw-num">{{ datos.promedioSatisfaccion | number: '1.2-2' }} / 5</strong>
         <app-calificacion-estrellas
           [valor]="datos.promedioSatisfaccion"
           [soloLectura]="true"
@@ -44,22 +44,22 @@
 
       <article class="fw-kpi-card">
         <span class="fw-kpi-label">Encuestas registradas</span>
-        <strong class="fw-kpi-valor">{{ datos.totalEncuestas }}</strong>
+        <strong class="fw-kpi-valor fw-num">{{ datos.totalEncuestas }}</strong>
       </article>
 
       <article class="fw-kpi-card">
         <span class="fw-kpi-label">Usuarios registrados</span>
-        <strong class="fw-kpi-valor">{{ datos.totalUsuariosRegistrados }}</strong>
+        <strong class="fw-kpi-valor fw-num">{{ datos.totalUsuariosRegistrados }}</strong>
       </article>
 
       <article class="fw-kpi-card">
         <span class="fw-kpi-label">Proveedores verificados</span>
-        <strong class="fw-kpi-valor">{{ datos.totalProveedoresVerificados }}</strong>
+        <strong class="fw-kpi-valor fw-num">{{ datos.totalProveedoresVerificados }}</strong>
       </article>
 
       <article class="fw-kpi-card">
         <span class="fw-kpi-label">Solicitudes finalizadas</span>
-        <strong class="fw-kpi-valor">{{ datos.totalSolicitudesFinalizadas }}</strong>
+        <strong class="fw-kpi-valor fw-num">{{ datos.totalSolicitudesFinalizadas }}</strong>
       </article>
     </div>
   }

@@ -10,7 +10,9 @@
         </p>
       }
     </div>
-    <button type="button" class="fw-btn-secundario" (click)="cancelar.emit()">Cerrar</button>
+    <button type="button" class="fw-btn-secundario fw-btn-cerrar-resena" (click)="cancelar.emit()">
+      Cerrar
+    </button>
   </header>
 
   <app-alerta-mensaje [error]="errorHttp()" [cerrable]="true" (cerrado)="errorHttp.set(null)" />
@@ -36,8 +38,8 @@
         class="fw-textarea"
         [placeholder]="
           rolEvaluador() === 'PROVEEDOR'
-            ? 'Describe la puntualidad, claridad del requerimiento y trato del cliente...'
-            : 'Describe la puntualidad, calidad del trabajo y trato del proveedor...'
+            ? 'Describe la puntualidad, claridad del requerimiento y trato del cliente…'
+            : 'Describe la puntualidad, calidad del trabajo y trato del proveedor…'
         "
         [formField]="formulario.comentario"
       ></textarea>
@@ -53,7 +55,7 @@
     <div class="fw-acciones">
       <button type="button" class="fw-btn-secundario" (click)="cancelar.emit()">Cancelar</button>
       <button type="submit" class="fw-btn-primario" [disabled]="cargando()">
-        {{ cargando() ? 'Enviando...' : 'Publicar reseña' }}
+        {{ cargando() ? 'Enviando…' : 'Publicar reseña' }}
       </button>
     </div>
   </form>

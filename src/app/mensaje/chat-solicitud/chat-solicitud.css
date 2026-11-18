@@ -1,10 +1,11 @@
 .fw-chat-panel {
   background-color: var(--fw-surface);
   border: 1px solid var(--fw-border);
-  border-radius: var(--fw-radius);
+  border-radius: var(--fw-radius-lg);
   display: flex;
   flex-direction: column;
-  height: 540px;
+  height: min(540px, 78dvh);
+  overflow: hidden;
 }
 
 .fw-chat-cabecera {
@@ -16,9 +17,14 @@
   gap: 0.75rem;
 }
 
+.fw-chat-cabecera-info {
+  min-width: 0;
+}
+
 .fw-chat-titulo {
   margin: 0;
   font-size: 1rem;
+  font-weight: 700;
 }
 
 .fw-chat-subtitulo {
@@ -29,7 +35,14 @@
 
 .fw-chat-controles {
   display: flex;
-  gap: 0.5rem;
+  gap: 0.45rem;
+  flex-shrink: 0;
+}
+
+.fw-chat-btn {
+  min-height: 2.15rem;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.82rem;
 }
 
 .fw-chat-hilo {
@@ -46,21 +59,24 @@
   margin: auto;
   color: var(--fw-muted);
   font-size: 0.9rem;
+  text-align: center;
 }
 
 .fw-burbuja {
-  max-width: 80%;
+  max-width: 82%;
   align-self: flex-start;
   padding: 0.65rem 0.85rem;
   border-radius: var(--fw-radius);
   background-color: var(--fw-surface);
   border: 1px solid var(--fw-border);
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .fw-burbuja-propia {
   align-self: flex-end;
   background-color: var(--fw-primary-soft);
-  border-color: var(--fw-primary);
+  border-color: var(--fw-sage);
 }
 
 .fw-burbuja-meta {
@@ -79,39 +95,14 @@
 }
 
 .fw-chat-form {
-  padding: 0.85rem 1rem;
+  padding: 0.8rem 1rem;
   border-top: 1px solid var(--fw-border);
+  background-color: var(--fw-surface);
   display: flex;
-  gap: 0.6rem;
+  gap: 0.55rem;
 }
 
 .fw-chat-input {
   flex: 1;
-  padding: 0.55rem 0.75rem;
-  border: 1px solid var(--fw-border);
-  border-radius: var(--fw-radius);
-}
-
-.fw-btn-primario {
-  padding: 0.55rem 1rem;
-  border: none;
-  border-radius: var(--fw-radius);
-  background-color: var(--fw-primary);
-  color: #ffffff;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.fw-btn-primario:disabled {
-  opacity: 0.65;
-  cursor: not-allowed;
-}
-
-.fw-btn-secundario {
-  padding: 0.4rem 0.75rem;
-  border: 1px solid var(--fw-border);
-  border-radius: var(--fw-radius);
-  background-color: var(--fw-surface);
-  font-size: 0.825rem;
-  cursor: pointer;
+  min-width: 0;
 }

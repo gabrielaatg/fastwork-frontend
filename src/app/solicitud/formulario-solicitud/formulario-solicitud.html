@@ -1,10 +1,16 @@
 <section class="fw-solicitud-pagina">
   <div class="fw-migas">
-    <a routerLink="/directorio">&larr; Volver al directorio</a>
+    <a routerLink="/directorio">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <line x1="19" y1="12" x2="5" y2="12" />
+        <polyline points="12 19 5 12 12 5" />
+      </svg>
+      <span>Volver al directorio</span>
+    </a>
   </div>
 
   <div class="fw-solicitud-tarjeta">
-    <header>
+    <header class="fw-solicitud-cabecera">
       <h1 class="fw-solicitud-titulo">Publicar solicitud de trabajo</h1>
       <p class="fw-solicitud-subtitulo">
         Elige la categoría, tu distrito en Trujillo, presupuesto inicial e imágenes del problema. Los
@@ -15,13 +21,13 @@
     <app-alerta-mensaje [error]="errorHttp()" [cerrable]="true" (cerrado)="errorHttp.set(null)" />
 
     @if (cargandoCatalogos()) {
-      <div class="fw-estado-caja">Cargando categorías y distritos de Trujillo...</div>
+      <div class="fw-estado-caja">Cargando categorías y distritos de Trujillo…</div>
     } @else {
       <form class="fw-form" (submit)="alEnviar($event)" novalidate>
         <div class="fw-grid-campos">
           <div class="fw-campo">
             <label class="fw-label" for="sol-oficio">Categoría de oficio</label>
-            <select id="sol-oficio" class="fw-input" [formField]="formulario.idOficio">
+            <select id="sol-oficio" class="fw-select" [formField]="formulario.idOficio">
               <option value="">Selecciona un oficio</option>
               @for (oficio of oficios(); track oficio.idOficio) {
                 <option [value]="'' + oficio.idOficio">{{ oficio.nombreOficio }}</option>
@@ -38,7 +44,7 @@
 
           <div class="fw-campo">
             <label class="fw-label" for="sol-zona">Distrito en Trujillo</label>
-            <select id="sol-zona" class="fw-input" [formField]="formulario.idZona">
+            <select id="sol-zona" class="fw-select" [formField]="formulario.idZona">
               <option value="">Selecciona un distrito</option>
               @for (zona of zonas(); track zona.idZona) {
                 <option [value]="'' + zona.idZona">{{ zona.nombreZona }}</option>
@@ -60,7 +66,7 @@
             id="sol-direccion"
             type="text"
             class="fw-input"
-            placeholder="Ej. Av. España 450, Urb. Centro, Trujillo"
+            placeholder="Ej. Av. España 450, Urb. Centro, Trujillo…"
             [formField]="formulario.direccionTrujillo"
           />
           @if (formulario.direccionTrujillo().touched() && formulario.direccionTrujillo().invalid()) {
@@ -78,7 +84,7 @@
             <input
               id="sol-fecha"
               type="date"
-              class="fw-input"
+              class="fw-input fw-num"
               [formField]="formulario.fechaProgramada"
             />
             @if (formulario.fechaProgramada().touched() && formulario.fechaProgramada().invalid()) {
@@ -95,7 +101,7 @@
             <input
               id="sol-hora"
               type="time"
-              class="fw-input"
+              class="fw-input fw-num"
               [formField]="formulario.horaProgramada"
             />
             @if (formulario.horaProgramada().touched() && formulario.horaProgramada().invalid()) {
@@ -114,7 +120,7 @@
             id="sol-presupuesto"
             type="number"
             step="1"
-            class="fw-input"
+            class="fw-input fw-num"
             placeholder="Ej. 90"
             [formField]="formulario.presupuestoReferencial"
           />
@@ -132,14 +138,14 @@
 
         <div class="fw-campo">
           <label class="fw-label" for="sol-imagenes">
-            Imágenes del problema (1 a 5 fotos, máx. 5 MB c/u)
+            Imágenes del problema (1 a 5 fotos, máx. 5&nbsp;MB c/u)
           </label>
           <input
             id="sol-imagenes"
             type="file"
             accept="image/jpeg,image/png,image/webp"
             multiple
-            class="fw-input"
+            class="fw-input fw-input-archivo"
             (change)="alSeleccionarImagenes($event)"
           />
           @if (imagenesSeleccionadas().length > 0) {
@@ -147,11 +153,17 @@
               @for (item of imagenesSeleccionadas(); track $index) {
                 <div class="fw-img-item">
                   @if (item.previewUrl) {
-                    <img [src]="item.previewUrl" [alt]="item.archivo.name" class="fw-img-preview" />
+                    <img
+                      [src]="item.previewUrl"
+                      [alt]="item.archivo.name"
+                      width="150"
+                      height="110"
+                      class="fw-img-preview"
+                    />
                   }
                   <div class="fw-img-meta">
                     <span class="fw-img-nombre">{{ item.archivo.name }}</span>
-                    <span class="fw-img-peso">{{ formatearTamano(item.archivo.size) }}</span>
+                    <span class="fw-img-peso fw-num">{{ formatearTamano(item.archivo.size) }}</span>
                   </div>
                   <button
                     type="button"
@@ -177,7 +189,7 @@
             id="sol-desc"
             rows="4"
             class="fw-textarea"
-            placeholder="Describe qué falla o instalación necesitas, materiales disponibles y detalles útiles..."
+            placeholder="Describe qué falla o instalación necesitas, materiales disponibles y detalles útiles…"
             [formField]="formulario.descripcionTrabajo"
           ></textarea>
           @if (formulario.descripcionTrabajo().touched() && formulario.descripcionTrabajo().invalid()) {
@@ -192,7 +204,7 @@
         <div class="fw-form-acciones">
           <a routerLink="/directorio" class="fw-btn-secundario">Cancelar</a>
           <button type="submit" class="fw-btn-primario" [disabled]="enviando()">
-            {{ enviando() ? 'Publicando...' : 'Publicar solicitud' }}
+            {{ enviando() ? 'Publicando…' : 'Publicar solicitud' }}
           </button>
         </div>
       </form>

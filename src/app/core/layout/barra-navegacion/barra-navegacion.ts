@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { RolUsuario } from '../../../dominio/rol';
 import { AuthApi } from '../../auth/auth-api';
@@ -30,7 +30,7 @@ const ENLACES_POR_ROL: Record<RolUsuario, readonly EnlaceNavegacion[]> = {
 };
 
 /**
- * Barra superior de navegación adaptada al rol de la sesión activa.
+ * Barra superior de navegación adaptada al rol de la sesión activa y responsive para móvil.
  */
 @Component({
   selector: 'app-barra-navegacion',
@@ -38,6 +38,9 @@ const ENLACES_POR_ROL: Record<RolUsuario, readonly EnlaceNavegacion[]> = {
   templateUrl: './barra-navegacion.html',
   styleUrl: './barra-navegacion.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    '(document:keydown.escape)': 'cerrarMenu()',
+  },
 })
 export class BarraNavegacion {
   private readonly authApi = inject(AuthApi);
@@ -45,6 +48,7 @@ export class BarraNavegacion {
 
   protected readonly estaAutenticado = this.authApi.estaAutenticado;
   protected readonly usuario = this.authApi.usuario;
+  protected readonly menuAbierto = signal(false);
 
   protected readonly enlaces = computed<readonly EnlaceNavegacion[]>(() => {
     const rol = this.authApi.rol();
@@ -54,8 +58,17 @@ export class BarraNavegacion {
     return ENLACES_POR_ROL[rol];
   });
 
+  protected alternarMenu(): void {
+    this.menuAbierto.update((abierto) => !abierto);
+  }
+
+  protected cerrarMenu(): void {
+    this.menuAbierto.set(false);
+  }
+
   /** Limpia la sesión actual y redirige a la pantalla de inicio de sesión. */
   protected cerrarSesion(): void {
+    this.menuAbierto.set(false);
     this.authApi.cerrarSesion();
     void this.router.navigate(['/login']);
   }

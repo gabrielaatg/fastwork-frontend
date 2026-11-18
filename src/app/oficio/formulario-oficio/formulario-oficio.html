@@ -9,7 +9,7 @@
         id="oficio-nombre"
         type="text"
         class="fw-input"
-        placeholder="Ej. Carpintería"
+        placeholder="Ej. Carpintería…"
         [formField]="formulario.nombreOficio"
       />
       @if (formulario.nombreOficio().touched() && formulario.nombreOficio().invalid()) {
@@ -23,13 +23,13 @@
         id="oficio-desc"
         rows="3"
         class="fw-textarea"
-        placeholder="Trabajos comprendidos en este oficio técnico..."
+        placeholder="Trabajos comprendidos en este oficio técnico…"
         [formField]="formulario.descripcion"
       ></textarea>
     </div>
 
     <button type="submit" class="fw-btn-primario" [disabled]="guardando()">
-      {{ guardando() ? 'Registrando...' : 'Agregar oficio al catálogo' }}
+      {{ guardando() ? 'Registrando…' : 'Agregar oficio al catálogo' }}
     </button>
   </form>
 </section>

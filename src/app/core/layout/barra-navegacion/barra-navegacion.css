@@ -1,67 +1,108 @@
 .fw-navbar {
   position: sticky;
   top: 0;
-  z-index: 20;
+  z-index: 30;
   background-color: var(--fw-surface);
   border-bottom: 1px solid var(--fw-border);
-  box-shadow: var(--fw-shadow-sm);
 }
 
 .fw-navbar-inner {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 0.65rem 1.5rem;
+  padding: 0.7rem 1.5rem;
   min-height: 4rem;
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 0.75rem 1.5rem;
+  gap: 1rem 1.5rem;
 }
 
 .fw-marca {
   display: inline-flex;
-  align-items: baseline;
-  gap: 0.5rem;
+  align-items: center;
+  gap: 0.55rem;
   color: var(--fw-text);
   text-decoration: none;
+  flex-shrink: 0;
 }
 
 .fw-marca:hover {
   text-decoration: none;
 }
 
+.fw-marca-isotipo {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 7px;
+  background-color: var(--fw-primary);
+  color: #ffffff;
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .fw-marca-titulo {
   font-size: 1.15rem;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  color: var(--fw-primary);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--fw-text);
 }
 
 .fw-marca-ciudad {
-  font-size: 0.75rem;
+  font-size: 0.74rem;
   font-weight: 600;
-  padding: 0.125rem 0.5rem;
+  padding: 0.14rem 0.55rem;
   border-radius: 999px;
   background-color: var(--fw-primary-soft);
   color: var(--fw-primary);
+  border: 1px solid rgb(165 191 175 / 0.55);
+}
+
+.fw-nav-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
+  border: 1px solid var(--fw-border);
+  border-radius: var(--fw-radius);
+  background-color: var(--fw-surface);
+  color: var(--fw-text);
+  cursor: pointer;
+}
+
+.fw-nav-toggle:hover {
+  background-color: var(--fw-surface-alt);
+}
+
+.fw-nav-collapse {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex: 1;
+  min-width: 0;
 }
 
 .fw-nav-links {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0.375rem;
-  flex: 1;
+  gap: 0.25rem;
 }
 
 .fw-nav-link {
-  padding: 0.45rem 0.85rem;
+  padding: 0.48rem 0.8rem;
   border-radius: var(--fw-radius);
   font-size: 0.9rem;
   font-weight: 500;
   color: var(--fw-muted);
   text-decoration: none;
+  white-space: nowrap;
   transition:
     background-color 0.15s ease,
     color 0.15s ease;
@@ -76,7 +117,7 @@
 .fw-nav-link-activo {
   background-color: var(--fw-primary-soft);
   color: var(--fw-primary);
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .fw-nav-usuario,
@@ -84,19 +125,30 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
+  flex-shrink: 0;
+}
+
+.fw-usuario-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .fw-usuario-nombre {
-  font-size: 0.9rem;
+  font-size: 0.88rem;
   font-weight: 600;
   color: var(--fw-text);
+  max-width: 16ch;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .fw-usuario-rol {
-  font-size: 0.72rem;
-  font-weight: 600;
+  font-size: 0.7rem;
+  font-weight: 700;
   letter-spacing: 0.03em;
-  padding: 0.15rem 0.55rem;
+  padding: 0.15rem 0.5rem;
   border-radius: 999px;
   background-color: var(--fw-surface-alt);
   color: var(--fw-muted);
@@ -104,33 +156,69 @@
 }
 
 .fw-btn-salir {
-  padding: 0.45rem 0.85rem;
+  min-height: 2.3rem;
+  padding: 0.4rem 0.85rem;
   border: 1px solid var(--fw-border);
   border-radius: var(--fw-radius);
   background-color: var(--fw-surface);
   color: var(--fw-text);
   font-size: 0.85rem;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease;
 }
 
 .fw-btn-salir:hover {
   background-color: var(--fw-danger-soft);
-  border-color: var(--fw-danger);
+  border-color: rgb(159 45 45 / 0.35);
   color: var(--fw-danger);
 }
 
-.fw-btn-registro {
-  padding: 0.45rem 0.95rem;
-  border-radius: var(--fw-radius);
-  background-color: var(--fw-primary);
-  color: #ffffff;
-  font-size: 0.88rem;
-  font-weight: 600;
-  text-decoration: none;
+.fw-nav-btn {
+  min-height: 2.35rem;
+  padding: 0.42rem 0.9rem;
+  font-size: 0.86rem;
 }
 
-.fw-btn-registro:hover {
-  background-color: var(--fw-primary-hover);
-  text-decoration: none;
+@media (max-width: 899px) {
+  .fw-navbar-inner {
+    flex-wrap: wrap;
+    padding: 0.65rem 1rem;
+  }
+
+  .fw-nav-toggle {
+    display: inline-flex;
+  }
+
+  .fw-nav-collapse {
+    display: none;
+    flex-basis: 100%;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--fw-border);
+  }
+
+  .fw-nav-collapse.fw-nav-abierto {
+    display: flex;
+  }
+
+  .fw-nav-links {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .fw-nav-link {
+    padding: 0.6rem 0.8rem;
+  }
+
+  .fw-nav-usuario {
+    justify-content: space-between;
+    padding-top: 0.65rem;
+    border-top: 1px solid var(--fw-border);
+  }
 }

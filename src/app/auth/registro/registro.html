@@ -1,7 +1,19 @@
 <section class="fw-registro-pagina">
+  <div class="fw-registro-cabecera-marca">
+    <a routerLink="/login" class="fw-marca-link">
+      <span class="fw-marca-isotipo" aria-hidden="true" translate="no">FW</span>
+      <span class="fw-marca-nombre" translate="no">fastwork</span>
+      <span class="fw-marca-ciudad">Trujillo</span>
+    </a>
+    <a routerLink="/login" class="fw-btn-secundario fw-btn-sm">Iniciar sesión</a>
+  </div>
+
   <div class="fw-registro-tarjeta">
     <div class="fw-registro-cabecera">
       <h1 class="fw-registro-titulo">Crear cuenta en Fast Work</h1>
+      <p class="fw-registro-subtitulo">
+        Regístrate como cliente para solicitar trabajos o como proveedor verificado en Trujillo.
+      </p>
     </div>
 
     <div class="fw-selector-rol" role="group" aria-label="Tipo de cuenta">
@@ -11,7 +23,7 @@
         [class.fw-rol-btn-activo]="modelo().rol === 'CLIENTE'"
         (click)="seleccionarRol('CLIENTE')"
       >
-        Soy Cliente
+        <strong>Soy Cliente</strong>
         <span>Busco servicios técnicos</span>
       </button>
       <button
@@ -20,7 +32,7 @@
         [class.fw-rol-btn-activo]="modelo().rol === 'PROVEEDOR'"
         (click)="seleccionarRol('PROVEEDOR')"
       >
-        Soy Proveedor
+        <strong>Soy Proveedor</strong>
         <span>Ofrezco mis servicios</span>
       </button>
     </div>
@@ -34,12 +46,13 @@
           id="reg-dni"
           type="text"
           inputmode="numeric"
-          class="fw-input"
-          placeholder="Ej. 71234567"
+          autocomplete="off"
+          class="fw-input fw-num"
+          placeholder="Ej. 71234567…"
           [formField]="formulario.dni"
         />
         @if (consultandoDni()) {
-          <p class="fw-sub-ayuda">Verificando DNI...</p>
+          <p class="fw-sub-ayuda">Verificando DNI…</p>
         }
         @if (errorDniConsulta(); as errDni) {
           <ul class="fw-errores-campo">
@@ -69,9 +82,10 @@
           <input
             id="reg-nombres"
             type="text"
+            autocomplete="given-name"
             class="fw-input"
             [class.fw-input-bloqueado]="heredadoDeRol() !== null"
-            placeholder="Carlos Alberto"
+            placeholder="Carlos Alberto…"
             [formField]="formulario.nombres"
           />
           @if (formulario.nombres().touched() && formulario.nombres().invalid()) {
@@ -88,9 +102,10 @@
           <input
             id="reg-apellidos"
             type="text"
+            autocomplete="family-name"
             class="fw-input"
             [class.fw-input-bloqueado]="heredadoDeRol() !== null"
-            placeholder="Mendoza Paredes"
+            placeholder="Mendoza Paredes…"
             [formField]="formulario.apellidos"
           />
           @if (formulario.apellidos().touched() && formulario.apellidos().invalid()) {
@@ -111,9 +126,10 @@
               id="reg-correo"
               type="email"
               autocomplete="email"
+              spellcheck="false"
               class="fw-input"
               [class.fw-input-bloqueado]="heredadoDeRol() !== null"
-              placeholder="carlos@correo.com"
+              placeholder="carlos@correo.com…"
               [formField]="formulario.correo"
             />
             <button
@@ -126,7 +142,7 @@
               @if (correoVerificado()) {
                 Verificado
               } @else if (enviandoCodigo()) {
-                Enviando...
+                Enviando…
               } @else if (cooldownSegundos() > 0) {
                 Reenviar ({{ cooldownSegundos() }}s)
               } @else {
@@ -135,7 +151,7 @@
             </button>
           </div>
           @if (correoVerificado()) {
-            <p class="fw-ok-campo">&#10003; Correo electrónico verificado</p>
+            <p class="fw-ok-campo">Correo electrónico verificado</p>
           }
           @if (formulario.correo().touched() && formulario.correo().invalid()) {
             <ul class="fw-errores-campo">
@@ -156,9 +172,11 @@
           <input
             id="reg-telefono"
             type="tel"
-            class="fw-input"
+            inputmode="tel"
+            autocomplete="tel"
+            class="fw-input fw-num"
             [class.fw-input-bloqueado]="heredadoDeRol() !== null"
-            placeholder="948123456"
+            placeholder="948123456…"
             [formField]="formulario.telefono"
           />
           @if (formulario.telefono().touched() && formulario.telefono().invalid()) {
@@ -180,7 +198,7 @@
               [type]="mostrarPassword() ? 'text' : 'password'"
               autocomplete="new-password"
               class="fw-input fw-input-password"
-              placeholder="Mínimo 6 caracteres"
+              placeholder="Mínimo 6 caracteres…"
               [formField]="formulario.password"
             />
             <button
@@ -224,7 +242,7 @@
               [type]="mostrarConfirmarPassword() ? 'text' : 'password'"
               autocomplete="new-password"
               class="fw-input fw-input-password"
-              placeholder="Repite tu contraseña"
+              placeholder="Repite tu contraseña…"
               [formField]="formulario.confirmarPassword"
             />
             <button
@@ -292,7 +310,6 @@
 
           <div class="fw-campo">
             <span class="fw-label">Oficio(s) que ofreces (mín. 1)</span>
-
             <div class="fw-checks-grid">
               @for (oficio of catalogoOficios(); track oficio.idOficio) {
                 <label class="fw-check-chip">
@@ -315,17 +332,14 @@
 
         <div class="fw-cul-caja">
           <div class="fw-cul-cabecera">
-            <div>
-              <h2 class="fw-cul-titulo">Certificado Único Laboral (CUL) obligatorio</h2>
-              
-            </div>
+            <h2 class="fw-cul-titulo">Certificado Único Laboral (CUL) obligatorio</h2>
             <a
               [href]="urlPortalCul"
               target="_blank"
               rel="noopener noreferrer"
               class="fw-cul-link"
             >
-              Obtener CUL en Empleos Perú (MTPE) &#8599;
+              Obtener CUL en Empleos Perú (MTPE)
             </a>
           </div>
 
@@ -346,7 +360,7 @@
                 (click)="validarCulEnServidor()"
               >
                 @if (validandoCul()) {
-                  Validando...
+                  Validando…
                 } @else if (culVerificado()) {
                   CUL verificado
                 } @else {
@@ -355,7 +369,7 @@
               </button>
             </div>
             @if (archivoCul(); as cul) {
-              <p class="fw-cul-archivo-ok">
+              <p class="fw-cul-archivo-ok fw-num">
                 Archivo seleccionado: <strong>{{ cul.name }}</strong> ({{ formatearTamanoArchivo(cul.size) }})
               </p>
             }
@@ -375,7 +389,7 @@
             <div class="fw-campo fw-foto-perfil-box">
               <label class="fw-label" for="reg-foto-perfil">Foto de perfil profesional (obligatoria)</label>
               <p class="fw-sub-ayuda">
-                Tu CUL fue verificado. Sube ahora una foto clara (JPG, PNG o WEBP, máx. 5 MB) para completar tu registro.
+                Tu CUL fue verificado. Sube una foto clara (JPG, PNG o WEBP, máx. 5&nbsp;MB) para completar tu registro.
               </p>
               <input
                 id="reg-foto-perfil"
@@ -386,7 +400,13 @@
               />
               @if (previewFotoPerfil(); as preview) {
                 <div class="fw-foto-preview-wrap">
-                  <img [src]="preview" alt="Vista previa de foto de perfil" class="fw-foto-preview" />
+                  <img
+                    [src]="preview"
+                    alt="Vista previa de foto de perfil"
+                    width="56"
+                    height="56"
+                    class="fw-foto-preview"
+                  />
                   <span class="fw-cul-archivo-ok">{{ archivoFotoPerfil()?.name }}</span>
                 </div>
               }
@@ -420,8 +440,8 @@
         }
       </div>
 
-      <button type="submit" class="fw-btn-primario" [disabled]="cargando()">
-        {{ cargando() ? 'Creando cuenta...' : 'Registrarme' }}
+      <button type="submit" class="fw-btn-primario fw-btn-registro-submit" [disabled]="cargando()">
+        {{ cargando() ? 'Creando cuenta…' : 'Registrarme' }}
       </button>
     </form>
 
@@ -458,7 +478,8 @@
             inputmode="numeric"
             maxlength="6"
             autocomplete="one-time-code"
-            class="fw-input fw-input-codigo"
+            spellcheck="false"
+            class="fw-input fw-input-codigo fw-num"
             placeholder="000000"
             [value]="codigoIngresado()"
             (input)="alEscribirCodigo($event)"
@@ -473,7 +494,7 @@
             [disabled]="verificandoCodigo()"
             (click)="confirmarCodigoCorreo()"
           >
-            {{ verificandoCodigo() ? 'Validando...' : 'Validar código' }}
+            {{ verificandoCodigo() ? 'Validando…' : 'Validar código' }}
           </button>
           <button
             type="button"
@@ -483,7 +504,7 @@
             (click)="solicitarCodigoCorreo(true)"
           >
             @if (enviandoCodigo()) {
-              Reenviando...
+              Reenviando…
             } @else if (cooldownSegundos() > 0) {
               Reenviar en {{ cooldownSegundos() }}s
             } @else {
@@ -506,7 +527,11 @@
       aria-labelledby="fw-modal-exito-titulo"
     >
       <div class="fw-modal fw-modal-exito">
-        <div class="fw-exito-icono" aria-hidden="true">&#10003;</div>
+        <div class="fw-exito-icono" aria-hidden="true">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="20 6 9 17 4 12" />
+          </svg>
+        </div>
         <h2 id="fw-modal-exito-titulo" class="fw-modal-titulo">¡Se registró correctamente!</h2>
         <p class="fw-modal-mensaje">
           Bienvenido/a, <strong>{{ exito.nombres }}</strong>. Tu cuenta de

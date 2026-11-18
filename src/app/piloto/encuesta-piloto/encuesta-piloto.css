@@ -1,7 +1,7 @@
 .fw-encuesta-pagina {
   display: flex;
   justify-content: center;
-  padding: 1rem 0;
+  padding: 0.5rem 0 1.5rem;
 }
 
 .fw-encuesta-tarjeta {
@@ -9,21 +9,28 @@
   max-width: 640px;
   background-color: var(--fw-surface);
   border: 1px solid var(--fw-border);
-  border-radius: var(--fw-radius);
+  border-radius: var(--fw-radius-lg);
   padding: 1.75rem;
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
 }
 
+.fw-encuesta-cabecera {
+  padding-bottom: 0.9rem;
+  border-bottom: 1px solid var(--fw-border);
+}
+
 .fw-titulo {
   margin: 0;
-  font-size: 1.45rem;
+  font-size: clamp(1.3rem, 2.2vw, 1.55rem);
+  font-weight: 700;
 }
 
 .fw-subtitulo {
-  margin: 0.3rem 0 0;
+  margin: 0.25rem 0 0;
   color: var(--fw-muted);
+  font-size: 0.94rem;
 }
 
 .fw-form {
@@ -32,42 +39,16 @@
   gap: 1.15rem;
 }
 
-.fw-campo {
-  display: flex;
-  flex-direction: column;
-  gap: 0.45rem;
-}
-
-.fw-label {
-  font-size: 0.9rem;
-  font-weight: 600;
-}
-
-.fw-textarea {
-  width: 100%;
-  padding: 0.6rem 0.75rem;
-  border: 1px solid var(--fw-border);
-  border-radius: var(--fw-radius);
-}
-
-.fw-error-texto {
-  margin: 0;
-  color: var(--fw-danger);
-  font-size: 0.8rem;
-}
-
-.fw-btn-primario {
+.fw-btn-encuesta {
   align-self: flex-end;
-  padding: 0.68rem 1.35rem;
-  border: none;
-  border-radius: var(--fw-radius);
-  background-color: var(--fw-primary);
-  color: #ffffff;
-  font-weight: 600;
-  cursor: pointer;
 }
 
-.fw-btn-primario:disabled {
-  opacity: 0.65;
-  cursor: not-allowed;
+@media (max-width: 639px) {
+  .fw-encuesta-tarjeta {
+    padding: 1.25rem;
+  }
+
+  .fw-btn-encuesta {
+    width: 100%;
+  }
 }

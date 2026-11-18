@@ -2,13 +2,20 @@
   <header class="fw-card-cabecera">
     <div class="fw-card-identidad">
       @if (proveedor().fotoPerfilUrl; as fotoUrl) {
-        <img [src]="fotoUrl" [alt]="'Foto de ' + proveedor().nombres" class="fw-avatar-card" />
+        <img
+          [src]="fotoUrl"
+          [alt]="'Foto de ' + proveedor().nombres"
+          width="48"
+          height="48"
+          loading="lazy"
+          class="fw-avatar-card"
+        />
       } @else {
         <div class="fw-avatar-fallback" aria-hidden="true">
           {{ proveedor().nombres.charAt(0) }}{{ proveedor().apellidos.charAt(0) }}
         </div>
       }
-      <div>
+      <div class="fw-card-identidad-texto">
         <h2 class="fw-card-nombre">{{ proveedor().nombres }} {{ proveedor().apellidos }}</h2>
         <div class="fw-card-rating">
           <app-calificacion-estrellas
@@ -38,7 +45,7 @@
         @for (oficio of proveedor().oficios; track oficio.idProveedorOficio) {
           <li class="fw-oficio-chip">
             <span class="fw-oficio-nombre">{{ oficio.nombreOficio }}</span>
-            <span class="fw-oficio-tarifa">
+            <span class="fw-oficio-tarifa fw-num">
               S/ {{ oficio.precioMinimo | number: '1.2-2' }} – S/
               {{ oficio.precioMaximo | number: '1.2-2' }}
             </span>
@@ -62,8 +69,8 @@
   </div>
 
   <footer class="fw-card-pie">
-    <span class="fw-card-contacto">Tel. {{ proveedor().telefono }}</span>
-    <a class="fw-btn-detalle" [routerLink]="['/proveedores', proveedor().idPerfilProveedor]">
+    <span class="fw-card-contacto fw-num">Tel. {{ proveedor().telefono }}</span>
+    <a class="fw-btn-primario fw-btn-detalle" [routerLink]="['/proveedores', proveedor().idPerfilProveedor]">
       Ver perfil y tarifas
     </a>
   </footer>

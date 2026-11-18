@@ -3,37 +3,49 @@
   align-items: flex-start;
   justify-content: space-between;
   gap: 0.75rem;
-  padding: 0.75rem 1rem;
+  padding: 0.8rem 1rem;
   border-radius: var(--fw-radius);
   border: 1px solid transparent;
+  border-left-width: 3px;
   font-size: 0.9rem;
 }
 
 .fw-alerta-error {
   background-color: var(--fw-danger-soft);
-  border-color: #fecaca;
+  border-color: rgb(159 45 45 / 0.25);
+  border-left-color: var(--fw-danger);
   color: var(--fw-danger);
 }
 
 .fw-alerta-exito {
   background-color: var(--fw-success-soft);
-  border-color: #bbf7d0;
+  border-color: rgb(165 191 175 / 0.75);
+  border-left-color: var(--fw-primary);
   color: var(--fw-success);
 }
 
 .fw-alerta-info {
-  background-color: var(--fw-primary-soft);
-  border-color: #bfdbfe;
-  color: var(--fw-primary);
+  background-color: var(--fw-surface);
+  border-color: var(--fw-border);
+  border-left-color: var(--fw-primary);
+  color: var(--fw-text);
+}
+
+.fw-alerta-icono {
+  display: inline-flex;
+  align-items: center;
+  margin-top: 0.1rem;
+  flex-shrink: 0;
 }
 
 .fw-alerta-cuerpo {
   flex: 1;
+  min-width: 0;
 }
 
 .fw-alerta-texto {
   margin: 0;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .fw-alerta-lista {
@@ -45,9 +57,18 @@
 .fw-alerta-cerrar {
   background: transparent;
   border: none;
-  font-size: 1.2rem;
-  line-height: 1;
+  border-radius: var(--fw-radius-sm);
+  width: 1.85rem;
+  height: 1.85rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
-  padding: 0 0.25rem;
+  padding: 0;
   color: inherit;
+  flex-shrink: 0;
+}
+
+.fw-alerta-cerrar:hover {
+  background-color: rgb(41 47 44 / 0.08);
 }

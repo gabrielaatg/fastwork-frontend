@@ -1,8 +1,8 @@
 <article class="fw-card-solicitud" [class.fw-card-activa]="activa()">
   <header class="fw-card-cabecera">
-    <div>
-      <span class="fw-solicitud-id">
-        Solicitud #{{ solicitud().idSolicitud }} &bull; {{ solicitud().nombreZona }}
+    <div class="fw-card-titulo-wrap">
+      <span class="fw-solicitud-id fw-num">
+        Solicitud #{{ solicitud().idSolicitud }} · {{ solicitud().nombreZona }}
       </span>
       <h2 class="fw-solicitud-oficio">{{ solicitud().nombreOficio }}</h2>
     </div>
@@ -12,16 +12,18 @@
   <div class="fw-solicitud-meta">
     @if (rol() === 'CLIENTE') {
       @if (solicitud().nombreProveedor) {
-        <div>
+        <div class="fw-num">
           <strong>Proveedor contratado:</strong> {{ solicitud().nombreProveedor }} (Tel.
           {{ solicitud().telefonoProveedor }})
         </div>
       } @else {
-        <div><strong>Estado de selección:</strong> En recepción de propuestas ({{ solicitud().totalOfertas }})</div>
+        <div class="fw-num">
+          <strong>Estado de selección:</strong> En recepción de propuestas ({{ solicitud().totalOfertas }})
+        </div>
       }
     } @else {
-      <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem;">
-        <span>
+      <div class="fw-meta-cliente">
+        <span class="fw-num">
           <strong>Cliente:</strong> {{ solicitud().nombreCliente }} (Tel.
           {{ solicitud().telefonoCliente }})
         </span>
@@ -37,15 +39,15 @@
       <strong>Distrito y dirección:</strong> {{ solicitud().nombreZona }} —
       {{ solicitud().direccionTrujillo }}
     </div>
-    <div>
+    <div class="fw-num">
       <strong>Programación:</strong> {{ solicitud().fechaProgramada }} a las
       {{ solicitud().horaProgramada }}
     </div>
-    <div>
+    <div class="fw-num">
       <strong>Presupuesto inicial:</strong> S/
       {{ solicitud().presupuestoReferencial | number: '1.2-2' }}
     </div>
-    <div class="fw-fecha-registro">
+    <div class="fw-fecha-registro fw-num">
       Creada el {{ solicitud().fechaCreacion | date: 'dd/MM/yyyy HH:mm' }}
     </div>
   </div>
@@ -54,7 +56,7 @@
 
   @if (imagenes().length > 0) {
     <div class="fw-solicitud-imagenes">
-      <span class="fw-imagenes-titulo">Fotos del problema ({{ imagenes().length }})</span>
+      <span class="fw-imagenes-titulo fw-num">Fotos del problema ({{ imagenes().length }})</span>
       <div class="fw-imagenes-galeria">
         @for (img of imagenes(); track img.idImagen; let idx = $index) {
           <button
@@ -66,6 +68,8 @@
             <img
               [src]="obtenerUrlMiniatura(img.url)"
               [alt]="img.nombreOriginal"
+              width="84"
+              height="84"
               loading="lazy"
               class="fw-miniatura-img"
             />
@@ -77,8 +81,8 @@
 
   @if (rol() === 'PROVEEDOR' && solicitud().miOferta; as miOferta) {
     <div class="fw-mi-oferta-caja">
-      <div style="display: flex; justify-content: space-between; align-items: center;">
-        <strong>
+      <div class="fw-caja-top">
+        <strong class="fw-num">
           Tu oferta ({{
             miOferta.tipoOferta === 'ACEPTA_PRESUPUESTO' ? 'Aceptó presupuesto' : 'Contraoferta'
           }}): S/ {{ miOferta.precioOfertado | number: '1.2-2' }}
@@ -101,7 +105,9 @@
             [checked]="tipoOfertaForm() === 'ACEPTA_PRESUPUESTO'"
             (change)="tipoOfertaForm.set('ACEPTA_PRESUPUESTO')"
           />
-          <span>Aceptar presupuesto (S/ {{ solicitud().presupuestoReferencial | number: '1.2-2' }})</span>
+          <span class="fw-num">
+            Aceptar presupuesto (S/ {{ solicitud().presupuestoReferencial | number: '1.2-2' }})
+          </span>
         </label>
         <label class="fw-oferta-radio">
           <input
@@ -115,25 +121,25 @@
       </div>
 
       @if (tipoOfertaForm() === 'CONTRAOFERTA') {
-        <label>
-          <span>Precio ofertado (S/)</span>
+        <label class="fw-campo">
+          <span class="fw-label">Precio ofertado (S/)</span>
           <input
             type="number"
             min="1"
             step="1"
-            class="fw-input-oferta"
+            class="fw-input fw-num"
             [value]="precioOfertaForm()"
             (input)="precioOfertaForm.set(+$any($event.target).value)"
           />
         </label>
       }
 
-      <label>
-        <span>Condiciones u observaciones (opcional)</span>
+      <label class="fw-campo">
+        <span class="fw-label">Condiciones u observaciones (opcional)</span>
         <textarea
           rows="2"
-          class="fw-input-oferta"
-          placeholder="Ej. Incluye diagnóstico, disponibilidad inmediata, repuestos aparte..."
+          class="fw-textarea"
+          placeholder="Ej. Incluye diagnóstico, disponibilidad inmediata, repuestos aparte…"
           [value]="condicionesOfertaForm()"
           (input)="condicionesOfertaForm.set($any($event.target).value)"
         ></textarea>
@@ -156,19 +162,19 @@
 
   @if (solicitud().contratacion; as contratacion) {
     <div class="fw-contratacion-caja">
-      <div style="display: flex; justify-content: space-between; align-items: center;">
-        <h3 class="fw-contratacion-titulo">
-          Contratación #{{ contratacion.idContratacion }} &bull; Precio final: S/
+      <div class="fw-caja-top">
+        <h3 class="fw-contratacion-titulo fw-num">
+          Contratación #{{ contratacion.idContratacion }} · Precio final: S/
           {{ contratacion.precioFinal | number: '1.2-2' }}
         </h3>
         <app-badge-estado [estado]="contratacion.estado" />
       </div>
       <div class="fw-confirmaciones-fila">
         <span [class.fw-confirmado-ok]="contratacion.completadoProveedor">
-          {{ contratacion.completadoProveedor ? '✓ Proveedor confirmó fin' : '○ Proveedor pendiente' }}
+          {{ contratacion.completadoProveedor ? 'Proveedor confirmó fin' : 'Proveedor pendiente' }}
         </span>
         <span [class.fw-confirmado-ok]="contratacion.completadoCliente">
-          {{ contratacion.completadoCliente ? '✓ Cliente confirmó fin' : '○ Cliente pendiente' }}
+          {{ contratacion.completadoCliente ? 'Cliente confirmó fin' : 'Cliente pendiente' }}
         </span>
       </div>
     </div>
@@ -177,19 +183,19 @@
   <footer class="fw-card-acciones">
     <div class="fw-acciones-estado">
       @if (rol() === 'CLIENTE' && solicitud().estado === 'ABIERTA') {
-        <button type="button" class="fw-btn-primario" (click)="verOfertas.emit(solicitud())">
+        <button type="button" class="fw-btn-primario fw-btn-sm fw-num" (click)="verOfertas.emit(solicitud())">
           Ver ofertas ({{ solicitud().totalOfertas }})
         </button>
       }
       @if (puedeOfertar() && !editandoOferta()) {
-        <button type="button" class="fw-btn-primario" (click)="abrirFormularioOferta()">
+        <button type="button" class="fw-btn-primario fw-btn-sm" (click)="abrirFormularioOferta()">
           {{ solicitud().miOferta ? 'Editar mi oferta' : 'Ofertar / Contraoferta' }}
         </button>
       }
       @if (puedeIniciarTrabajo()) {
         <button
           type="button"
-          class="fw-btn-estado"
+          class="fw-btn-primario fw-btn-sm"
           [disabled]="actualizando()"
           (click)="iniciarContratacion.emit(solicitud().contratacion!.idContratacion)"
         >
@@ -199,7 +205,7 @@
       @if (puedeConfirmarCompletado()) {
         <button
           type="button"
-          class="fw-btn-estado"
+          class="fw-btn-primario fw-btn-sm"
           [disabled]="actualizando()"
           (click)="confirmarCompletado.emit(solicitud().contratacion!.idContratacion)"
         >
@@ -209,7 +215,7 @@
       @if (puedeCancelar()) {
         <button
           type="button"
-          class="fw-btn-estado fw-btn-peligro"
+          class="fw-btn-peligro-sm"
           [disabled]="actualizando()"
           (click)="solicitarCancelacion()"
         >
@@ -220,16 +226,16 @@
 
     <div class="fw-acciones-extra">
       @if (puedeAbrirChat()) {
-        <button type="button" class="fw-btn-secundario" (click)="abrirChat.emit(solicitud())">
+        <button type="button" class="fw-btn-secundario fw-btn-sm" (click)="abrirChat.emit(solicitud())">
           Mensajes
         </button>
       }
       @if (puedeCalificar()) {
-        <button type="button" class="fw-btn-primario" (click)="abrirResena.emit(solicitud())">
+        <button type="button" class="fw-btn-primario fw-btn-sm" (click)="abrirResena.emit(solicitud())">
           {{ rol() === 'PROVEEDOR' ? 'Calificar al cliente' : 'Calificar al proveedor' }}
         </button>
       } @else if (yaCalifico()) {
-        <span class="fw-fecha-registro">Calificado</span>
+        <span class="fw-calificado-etiqueta">Calificado</span>
       }
     </div>
   </footer>
@@ -244,7 +250,7 @@
     >
       <div class="fw-lightbox-contenido" (click)="$event.stopPropagation()">
         <header class="fw-lightbox-cabecera">
-          <span class="fw-lightbox-titulo">
+          <span class="fw-lightbox-titulo fw-num">
             {{ lb.imagen.nombreOriginal }} ({{ lb.indice + 1 }} / {{ lb.total }})
           </span>
           <button

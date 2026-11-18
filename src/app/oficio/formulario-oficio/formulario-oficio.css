@@ -1,7 +1,7 @@
 .fw-panel-oficio {
   background-color: var(--fw-surface);
   border: 1px solid var(--fw-border);
-  border-radius: var(--fw-radius);
+  border-radius: var(--fw-radius-lg);
   padding: 1.25rem;
   display: flex;
   flex-direction: column;
@@ -11,49 +11,11 @@
 .fw-panel-titulo {
   margin: 0;
   font-size: 1.1rem;
+  font-weight: 700;
 }
 
 .fw-form {
   display: flex;
   flex-direction: column;
   gap: 0.9rem;
-}
-
-.fw-campo {
-  display: flex;
-  flex-direction: column;
-  gap: 0.35rem;
-}
-
-.fw-label {
-  font-size: 0.875rem;
-  font-weight: 600;
-}
-
-.fw-input,
-.fw-textarea {
-  width: 100%;
-  padding: 0.55rem 0.7rem;
-  border: 1px solid var(--fw-border);
-  border-radius: var(--fw-radius);
-}
-
-.fw-error-texto {
-  color: var(--fw-danger);
-  font-size: 0.8rem;
-}
-
-.fw-btn-primario {
-  padding: 0.65rem 1rem;
-  border: none;
-  border-radius: var(--fw-radius);
-  background-color: var(--fw-primary);
-  color: #ffffff;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.fw-btn-primario:disabled {
-  opacity: 0.65;
-  cursor: not-allowed;
 }

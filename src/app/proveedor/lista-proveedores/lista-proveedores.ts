@@ -33,15 +33,31 @@ export class ListaProveedores implements OnInit {
   protected readonly proveedores = signal<ProveedorDirectorio[]>([]);
   protected readonly cargando = signal(false);
   protected readonly errorHttp = signal<ErrorHttp | null>(null);
+  protected readonly filtrosAbiertos = signal(false);
 
   protected readonly oficiosSeleccionados = signal<number[]>([]);
   protected readonly zonaSeleccionada = signal<number | null>(null);
   protected readonly calificacionMinima = signal<number | null>(null);
 
+  protected readonly totalFiltrosActivos = computed(() => {
+    let total = this.oficiosSeleccionados().length;
+    if (this.zonaSeleccionada() !== null) {
+      total += 1;
+    }
+    if (this.calificacionMinima() !== null) {
+      total += 1;
+    }
+    return total;
+  });
+
   ngOnInit(): void {
     this.cargarOficios();
     this.cargarZonas();
     this.buscarProveedores();
+  }
+
+  protected alternarPanelFiltros(): void {
+    this.filtrosAbiertos.update((v) => !v);
   }
 
   protected estaOficioSeleccionado(idOficio: number): boolean {

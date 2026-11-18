@@ -1,26 +1,47 @@
 <section class="fw-directorio-pagina">
   <header class="fw-directorio-cabecera">
-    <div>
+    <div class="fw-directorio-intro">
       <h1 class="fw-directorio-titulo">Directorio de Proveedores en Trujillo</h1>
       <p class="fw-directorio-subtitulo">
         Compara especialistas por oficio, distrito de cobertura y reputación verificada.
       </p>
     </div>
+
     <div class="fw-directorio-acciones">
-      @if (esCliente()) {
-        <a routerLink="/solicitudes/nueva" class="fw-btn-publicar">Publicar trabajo</a>
-      }
-      <span class="fw-contador-resultados">
+      <span class="fw-contador-resultados fw-num">
         {{ proveedores().length }}
-        {{ proveedores().length === 1 ? 'proveedor encontrado' : 'proveedores encontrados' }}
+        {{ proveedores().length === 1 ? 'proveedor disponible' : 'proveedores disponibles' }}
       </span>
+      <button
+        type="button"
+        class="fw-btn-secundario fw-btn-filtros-movil"
+        aria-controls="fw-panel-filtros"
+        [attr.aria-expanded]="filtrosAbiertos()"
+        (click)="alternarPanelFiltros()"
+      >
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
+        </svg>
+        <span>Filtros</span>
+        @if (totalFiltrosActivos() > 0) {
+          <span class="fw-filtro-badge fw-num">{{ totalFiltrosActivos() }}</span>
+        }
+      </button>
+      @if (esCliente()) {
+        <a routerLink="/solicitudes/nueva" class="fw-btn-primario">Publicar trabajo</a>
+      }
     </div>
   </header>
 
   <app-alerta-mensaje [error]="errorHttp()" [cerrable]="true" (cerrado)="errorHttp.set(null)" />
 
   <div class="fw-directorio-layout">
-    <aside class="fw-filtros-panel" aria-label="Filtros del directorio">
+    <aside
+      id="fw-panel-filtros"
+      class="fw-filtros-panel"
+      [class.fw-filtros-abiertos]="filtrosAbiertos()"
+      aria-label="Filtros del directorio"
+    >
       <div class="fw-filtros-top">
         <h2>Filtros</h2>
         <button type="button" class="fw-btn-limpiar" (click)="limpiarFiltros()">Limpiar</button>
@@ -75,7 +96,7 @@
 
     <div class="fw-resultados-area">
       @if (cargando()) {
-        <div class="fw-estado-caja">Buscando proveedores disponibles en Trujillo...</div>
+        <div class="fw-estado-caja">Buscando proveedores disponibles en Trujillo…</div>
       } @else if (proveedores().length === 0) {
         <div class="fw-estado-caja">
           <p>No se encontraron proveedores con los filtros seleccionados.</p>

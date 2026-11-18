@@ -6,37 +6,24 @@
 
 .fw-cabecera {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: flex-end;
   gap: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--fw-border);
 }
 
 .fw-titulo {
   margin: 0;
-  font-size: 1.5rem;
+  font-size: clamp(1.35rem, 2.2vw, 1.65rem);
+  font-weight: 700;
 }
 
 .fw-subtitulo {
   margin: 0.25rem 0 0;
   color: var(--fw-muted);
-}
-
-.fw-btn-secundario {
-  padding: 0.5rem 0.9rem;
-  border: 1px solid var(--fw-border);
-  border-radius: var(--fw-radius);
-  background-color: var(--fw-surface);
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.fw-estado-caja {
-  padding: 2.5rem;
-  text-align: center;
-  background-color: var(--fw-surface);
-  border: 1px solid var(--fw-border);
-  border-radius: var(--fw-radius);
-  color: var(--fw-muted);
+  font-size: 0.94rem;
 }
 
 .fw-kpi-grid {
@@ -48,7 +35,8 @@
 .fw-kpi-card {
   background-color: var(--fw-surface);
   border: 1px solid var(--fw-border);
-  border-radius: var(--fw-radius);
+  border-top: 3px solid var(--fw-primary);
+  border-radius: var(--fw-radius-lg);
   padding: 1.35rem;
   display: flex;
   flex-direction: column;
@@ -63,5 +51,23 @@
 
 .fw-kpi-valor {
   font-size: 1.85rem;
+  font-weight: 700;
   color: var(--fw-text);
+  line-height: 1.15;
+}
+
+@media (max-width: 959px) {
+  .fw-kpi-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 599px) {
+  .fw-kpi-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .fw-cabecera button {
+    width: 100%;
+  }
 }

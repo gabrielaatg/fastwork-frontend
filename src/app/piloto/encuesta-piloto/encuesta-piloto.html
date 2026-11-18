@@ -1,6 +1,6 @@
 <section class="fw-encuesta-pagina">
   <div class="fw-encuesta-tarjeta">
-    <header>
+    <header class="fw-encuesta-cabecera">
       <h1 class="fw-titulo">Encuesta de Evaluación del Piloto</h1>
       <p class="fw-subtitulo">
         Tu opinión nos ayuda a mejorar la usabilidad y experiencia de Fast Work en Trujillo.
@@ -46,7 +46,7 @@
           id="piloto-obs"
           rows="4"
           class="fw-textarea"
-          placeholder="Cuéntanos qué funcionó bien o qué podemos mejorar..."
+          placeholder="Cuéntanos qué funcionó bien o qué podemos mejorar…"
           [formField]="formulario.observaciones"
         ></textarea>
         @if (formulario.observaciones().touched() && formulario.observaciones().invalid()) {
@@ -54,8 +54,8 @@
         }
       </div>
 
-      <button type="submit" class="fw-btn-primario" [disabled]="enviando()">
-        {{ enviando() ? 'Enviando evaluación...' : 'Enviar encuesta' }}
+      <button type="submit" class="fw-btn-primario fw-btn-encuesta" [disabled]="enviando()">
+        {{ enviando() ? 'Enviando evaluación…' : 'Enviar encuesta' }}
       </button>
     </form>
   </div>

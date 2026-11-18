@@ -1,7 +1,9 @@
+<a class="fw-skip-link" href="#contenido-principal">Ir al contenido principal</a>
+
 @if (mostrarBarra()) {
   <app-barra-navegacion />
 }
 
-<main class="fw-contenedor">
+<main id="contenido-principal" class="fw-contenedor" tabindex="-1">
   <router-outlet />
 </main>

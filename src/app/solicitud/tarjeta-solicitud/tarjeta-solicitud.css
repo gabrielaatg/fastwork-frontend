@@ -1,116 +1,87 @@
 .fw-card-solicitud {
   background-color: var(--fw-surface);
   border: 1px solid var(--fw-border);
-  border-radius: var(--fw-radius);
-  padding: 1.15rem;
+  border-radius: var(--fw-radius-lg);
+  padding: 1.2rem;
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 0.8rem;
+  min-width: 0;
 }
 
 .fw-card-activa {
   border-color: var(--fw-primary);
-  box-shadow: 0 0 0 2px var(--fw-primary-soft);
+  box-shadow: 0 0 0 2px rgb(36 92 74 / 0.14);
+}
+
+.fw-card-cabecera,
+.fw-caja-top,
+.fw-card-acciones,
+.fw-lightbox-cabecera {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.6rem;
 }
 
 .fw-card-cabecera {
-  display: flex;
-  justify-content: space-between;
   align-items: flex-start;
-  gap: 0.75rem;
+}
+
+.fw-card-titulo-wrap {
+  min-width: 0;
 }
 
 .fw-solicitud-id {
-  font-size: 0.75rem;
+  font-size: 0.76rem;
   color: var(--fw-muted);
   font-weight: 600;
 }
 
 .fw-solicitud-oficio {
   margin: 0.1rem 0 0;
-  font-size: 1.05rem;
+  font-size: 1.08rem;
+  font-weight: 700;
 }
 
-.fw-solicitud-meta {
+.fw-solicitud-meta,
+.fw-solicitud-imagenes {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
-  font-size: 0.875rem;
+  gap: 0.28rem;
+  font-size: 0.88rem;
 }
 
-.fw-fecha-registro {
-  color: var(--fw-muted);
-  font-size: 0.8rem;
-}
-
-.fw-solicitud-desc {
-  margin: 0;
-  padding: 0.6rem 0.75rem;
-  border-radius: var(--fw-radius);
-  background-color: var(--fw-surface-alt);
-  font-size: 0.9rem;
-}
-
-.fw-card-acciones {
-  padding-top: 0.6rem;
-  border-top: 1px solid var(--fw-border);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
+.fw-meta-cliente,
+.fw-imagenes-galeria,
+.fw-confirmaciones-fila,
+.fw-oferta-radios,
+.fw-oferta-botones,
 .fw-acciones-estado,
 .fw-acciones-extra {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.45rem;
+  align-items: center;
+  gap: 0.5rem;
 }
 
-.fw-btn-estado,
-.fw-btn-secundario,
-.fw-btn-primario {
-  padding: 0.42rem 0.8rem;
-  border-radius: var(--fw-radius);
-  font-size: 0.825rem;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.fw-btn-estado,
-.fw-btn-primario {
-  border: none;
-  background-color: var(--fw-primary);
-  color: #ffffff;
-}
-
-.fw-btn-peligro {
-  background-color: var(--fw-danger);
-}
-
-.fw-btn-secundario {
-  border: 1px solid var(--fw-border);
-  background-color: var(--fw-surface);
-  color: var(--fw-text);
-}
-
-.fw-solicitud-imagenes {
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
+.fw-fecha-registro,
+.fw-imagenes-titulo {
+  color: var(--fw-muted);
+  font-size: 0.8rem;
 }
 
 .fw-imagenes-titulo {
-  font-size: 0.8rem;
   font-weight: 600;
-  color: var(--fw-muted);
 }
 
-.fw-imagenes-galeria {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
+.fw-solicitud-desc {
+  margin: 0;
+  padding: 0.7rem 0.85rem;
+  border-radius: var(--fw-radius);
+  background-color: var(--fw-bg);
+  border: 1px solid var(--fw-border);
+  font-size: 0.9rem;
 }
 
 .fw-miniatura-btn {
@@ -119,12 +90,10 @@
   padding: 0;
   border: 1px solid var(--fw-border);
   border-radius: var(--fw-radius);
-  background-color: var(--fw-surface-alt);
+  background-color: var(--fw-bg);
   overflow: hidden;
   cursor: pointer;
   display: inline-flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .fw-miniatura-btn:hover {
@@ -138,39 +107,103 @@
   display: block;
 }
 
-.fw-miniatura-estado {
-  font-size: 0.7rem;
+.fw-mi-oferta-caja,
+.fw-oferta-form,
+.fw-contratacion-caja {
+  padding: 0.8rem 0.95rem;
+  border-radius: var(--fw-radius);
+  border: 1px solid var(--fw-border);
+  background-color: var(--fw-bg);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  font-size: 0.86rem;
+}
+
+.fw-contratacion-caja {
+  background-color: var(--fw-primary-soft);
+  border-color: var(--fw-sage);
+}
+
+.fw-contratacion-titulo {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.fw-confirmaciones-fila {
+  gap: 0.85rem;
+  font-size: 0.8rem;
   color: var(--fw-muted);
-  padding: 0.25rem;
-  text-align: center;
+}
+
+.fw-confirmado-ok,
+.fw-calificado-etiqueta {
+  color: var(--fw-primary);
+  font-weight: 600;
+}
+
+.fw-calificado-etiqueta {
+  font-size: 0.82rem;
+}
+
+.fw-oferta-radios {
+  gap: 1rem;
+}
+
+.fw-oferta-radio {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.fw-oferta-radio input {
+  accent-color: var(--fw-primary);
+}
+
+.fw-error-oferta {
+  margin: 0;
+  color: var(--fw-danger);
+  font-size: 0.8rem;
+}
+
+.fw-oferta-botones {
+  justify-content: flex-end;
+}
+
+.fw-card-acciones {
+  padding-top: 0.7rem;
+  border-top: 1px solid var(--fw-border);
+  flex-wrap: wrap;
 }
 
 .fw-lightbox-backdrop {
   position: fixed;
   inset: 0;
   z-index: 1000;
-  background-color: rgb(15 23 42 / 0.82);
+  background-color: rgb(41 47 44 / 0.85);
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1.5rem;
+  padding: 1rem;
+  overscroll-behavior: contain;
 }
 
 .fw-lightbox-contenido {
   background-color: var(--fw-surface);
-  border-radius: var(--fw-radius);
+  border-radius: var(--fw-radius-lg);
   max-width: 900px;
   width: 100%;
-  max-height: 90vh;
+  max-height: 90dvh;
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  box-shadow: var(--fw-shadow-modal);
 }
 
 .fw-lightbox-cabecera {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   padding: 0.75rem 1rem;
   border-bottom: 1px solid var(--fw-border);
 }
@@ -178,6 +211,10 @@
 .fw-lightbox-titulo {
   font-size: 0.9rem;
   font-weight: 600;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .fw-lightbox-cerrar {
@@ -190,35 +227,26 @@
   color: var(--fw-muted);
 }
 
-.fw-lightbox-cerrar:hover {
-  color: var(--fw-text);
-}
-
 .fw-lightbox-cuerpo {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.75rem;
   padding: 1rem;
-  background-color: #0f172a;
-  min-height: 320px;
+  background-color: var(--fw-text);
+  min-height: 280px;
 }
 
 .fw-lightbox-img {
-  max-width: calc(100% - 5rem);
-  max-height: 72vh;
+  max-width: calc(100% - 4.5rem);
+  max-height: 70dvh;
   object-fit: contain;
-  border-radius: 0.35rem;
-}
-
-.fw-lightbox-cargando {
-  color: #e2e8f0;
-  font-size: 0.9rem;
+  border-radius: var(--fw-radius-sm);
 }
 
 .fw-lightbox-nav {
   border: none;
-  background-color: rgb(255 255 255 / 0.16);
+  background-color: rgb(255 255 255 / 0.18);
   color: #ffffff;
   width: 2.25rem;
   height: 2.25rem;
@@ -230,72 +258,5 @@
 }
 
 .fw-lightbox-nav:hover {
-  background-color: rgb(255 255 255 / 0.28);
-}
-
-.fw-contratacion-caja,
-.fw-mi-oferta-caja,
-.fw-oferta-form {
-  padding: 0.75rem 0.9rem;
-  border-radius: var(--fw-radius);
-  border: 1px solid var(--fw-border);
-  background-color: var(--fw-surface-alt);
-  display: flex;
-  flex-direction: column;
-  gap: 0.45rem;
-  font-size: 0.85rem;
-}
-
-.fw-contratacion-titulo {
-  margin: 0;
-  font-size: 0.88rem;
-  font-weight: 700;
-}
-
-.fw-confirmaciones-fila {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.85rem;
-  font-size: 0.8rem;
-  color: var(--fw-muted);
-}
-
-.fw-confirmado-ok {
-  color: #166534;
-  font-weight: 600;
-}
-
-.fw-oferta-radios {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-}
-
-.fw-oferta-radio {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.fw-input-oferta {
-  width: 100%;
-  padding: 0.45rem 0.6rem;
-  border: 1px solid var(--fw-border);
-  border-radius: var(--fw-radius);
-  background-color: var(--fw-surface);
-  font-family: inherit;
-}
-
-.fw-error-oferta {
-  margin: 0;
-  color: var(--fw-danger);
-  font-size: 0.8rem;
-}
-
-.fw-oferta-botones {
-  display: flex;
-  justify-content: flex-end;
-  gap: 0.5rem;
+  background-color: rgb(255 255 255 / 0.3);
 }

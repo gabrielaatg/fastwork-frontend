@@ -1,9 +1,24 @@
-<section class="fw-auth-pagina">
+<section class="fw-auth-shell">
+  <div class="fw-auth-contexto">
+    <div class="fw-auth-marca">
+      <span class="fw-auth-isotipo" aria-hidden="true" translate="no">FW</span>
+      <span class="fw-auth-nombre" translate="no">fastwork</span>
+    </div>
+
+    <div class="fw-auth-copy">
+      <h1 class="fw-auth-hero">Oficios de confianza a un acuerdo directo.</h1>
+      <p class="fw-auth-lead">
+        Encuentra gasfiteros, electricistas, pintores, carpinteros y técnicos independientes en los
+        12 distritos de Trujillo.
+      </p>
+    </div>
+  </div>
+
   <div class="fw-auth-tarjeta">
     <div class="fw-auth-cabecera">
-      <h1 class="fw-auth-titulo">Iniciar sesión</h1>
+      <h2 class="fw-auth-titulo">Iniciar sesión</h2>
       <p class="fw-auth-subtitulo">
-        Accede a Fast Work para gestionar tus servicios y contactos en Trujillo.
+        Ingresa con tu correo electrónico o DNI
       </p>
     </div>
 
@@ -15,10 +30,11 @@
         <input
           id="login-identificador"
           type="text"
-          inputmode="email"
+          inputmode="text"
           autocomplete="username"
+          spellcheck="false"
           class="fw-input"
-          placeholder="usuario@correo.com o 70112233"
+          placeholder="usuario@correo.com o 70112233…"
           [formField]="formulario.identificador"
         />
 
@@ -39,7 +55,7 @@
             [type]="mostrarPassword() ? 'text' : 'password'"
             autocomplete="current-password"
             class="fw-input fw-input-password"
-            placeholder="Ingresa tu contraseña"
+            placeholder="Ingresa tu contraseña…"
             [formField]="formulario.password"
           />
           <button
@@ -72,8 +88,8 @@
         }
       </div>
 
-      <button type="submit" class="fw-btn-primario" [disabled]="cargando()">
-        {{ cargando() ? 'Ingresando...' : 'Ingresar' }}
+      <button type="submit" class="fw-btn-primario fw-auth-submit" [disabled]="cargando()">
+        {{ cargando() ? 'Ingresando…' : 'Ingresar' }}
       </button>
     </form>
 
@@ -106,7 +122,7 @@
               (click)="ingresarConRol(rol)"
             >
               <strong>
-                {{ rolCargando() === rol ? 'Ingresando...' : tituloRol(rol) }}
+                {{ rolCargando() === rol ? 'Ingresando…' : tituloRol(rol) }}
               </strong>
               <span>{{ descripcionRol(rol) }}</span>
             </button>

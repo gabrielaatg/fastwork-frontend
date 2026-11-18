@@ -1,17 +1,29 @@
 <section class="fw-detalle-pagina">
   <div class="fw-migas">
-    <a routerLink="/directorio">&larr; Volver al directorio</a>
+    <a routerLink="/directorio">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <line x1="19" y1="12" x2="5" y2="12" />
+        <polyline points="12 19 5 12 12 5" />
+      </svg>
+      <span>Volver al directorio</span>
+    </a>
   </div>
 
   <app-alerta-mensaje [error]="errorHttp()" />
 
   @if (cargando()) {
-    <div class="fw-estado-caja">Cargando perfil del proveedor...</div>
+    <div class="fw-estado-caja">Cargando perfil del proveedor…</div>
   } @else if (detalle(); as proveedor) {
     <article class="fw-detalle-cabecera">
       <div class="fw-detalle-identidad">
         @if (proveedor.fotoPerfilUrl; as fotoUrl) {
-          <img [src]="fotoUrl" [alt]="'Foto de ' + proveedor.nombres" class="fw-avatar-detalle" />
+          <img
+            [src]="fotoUrl"
+            [alt]="'Foto de ' + proveedor.nombres"
+            width="80"
+            height="80"
+            class="fw-avatar-detalle"
+          />
         }
         <div class="fw-detalle-info">
           <div class="fw-badges">
@@ -28,7 +40,7 @@
             <p class="fw-detalle-desc">{{ proveedor.descripcionPerfil }}</p>
           }
           <div class="fw-contacto-fila">
-            <span><strong>Teléfono:</strong> {{ proveedor.telefono }}</span>
+            <span class="fw-num"><strong>Teléfono:</strong> {{ proveedor.telefono }}</span>
             <span><strong>Correo:</strong> {{ proveedor.correo }}</span>
             <span>
               <strong>Zonas:</strong>
@@ -46,7 +58,7 @@
 
       @if (esCliente() && proveedor.idUsuario !== idUsuarioActual()) {
         <div class="fw-detalle-cta">
-          <a class="fw-btn-solicitar" [routerLink]="['/solicitudes/nueva']">
+          <a class="fw-btn-primario fw-btn-solicitar" [routerLink]="['/solicitudes/nueva']">
             Publicar trabajo
           </a>
         </div>
@@ -58,34 +70,36 @@
       @if (proveedor.oficios.length === 0) {
         <p class="fw-vacio">Este proveedor aún no ha registrado tarifas de oficios.</p>
       } @else {
-        <table class="fw-tabla">
-          <thead>
-            <tr>
-              <th>Oficio</th>
-              <th>Rango referencial</th>
-              <th>Detalle de tarifa</th>
-            </tr>
-          </thead>
-          <tbody>
-            @for (oficio of proveedor.oficios; track oficio.idProveedorOficio) {
+        <div class="fw-tabla-scroll">
+          <table class="fw-tabla">
+            <thead>
               <tr>
-                <td>
-                  <strong>{{ oficio.nombreOficio }}</strong>
-                </td>
-                <td class="fw-tarifa-celda">
-                  S/ {{ oficio.precioMinimo | number: '1.2-2' }} – S/
-                  {{ oficio.precioMaximo | number: '1.2-2' }}
-                </td>
-                <td>{{ oficio.detalleTarifa || 'Sin observación adicional' }}</td>
+                <th>Oficio</th>
+                <th>Rango referencial</th>
+                <th>Detalle de tarifa</th>
               </tr>
-            }
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              @for (oficio of proveedor.oficios; track oficio.idProveedorOficio) {
+                <tr>
+                  <td>
+                    <strong>{{ oficio.nombreOficio }}</strong>
+                  </td>
+                  <td class="fw-tarifa-celda fw-num">
+                    S/ {{ oficio.precioMinimo | number: '1.2-2' }} – S/
+                    {{ oficio.precioMaximo | number: '1.2-2' }}
+                  </td>
+                  <td>{{ oficio.detalleTarifa || 'Sin observación adicional' }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
       }
     </section>
 
     <section class="fw-bloque">
-      <h2 class="fw-bloque-titulo">Reseñas de clientes ({{ proveedor.resenas.length }})</h2>
+      <h2 class="fw-bloque-titulo fw-num">Reseñas de clientes ({{ proveedor.resenas.length }})</h2>
       <app-lista-resenas [resenas]="proveedor.resenas" />
     </section>
   }

@@ -1,5 +1,5 @@
 <section class="fw-oficios-pagina">
-  <header>
+  <header class="fw-oficios-cabecera">
     <h1 class="fw-titulo">Catálogo Maestro de Oficios</h1>
     <p class="fw-subtitulo">
       Administra las categorías de oficios disponibles en Fast Work Trujillo.
@@ -19,34 +19,36 @@
   <div class="fw-oficios-layout">
     <div class="fw-tabla-contenedor">
       @if (cargando()) {
-        <div class="fw-estado-caja">Cargando catálogo de oficios...</div>
+        <div class="fw-estado-caja">Cargando catálogo de oficios…</div>
       } @else if (oficios().length === 0) {
         <div class="fw-estado-caja">No hay oficios activos registrados.</div>
       } @else {
-        <table class="fw-tabla">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Oficio</th>
-              <th>Descripción</th>
-              <th>Estado</th>
-            </tr>
-          </thead>
-          <tbody>
-            @for (oficio of oficios(); track oficio.idOficio) {
+        <div class="fw-tabla-scroll">
+          <table class="fw-tabla">
+            <thead>
               <tr>
-                <td>#{{ oficio.idOficio }}</td>
-                <td>
-                  <strong>{{ oficio.nombreOficio }}</strong>
-                </td>
-                <td>{{ oficio.descripcion || 'Sin descripción' }}</td>
-                <td>
-                  <span class="fw-estado-activo">{{ oficio.activo ? 'Activo' : 'Inactivo' }}</span>
-                </td>
+                <th>ID</th>
+                <th>Oficio</th>
+                <th>Descripción</th>
+                <th>Estado</th>
               </tr>
-            }
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              @for (oficio of oficios(); track oficio.idOficio) {
+                <tr>
+                  <td class="fw-num">#{{ oficio.idOficio }}</td>
+                  <td>
+                    <strong>{{ oficio.nombreOficio }}</strong>
+                  </td>
+                  <td>{{ oficio.descripcion || 'Sin descripción' }}</td>
+                  <td>
+                    <span class="fw-estado-activo">{{ oficio.activo ? 'Activo' : 'Inactivo' }}</span>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
       }
     </div>
 

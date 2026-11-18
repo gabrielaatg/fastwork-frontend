@@ -1,16 +1,23 @@
 <section class="fw-chat-panel">
   <header class="fw-chat-cabecera">
-    <div>
-      <h2 class="fw-chat-titulo">Mensajes de solicitud #{{ idSolicitud() }}</h2>
+    <div class="fw-chat-cabecera-info">
+      <h2 class="fw-chat-titulo fw-num">Mensajes de solicitud #{{ idSolicitud() }}</h2>
       @if (tituloConversacion()) {
         <p class="fw-chat-subtitulo">{{ tituloConversacion() }}</p>
       }
     </div>
     <div class="fw-chat-controles">
-      <button type="button" class="fw-btn-secundario" [disabled]="cargando()" (click)="recargar()">
+      <button
+        type="button"
+        class="fw-btn-secundario fw-chat-btn"
+        [disabled]="cargando()"
+        (click)="recargar()"
+      >
         Actualizar
       </button>
-      <button type="button" class="fw-btn-secundario" (click)="cerrado.emit()">Cerrar</button>
+      <button type="button" class="fw-btn-secundario fw-chat-btn" (click)="cerrado.emit()">
+        Cerrar
+      </button>
     </div>
   </header>
 
@@ -18,7 +25,7 @@
 
   <div class="fw-chat-hilo">
     @if (cargando() && mensajes().length === 0) {
-      <p class="fw-chat-estado">Cargando conversación...</p>
+      <p class="fw-chat-estado">Cargando conversación…</p>
     } @else if (mensajes().length === 0) {
       <p class="fw-chat-estado">Aún no hay mensajes. Inicia la coordinación aquí.</p>
     } @else {
@@ -29,7 +36,7 @@
         >
           <div class="fw-burbuja-meta">
             <strong>{{ msg.nombreEmisor }}</strong>
-            <span>{{ msg.fechaEnvio | date: 'dd/MM HH:mm' }}</span>
+            <span class="fw-num">{{ msg.fechaEnvio | date: 'dd/MM HH:mm' }}</span>
           </div>
           <p class="fw-burbuja-texto">{{ msg.contenido }}</p>
         </article>
@@ -40,13 +47,13 @@
   <form class="fw-chat-form" (submit)="alEnviar($event)" novalidate>
     <input
       type="text"
-      class="fw-chat-input"
-      placeholder="Escribe un mensaje para coordinar horario o detalles..."
+      class="fw-input fw-chat-input"
+      placeholder="Escribe un mensaje para coordinar horario o detalles…"
       aria-label="Mensaje"
       [formField]="formulario.contenido"
     />
     <button type="submit" class="fw-btn-primario" [disabled]="enviando()">
-      {{ enviando() ? 'Enviando...' : 'Enviar' }}
+      {{ enviando() ? 'Enviando…' : 'Enviar' }}
     </button>
   </form>
 </section>

@@ -1,25 +1,33 @@
 .fw-card-proveedor {
   background-color: var(--fw-surface);
   border: 1px solid var(--fw-border);
-  border-radius: var(--fw-radius);
-  box-shadow: var(--fw-shadow-sm);
+  border-radius: var(--fw-radius-lg);
   padding: 1.25rem;
   display: flex;
   flex-direction: column;
   gap: 0.9rem;
+  min-width: 0;
+  height: 100%;
 }
 
 .fw-card-cabecera {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  gap: 1rem;
+  gap: 0.75rem;
+  flex-wrap: wrap;
 }
 
 .fw-card-identidad {
   display: flex;
   align-items: center;
   gap: 0.75rem;
+  min-width: 0;
+  flex: 1;
+}
+
+.fw-card-identidad-texto {
+  min-width: 0;
 }
 
 .fw-avatar-card,
@@ -32,17 +40,81 @@
 
 .fw-avatar-card {
   object-fit: cover;
-  border: 2px solid var(--fw-border);
+  border: 1px solid var(--fw-border);
 }
 
 .fw-avatar-fallback {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--fw-primary-soft);
+  background-color: var(--fw-primary-soft);
+  border: 1px solid var(--fw-sage);
   color: var(--fw-primary);
   font-weight: 700;
   font-size: 0.95rem;
+}
+
+.fw-card-nombre {
+  margin: 0 0 0.25rem;
+  font-size: 1.06rem;
+  font-weight: 700;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.fw-card-rating {
+  display: flex;
+  align-items: center;
+}
+
+.fw-card-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.fw-card-desc {
+  margin: 0;
+  color: var(--fw-muted);
+  font-size: 0.9rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.fw-oficios-lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.fw-oficio-chip {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.45rem 0.7rem;
+  border-radius: var(--fw-radius);
+  background-color: var(--fw-bg);
+  border: 1px solid var(--fw-border);
+  font-size: 0.85rem;
+}
+
+.fw-oficio-nombre {
+  font-weight: 600;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.fw-oficio-tarifa {
+  color: var(--fw-primary);
+  font-weight: 700;
+  white-space: nowrap;
 }
 
 .fw-card-zonas {
@@ -68,69 +140,12 @@
 }
 
 .fw-zona-chip {
-  padding: 0.15rem 0.5rem;
+  padding: 0.14rem 0.52rem;
   border-radius: 999px;
   border: 1px solid var(--fw-border);
-  background: var(--fw-surface-alt);
-  font-size: 0.75rem;
-  color: var(--fw-text);
-}
-
-.fw-card-nombre {
-  margin: 0 0 0.35rem;
-  font-size: 1.1rem;
-  font-weight: 700;
-}
-
-.fw-card-rating {
-  display: flex;
-  align-items: center;
-}
-
-.fw-card-badges {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-  gap: 0.4rem;
-}
-
-.fw-card-desc {
-  margin: 0;
-  color: var(--fw-muted);
-  font-size: 0.9rem;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.fw-oficios-lista {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.45rem;
-}
-
-.fw-oficio-chip {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.45rem 0.7rem;
-  border-radius: var(--fw-radius);
   background-color: var(--fw-surface-alt);
-  font-size: 0.85rem;
-}
-
-.fw-oficio-nombre {
-  font-weight: 600;
-}
-
-.fw-oficio-tarifa {
-  color: var(--fw-primary);
-  font-weight: 600;
+  font-size: 0.74rem;
+  color: var(--fw-text);
 }
 
 .fw-sin-oficios {
@@ -140,11 +155,13 @@
 
 .fw-card-pie {
   margin-top: auto;
-  padding-top: 0.75rem;
+  padding-top: 0.8rem;
   border-top: 1px solid var(--fw-border);
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
+  gap: 0.65rem;
 }
 
 .fw-card-contacto {
@@ -153,15 +170,7 @@
 }
 
 .fw-btn-detalle {
-  padding: 0.45rem 0.9rem;
-  border-radius: var(--fw-radius);
-  background-color: var(--fw-primary);
-  color: #ffffff;
-  font-size: 0.875rem;
-  font-weight: 600;
-}
-
-.fw-btn-detalle:hover {
-  background-color: var(--fw-primary-hover);
-  text-decoration: none;
+  min-height: 2.25rem;
+  padding: 0.42rem 0.85rem;
+  font-size: 0.85rem;
 }

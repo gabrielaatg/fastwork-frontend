@@ -1,37 +1,65 @@
 <header class="fw-navbar">
   <div class="fw-navbar-inner">
-    <a class="fw-marca" [routerLink]="estaAutenticado() ? '/' : '/login'">
-      <span class="fw-marca-titulo">Fast Work</span>
+    <a class="fw-marca" [routerLink]="estaAutenticado() ? '/' : '/login'" (click)="cerrarMenu()">
+      <span class="fw-marca-isotipo" aria-hidden="true" translate="no">FW</span>
+      <span class="fw-marca-titulo" translate="no">fastwork</span>
       <span class="fw-marca-ciudad">Trujillo</span>
     </a>
 
     @if (estaAutenticado()) {
-      <nav class="fw-nav-links" aria-label="Navegación principal">
-        @for (enlace of enlaces(); track enlace.ruta) {
-          <a
-            class="fw-nav-link"
-            [routerLink]="enlace.ruta"
-            routerLinkActive="fw-nav-link-activo"
-            [routerLinkActiveOptions]="{ exact: enlace.exacta ?? false }"
-          >
-            {{ enlace.etiqueta }}
-          </a>
+      <button
+        type="button"
+        class="fw-nav-toggle"
+        aria-controls="fw-menu-principal"
+        [attr.aria-expanded]="menuAbierto()"
+        [attr.aria-label]="menuAbierto() ? 'Cerrar menú de navegación' : 'Abrir menú de navegación'"
+        (click)="alternarMenu()"
+      >
+        @if (menuAbierto()) {
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        } @else {
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <line x1="3" y1="6" x2="21" y2="6" />
+            <line x1="3" y1="12" x2="21" y2="12" />
+            <line x1="3" y1="18" x2="21" y2="18" />
+          </svg>
         }
-      </nav>
+      </button>
 
-      <div class="fw-nav-usuario">
-        @if (usuario(); as actual) {
-          <span class="fw-usuario-nombre">{{ actual.nombres }}</span>
-          <span class="fw-usuario-rol">{{ actual.rol }}</span>
-        }
-        <button type="button" class="fw-btn-salir" (click)="cerrarSesion()">Cerrar sesión</button>
+      <div id="fw-menu-principal" class="fw-nav-collapse" [class.fw-nav-abierto]="menuAbierto()">
+        <nav class="fw-nav-links" aria-label="Navegación principal">
+          @for (enlace of enlaces(); track enlace.ruta) {
+            <a
+              class="fw-nav-link"
+              [routerLink]="enlace.ruta"
+              routerLinkActive="fw-nav-link-activo"
+              [routerLinkActiveOptions]="{ exact: enlace.exacta ?? false }"
+              (click)="cerrarMenu()"
+            >
+              {{ enlace.etiqueta }}
+            </a>
+          }
+        </nav>
+
+        <div class="fw-nav-usuario">
+          @if (usuario(); as actual) {
+            <div class="fw-usuario-meta">
+              <span class="fw-usuario-nombre">{{ actual.nombres }}</span>
+              <span class="fw-usuario-rol">{{ actual.rol }}</span>
+            </div>
+          }
+          <button type="button" class="fw-btn-salir" (click)="cerrarSesion()">Cerrar sesión</button>
+        </div>
       </div>
     } @else {
       <div class="fw-nav-acciones">
-        <a class="fw-nav-link" routerLink="/login" routerLinkActive="fw-nav-link-activo">
+        <a class="fw-btn-secundario fw-nav-btn" routerLink="/login" routerLinkActive="fw-nav-link-activo">
           Iniciar sesión
         </a>
-        <a class="fw-btn-registro" routerLink="/registro">Registrarse</a>
+        <a class="fw-btn-primario fw-nav-btn" routerLink="/registro">Crear cuenta</a>
       </div>
     }
   </div>

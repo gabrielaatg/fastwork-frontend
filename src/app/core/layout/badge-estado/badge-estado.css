@@ -3,28 +3,33 @@
   align-items: center;
   padding: 0.2rem 0.6rem;
   border-radius: 999px;
-  font-size: 0.78rem;
+  font-size: 0.76rem;
   font-weight: 600;
   line-height: 1.25;
   white-space: nowrap;
+  border: 1px solid transparent;
 }
 
 .fw-badge-exito {
   background-color: var(--fw-success-soft);
+  border-color: rgb(165 191 175 / 0.65);
   color: var(--fw-success);
 }
 
 .fw-badge-advertencia {
   background-color: var(--fw-warning-soft);
+  border-color: rgb(138 83 0 / 0.22);
   color: var(--fw-warning);
 }
 
 .fw-badge-peligro {
   background-color: var(--fw-danger-soft);
+  border-color: rgb(159 45 45 / 0.25);
   color: var(--fw-danger);
 }
 
 .fw-badge-neutro {
   background-color: var(--fw-surface-alt);
+  border-color: var(--fw-border);
   color: var(--fw-muted);
 }

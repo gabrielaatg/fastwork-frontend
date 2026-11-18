@@ -4,23 +4,10 @@
   gap: 1.25rem;
 }
 
-.fw-migas {
-  font-size: 0.9rem;
-}
-
-.fw-estado-caja {
-  padding: 2.5rem;
-  text-align: center;
-  background-color: var(--fw-surface);
-  border: 1px solid var(--fw-border);
-  border-radius: var(--fw-radius);
-  color: var(--fw-muted);
-}
-
 .fw-detalle-cabecera {
   background-color: var(--fw-surface);
   border: 1px solid var(--fw-border);
-  border-radius: var(--fw-radius);
+  border-radius: var(--fw-radius-lg);
   padding: 1.5rem;
   display: flex;
   justify-content: space-between;
@@ -32,11 +19,12 @@
   display: flex;
   align-items: flex-start;
   gap: 1.25rem;
+  min-width: 0;
 }
 
 .fw-avatar-detalle {
-  width: 76px;
-  height: 76px;
+  width: 80px;
+  height: 80px;
   border-radius: 50%;
   object-fit: cover;
   border: 2px solid var(--fw-primary);
@@ -46,52 +34,44 @@
 .fw-detalle-info {
   display: flex;
   flex-direction: column;
-  gap: 0.65rem;
+  gap: 0.6rem;
+  min-width: 0;
 }
 
 .fw-badges {
   display: flex;
-  gap: 0.5rem;
+  flex-wrap: wrap;
+  gap: 0.45rem;
 }
 
 .fw-detalle-nombre {
   margin: 0;
-  font-size: 1.6rem;
+  font-size: clamp(1.35rem, 2.5vw, 1.65rem);
+  font-weight: 700;
 }
 
 .fw-detalle-desc {
-  margin: 0.25rem 0;
+  margin: 0.2rem 0;
   color: var(--fw-text);
-  max-width: 72ch;
+  max-width: 68ch;
 }
 
 .fw-contacto-fila {
   display: flex;
   flex-wrap: wrap;
-  gap: 1.5rem;
+  gap: 0.65rem 1.5rem;
   font-size: 0.9rem;
   color: var(--fw-muted);
 }
 
 .fw-btn-solicitar {
-  display: inline-block;
-  padding: 0.75rem 1.35rem;
-  border-radius: var(--fw-radius);
-  background-color: var(--fw-primary);
-  color: #ffffff;
-  font-weight: 600;
   white-space: nowrap;
-}
-
-.fw-btn-solicitar:hover {
-  background-color: var(--fw-primary-hover);
-  text-decoration: none;
 }
 
 .fw-bloque {
   background-color: var(--fw-surface);
   border: 1px solid var(--fw-border);
-  border-radius: var(--fw-radius);
+  border-radius: var(--fw-radius-lg);
   padding: 1.35rem;
   display: flex;
   flex-direction: column;
@@ -101,33 +81,33 @@
 .fw-bloque-titulo {
   margin: 0;
   font-size: 1.15rem;
-}
-
-.fw-tabla {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.925rem;
-}
-
-.fw-tabla th,
-.fw-tabla td {
-  text-align: left;
-  padding: 0.75rem;
-  border-bottom: 1px solid var(--fw-border);
-}
-
-.fw-tabla th {
-  color: var(--fw-muted);
-  font-size: 0.8rem;
-  text-transform: uppercase;
+  font-weight: 700;
 }
 
 .fw-tarifa-celda {
   color: var(--fw-primary);
-  font-weight: 600;
+  font-weight: 700;
+  white-space: nowrap;
 }
 
 .fw-vacio {
   margin: 0;
   color: var(--fw-muted);
+}
+
+@media (max-width: 767px) {
+  .fw-detalle-cabecera {
+    flex-direction: column;
+    padding: 1.2rem;
+  }
+
+  .fw-detalle-identidad {
+    flex-direction: column;
+    gap: 0.9rem;
+  }
+
+  .fw-detalle-cta,
+  .fw-btn-solicitar {
+    width: 100%;
+  }
 }
