@@ -4,7 +4,7 @@ const FOTOS_OFICIO: readonly { clave: RegExp; foto: string }[] = [
   { clave: /electr/i, foto: 'img/personas/electricista.webp' },
   { clave: /carpint|melamin|mueble/i, foto: 'img/personas/carpintero.webp' },
   { clave: /sold|metal|herrer/i, foto: 'img/personas/soldador.webp' },
-  { clave: /alba|constru|obra|drywall|pint/i, foto: 'img/personas/obrero.webp' },
+  { clave: /alba|constru|obra|drywall/i, foto: 'img/personas/obrero.webp' },
 ];
 
 /** Devuelve la foto que mejor representa un oficio, o `null` si no hay ninguna. */

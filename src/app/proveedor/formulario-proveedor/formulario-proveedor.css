@@ -225,3 +225,37 @@
   font-size: 0.875rem;
   cursor: pointer;
 }
+
+/* Portada editable del perfil */
+.fw-mi-portada {
+  overflow: hidden;
+  border-radius: var(--fw-radius-xl);
+  background: var(--fw-surface);
+  box-shadow: var(--fw-shadow-md);
+  animation: fw-mi-portada-in 0.8s var(--fw-ease-salida) 0.1s both;
+}
+
+@keyframes fw-mi-portada-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+}
+
+.fw-mi-portada-banner {
+  height: 180px;
+}
+
+.fw-mi-portada-texto {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 1rem 1.5rem 1.2rem;
+  font-size: 0.9rem;
+  color: var(--fw-muted);
+}
+
+.fw-mi-portada-texto strong {
+  font-size: 1.02rem;
+  color: var(--fw-text);
+}

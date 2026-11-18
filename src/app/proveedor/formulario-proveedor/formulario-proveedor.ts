@@ -12,6 +12,7 @@ import { forkJoin } from 'rxjs';
 import { ErrorHttp } from '../../core/api/errores';
 import { AlertaMensaje } from '../../core/layout/alerta-mensaje/alerta-mensaje';
 import { BadgeEstado } from '../../core/layout/badge-estado/badge-estado';
+import { PortadaPerfil } from '../../core/layout/portada-perfil/portada-perfil';
 import { Oficio } from '../../dominio/oficio';
 import {
   ActualizarOficioTarifaRequest,
@@ -38,7 +39,7 @@ interface PerfilProveedorModelo {
 
 @Component({
   selector: 'app-formulario-proveedor',
-  imports: [FormField, AlertaMensaje, BadgeEstado],
+  imports: [FormField, AlertaMensaje, BadgeEstado, PortadaPerfil],
   templateUrl: './formulario-proveedor.html',
   styleUrl: './formulario-proveedor.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -52,6 +53,8 @@ export class FormularioProveedor implements OnInit {
   protected readonly catalogoZonas = signal<Zona[]>([]);
   protected readonly zonasSeleccionadas = signal<number[]>([]);
   protected readonly fotoPerfilUrl = signal<string | null>(null);
+  protected readonly idPerfil = signal<number | null>(null);
+  protected readonly portadaServidor = signal<string | null>(null);
   protected readonly dni = signal('');
   protected readonly estadoDisponibilidad = signal<EstadoDisponibilidad>('DISPONIBLE');
   protected readonly estadoVerificacion = signal<EstadoVerificacion | null>(null);
@@ -181,6 +184,8 @@ export class FormularioProveedor implements OnInit {
             this.estadoVerificacion.set(detalle.estadoVerificacion);
             this.estadoDisponibilidad.set(detalle.estadoDisponibilidad);
             this.fotoPerfilUrl.set(detalle.fotoPerfilUrl);
+            this.idPerfil.set(detalle.idPerfilProveedor);
+            this.portadaServidor.set(detalle.portada ?? null);
             this.zonasSeleccionadas.set(detalle.zonas.map((z) => z.idZona));
             this.mensajeExito.set('Perfil comercial, zonas y tarifas guardados correctamente.');
           },
@@ -208,6 +213,8 @@ export class FormularioProveedor implements OnInit {
         this.catalogoOficios.set(oficios);
         this.catalogoZonas.set(zonas);
         this.fotoPerfilUrl.set(detalle.fotoPerfilUrl);
+        this.idPerfil.set(detalle.idPerfilProveedor);
+        this.portadaServidor.set(detalle.portada ?? null);
         this.zonasSeleccionadas.set((detalle.zonas ?? []).map((z) => z.idZona));
         this.dni.set(detalle.dni ?? '');
         this.estadoVerificacion.set(detalle.estadoVerificacion);

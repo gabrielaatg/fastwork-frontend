@@ -1,0 +1,179 @@
+:host {
+  display: block;
+  position: relative;
+}
+
+.fw-pp {
+  position: relative;
+  height: 100%;
+}
+
+.fw-pp-marco {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: var(--fw-tinta, #0d1a24);
+}
+
+.fw-pp-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  animation:
+    fw-pp-entra 0.8s var(--fw-ease-salida) both,
+    fw-pp-deriva 18s ease-in-out 0.8s infinite alternate;
+}
+
+/* La portada nueva entra con un fundido y un leve zoom */
+@keyframes fw-pp-entra {
+  from {
+    opacity: 0;
+    transform: scale(1.12);
+    filter: blur(8px);
+  }
+}
+
+/* Movimiento lento de la portada, como un fondo vivo */
+@keyframes fw-pp-deriva {
+  to {
+    transform: scale(1.08) translateX(-2%);
+  }
+}
+
+.fw-pp-editar {
+  position: absolute;
+  right: 1rem;
+  top: 1rem;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.55rem 0.95rem;
+  border: 1px solid rgb(255 255 255 / 0.3);
+  border-radius: 999px;
+  background: rgb(13 26 36 / 0.55);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  color: #ffffff;
+  font-size: 0.85rem;
+  font-weight: 650;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    transform 0.25s var(--fw-ease-resorte);
+}
+
+.fw-pp-editar:hover {
+  background: rgb(13 26 36 / 0.8);
+  transform: translateY(-1px);
+}
+
+.fw-pp-editar svg {
+  width: 1.05rem;
+  height: 1.05rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.fw-pp-panel {
+  position: absolute;
+  right: 1rem;
+  top: 4rem;
+  z-index: 3;
+  display: grid;
+  grid-template-columns: repeat(4, 6.5rem);
+  gap: 0.5rem;
+  padding: 0.6rem;
+  border-radius: 1.1rem;
+  background: #ffffff;
+  box-shadow: 0 24px 50px -18px rgb(13 26 36 / 0.55);
+  animation: fw-pp-panel 0.35s var(--fw-ease-salida) both;
+}
+
+@keyframes fw-pp-panel {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.97);
+  }
+}
+
+.fw-pp-opcion {
+  position: relative;
+  height: 4.2rem;
+  padding: 0;
+  overflow: hidden;
+  border: none;
+  border-radius: 0.75rem;
+  cursor: pointer;
+  animation: fw-pp-panel 0.4s var(--fw-ease-salida) both;
+  animation-delay: calc(var(--n) * 50ms);
+  transition: transform 0.25s var(--fw-ease-resorte);
+}
+
+.fw-pp-opcion img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.fw-pp-opcion::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 0 var(--fw-celeste, #7dd3fc);
+  transition: box-shadow 0.25s ease;
+}
+
+.fw-pp-opcion:hover {
+  transform: translateY(-2px);
+}
+
+.fw-pp-opcion-activa::after {
+  box-shadow: inset 0 0 0 3px var(--fw-celeste, #7dd3fc);
+}
+
+.fw-pp-check {
+  position: absolute;
+  right: 0.3rem;
+  top: 0.3rem;
+  display: grid;
+  place-items: center;
+  width: 1.3rem;
+  height: 1.3rem;
+  border-radius: 50%;
+  background: var(--fw-celeste, #7dd3fc);
+  transform: scale(0);
+  transition: transform 0.3s var(--fw-ease-resorte);
+}
+
+.fw-pp-check svg {
+  width: 0.8rem;
+  height: 0.8rem;
+  fill: none;
+  stroke: #0d1a24;
+  stroke-width: 3.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.fw-pp-opcion-activa .fw-pp-check {
+  transform: scale(1);
+}
+
+@media (max-width: 640px) {
+  .fw-pp-panel {
+    left: 0.75rem;
+    right: 0.75rem;
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .fw-pp-opcion {
+    height: 4.8rem;
+  }
+}

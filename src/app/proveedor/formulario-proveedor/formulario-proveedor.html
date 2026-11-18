@@ -20,6 +20,24 @@
     }
   </header>
 
+  @if (idPerfil(); as id) {
+    <section class="fw-mi-portada" aria-label="Portada de tu perfil">
+      <app-portada-perfil
+        class="fw-mi-portada-banner"
+        [idPerfil]="id"
+        [portadaServidor]="portadaServidor()"
+        [editable]="true"
+      />
+      <div class="fw-mi-portada-texto">
+        <strong>Portada de tu perfil</strong>
+        <span>
+          Es lo primero que ven los clientes al abrir tu perfil. Pulsa “Cambiar portada” para elegir
+          otra.
+        </span>
+      </div>
+    </section>
+  }
+
   <app-alerta-mensaje [error]="errorHttp()" [cerrable]="true" (cerrado)="errorHttp.set(null)" />
   @if (mensajeExito()) {
     <app-alerta-mensaje
@@ -74,9 +92,7 @@
           readonly
           disabled
         />
-        <p class="fw-bloque-ayuda">
-          El DNI registrado no puede modificarse.
-        </p>
+        <p class="fw-bloque-ayuda">El DNI registrado no puede modificarse.</p>
       </div>
 
       <div class="fw-campo">

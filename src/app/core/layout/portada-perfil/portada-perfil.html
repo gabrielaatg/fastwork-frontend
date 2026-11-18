@@ -1,0 +1,46 @@
+<div class="fw-pp" [class.fw-pp-editable]="editable()">
+  <div class="fw-pp-marco">
+    @for (portada of [actual()]; track portada.id) {
+      <img class="fw-pp-img" [src]="portada.url" alt="" />
+    }
+  </div>
+
+  @if (editable()) {
+    <button
+      type="button"
+      class="fw-pp-editar"
+      aria-haspopup="true"
+      [attr.aria-expanded]="abierto()"
+      (click)="alternar()"
+    >
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <rect x="3.5" y="5" width="17" height="14" rx="3" />
+        <circle cx="9" cy="10" r="1.6" />
+        <path d="M20 16l-4.5-4.5L7 19" />
+      </svg>
+      Cambiar portada
+    </button>
+
+    @if (abierto()) {
+      <div class="fw-pp-panel" role="radiogroup" aria-label="Elige una portada">
+        @for (opcion of opciones; track opcion.id; let i = $index) {
+          <button
+            type="button"
+            role="radio"
+            class="fw-pp-opcion"
+            [style.--n]="i"
+            [class.fw-pp-opcion-activa]="opcion.id === actual().id"
+            [attr.aria-checked]="opcion.id === actual().id"
+            [attr.aria-label]="opcion.nombre"
+            (click)="elegir(opcion)"
+          >
+            <img [src]="opcion.url" alt="" />
+            <span class="fw-pp-check" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg>
+            </span>
+          </button>
+        }
+      </div>
+    }
+  }
+</div>

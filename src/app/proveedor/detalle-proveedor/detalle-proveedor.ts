@@ -14,7 +14,7 @@ import { AuthApi } from '../../core/auth/auth-api';
 import { AlertaMensaje } from '../../core/layout/alerta-mensaje/alerta-mensaje';
 import { BadgeEstado } from '../../core/layout/badge-estado/badge-estado';
 import { CalificacionEstrellas } from '../../core/layout/calificacion-estrellas/calificacion-estrellas';
-import { fotoParaOficio } from '../../core/media/fotos-oficio';
+import { PortadaPerfil } from '../../core/layout/portada-perfil/portada-perfil';
 import { Contador } from '../../core/motion/contador';
 import { ProveedorDetalle } from '../../dominio/proveedor';
 import { ListaResenas } from '../../resena/lista-resenas/lista-resenas';
@@ -24,6 +24,7 @@ import { ProveedorApi } from '../proveedor-api';
   selector: 'app-detalle-proveedor',
   imports: [
     Contador,
+    PortadaPerfil,
     DecimalPipe,
     RouterLink,
     AlertaMensaje,
@@ -43,21 +44,15 @@ export class DetalleProveedor {
 
   protected readonly esCliente = computed(() => this.authApi.tieneRol('CLIENTE'));
   protected readonly idUsuarioActual = this.authApi.idUsuario;
+  protected readonly esProveedor = computed(() => this.authApi.tieneRol('PROVEEDOR'));
   protected readonly detalle = signal<ProveedorDetalle | null>(null);
   protected readonly cargando = signal(false);
   protected readonly errorHttp = signal<ErrorHttp | null>(null);
 
-  /** Foto de portada según el primer oficio con foto disponible. */
-  protected readonly fotoPortada = computed(() => {
-    const oficios = this.detalle()?.oficios ?? [];
-    for (const oficio of oficios) {
-      const foto = fotoParaOficio(oficio.nombreOficio);
-      if (foto) {
-        return foto;
-      }
-    }
-    return 'img/personas/obrero.webp';
-  });
+  /** Distritos de atención separados por comas. */
+  protected nombresZonas(proveedor: ProveedorDetalle): string {
+    return proveedor.zonas.map((z) => z.nombreZona).join(', ');
+  }
 
   /** Tarifa mínima entre todos los oficios del técnico. */
   protected readonly tarifaDesde = computed(() => {

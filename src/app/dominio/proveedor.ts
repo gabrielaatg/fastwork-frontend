@@ -42,6 +42,8 @@ export interface ProveedorDetalle {
   telefono: string;
   dni: string;
   fotoPerfilUrl: string | null;
+  /** Portada elegida (`portada-1` … `portada-4`). Opcional hasta que el backend la guarde. */
+  portada?: string | null;
   descripcionPerfil: string | null;
   estadoDisponibilidad: EstadoDisponibilidad;
   estadoVerificacion: EstadoVerificacion;

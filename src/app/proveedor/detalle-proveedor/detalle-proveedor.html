@@ -9,9 +9,12 @@
     <div class="fw-estado-caja">Cargando perfil del proveedor...</div>
   } @else if (detalle(); as proveedor) {
     <article class="fw-detalle-cabecera">
-      <div class="fw-portada" aria-hidden="true">
-        <img [src]="fotoPortada()" alt="" />
-      </div>
+      <app-portada-perfil
+        class="fw-portada"
+        [idPerfil]="proveedor.idPerfilProveedor"
+        [portadaServidor]="proveedor.portada"
+        [editable]="esProveedor() && proveedor.idUsuario === idUsuarioActual()"
+      />
 
       <div class="fw-detalle-identidad">
         <div class="fw-detalle-avatar">
@@ -91,12 +94,7 @@
           </svg>
           <strong>Zonas:</strong>
           @if (proveedor.zonas.length > 0) {
-            @for (z of proveedor.zonas; track z.idZona; let ultimo = $last) {
-              {{ z.nombreZona }}
-              @if (!ultimo) {
-                ,
-              }
-            }
+            {{ nombresZonas(proveedor) }}
           } @else {
             Por configurar
           }
